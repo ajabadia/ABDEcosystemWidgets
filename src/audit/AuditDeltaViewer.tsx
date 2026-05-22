@@ -3,7 +3,7 @@
 import React from 'react';
 import { useTranslations } from 'next-intl';
 import { FileCode, Tag } from 'lucide-react';
-import type { AuditLog } from '../hooks/useLivePolling.js';
+import type { AuditLog } from '../types.js';
 
 interface AuditDeltaViewerProps {
   log: AuditLog;

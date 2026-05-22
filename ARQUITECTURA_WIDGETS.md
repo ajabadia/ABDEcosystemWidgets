@@ -38,7 +38,19 @@ Para desplegar aplicaciones que usan este paquete, es OBLIGATORIO:
 3. Referenciarlo en el `package.json` de los satélites usando la sintaxis de GitHub (Ej: `"@abd/ecosystem-widgets": "github:ajabadia/ABDEcosystemWidgets#main"`).
 Esto asegura que Vercel, al clonar un satélite, pueda descargar este paquete directamente desde GitHub.
 
-## 6. Siguientes Pasos (Próxima Conversación)
+## 6. Internacionalización estricta con `next-intl`
+
+Todos los textos de los componentes deben extraerse obligatoriamente utilizando el hook `useTranslations()` de `next-intl`. 
+**Queda estrictamente prohibido:**
+1. Hardcodear strings en español (ej. `<span>Cargando...</span>`).
+2. Pasar objetos `translations={{ ... }}` como prop a los componentes.
+
+Esta regla asegura que el ecosistema completo reacciona de forma síncrona a los cambios de locale y evita el infierno de props de traducción anidadas.
+
+## 7. Prioridad a la Composición
+El diseño debe favorecer la composición sobre la configuración. En lugar de un componente monolítico con 30 props, deberíamos exponer componentes compuestos (`<Widget.Root>`, `<Widget.Header>`, `<Widget.Content>`).
+
+## 8. Siguientes Pasos (Próxima Conversación)
 1. Subir este paquete a su nuevo repositorio de GitHub.
 2. Migrar los componentes uno a uno, ajustando los imports en las aplicaciones de destino (`ABDLogs`, `Gobernanza`, `Quiz`).
 3. Crear el nuevo `<AuditHistoryModal />` dentro de `/src/audit/` y consumirlo desde Gobernanza.

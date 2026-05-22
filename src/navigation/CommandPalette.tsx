@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Search, Terminal, CornerDownLeft } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 export interface Command {
   id: string;
@@ -16,20 +17,34 @@ export interface Command {
 export interface CommandPaletteProps {
   commands: Command[];
   placeholder?: string;
-  triggerElementId?: string; // Optional element ID that triggers the palette when clicked
+  /** Pass isOpen and onOpenChange to control the palette externally instead of relying on DOM IDs */
+  isOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
 export function CommandPalette({
   commands,
-  placeholder = 'Escribe un comando o busca...',
-  triggerElementId
+  placeholder,
+  isOpen: controlledIsOpen,
+  onOpenChange
 }: CommandPaletteProps) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [internalIsOpen, setInternalIsOpen] = useState(false);
+  const isOpen = controlledIsOpen !== undefined ? controlledIsOpen : internalIsOpen;
+  
+  const setIsOpen = (newVal: boolean | ((prev: boolean) => boolean)) => {
+    const nextVal = typeof newVal === 'function' ? newVal(isOpen) : newVal;
+    setInternalIsOpen(nextVal);
+    onOpenChange?.(nextVal);
+  };
+
   const [search, setSearch] = useState('');
   const [activeIndex, setActiveIndex] = useState(0);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
+
+  const t = useTranslations('widgets');
+  const currentPlaceholder = placeholder || t('command_palette_placeholder', { defaultMessage: 'Escribe un comando o busca...' });
 
   // Toggle Command Palette on Ctrl+K / Cmd+K
   useEffect(() => {
@@ -44,20 +59,12 @@ export function CommandPalette({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  // Listen to custom trigger element if provided
+  // Custom global event listener for cross-component triggers
   useEffect(() => {
-    if (!triggerElementId) return;
-    const trigger = document.getElementById(triggerElementId);
-    if (!trigger) return;
-
-    const handleTriggerClick = (e: MouseEvent) => {
-      e.preventDefault();
-      setIsOpen(true);
-    };
-
-    trigger.addEventListener('click', handleTriggerClick);
-    return () => trigger.removeEventListener('click', handleTriggerClick);
-  }, [triggerElementId]);
+    const handleOpenEvent = () => setIsOpen(true);
+    window.addEventListener('abd-command-palette-open', handleOpenEvent);
+    return () => window.removeEventListener('abd-command-palette-open', handleOpenEvent);
+  }, []);
 
   // Focus input when palette opens
   useEffect(() => {
@@ -163,7 +170,7 @@ export function CommandPalette({
             ref={inputRef}
             type="text"
             className="w-full bg-transparent text-white text-base outline-none border-none placeholder-white/30"
-            placeholder={placeholder}
+            placeholder={currentPlaceholder}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -182,8 +189,8 @@ export function CommandPalette({
           {filteredCommands.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-10 px-4 text-center">
               <Terminal className="w-8 h-8 text-white/20 mb-2" />
-              <p className="text-white/60 text-sm font-medium">No se encontraron comandos</p>
-              <p className="text-white/30 text-xs mt-1">Prueba a escribir otra palabra clave</p>
+              <p className="text-white/60 text-sm font-medium">{t('command_palette_no_commands', { defaultMessage: 'No se encontraron comandos' })}</p>
+              <p className="text-white/30 text-xs mt-1">{t('command_palette_try_another', { defaultMessage: 'Prueba a escribir otra palabra clave' })}</p>
             </div>
           ) : (
             Object.keys(groupedCommands).map((category) => (
@@ -258,7 +265,7 @@ export function CommandPalette({
                           ) : (
                             isActive && (
                               <span className="text-[10px] text-white/40 flex items-center font-mono uppercase">
-                                ejecutar <CornerDownLeft className="w-3 h-3 ml-1" />
+                                {t('command_palette_execute', { defaultMessage: 'ejecutar' })} <CornerDownLeft className="w-3 h-3 ml-1" />
                               </span>
                             )
                           )}
@@ -276,14 +283,14 @@ export function CommandPalette({
         <div className="border-t border-white/5 px-4 py-2 bg-zinc-950 flex items-center justify-between text-[10px] text-white/30 select-none z-10 shrink-0">
           <div className="flex items-center space-x-3">
             <span>
-              <kbd className="px-1 py-0.5 rounded bg-white/5 border border-white/5">↑↓</kbd> Navegar
+              <kbd className="px-1 py-0.5 rounded bg-white/5 border border-white/5">↑↓</kbd> {t('command_palette_navigate', { defaultMessage: 'Navegar' })}
             </span>
             <span>
-              <kbd className="px-1 py-0.5 rounded bg-white/5 border border-white/5">enter</kbd> Seleccionar
+              <kbd className="px-1 py-0.5 rounded bg-white/5 border border-white/5">enter</kbd> {t('command_palette_select', { defaultMessage: 'Seleccionar' })}
             </span>
           </div>
           <div>
-            <span>Conmutador Rápido</span>
+            <span>{t('command_palette_switcher', { defaultMessage: 'Conmutador Rápido' })}</span>
           </div>
         </div>
       </div>

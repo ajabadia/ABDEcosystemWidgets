@@ -3,7 +3,9 @@
 import * as React from "react";
 import { useState, useRef, useEffect } from "react";
 import { Building2, ChevronDown, Search, X, Check, Loader2 } from "lucide-react";
-import { cn } from "./utils.js";
+import { cn } from "../utils.js";
+import { useTranslations } from "next-intl";
+import { useClickOutside } from "../hooks/useClickOutside.js";
 
 export interface ContextOption {
   id: string;
@@ -16,16 +18,6 @@ export interface TenantOption {
   active?: boolean;
 }
 
-export interface TenantSelectorTranslations {
-  title?: string;
-  searchPlaceholder?: string;
-  noTenantsFound?: string;
-  activeTenantBadge?: string;
-  selectTenant?: string;
-  spacesTitle?: string;
-  groupsTitle?: string;
-}
-
 export interface TenantSelectorProps {
   activeTenantId: string;
   tenants: TenantOption[];
@@ -35,19 +27,8 @@ export interface TenantSelectorProps {
   activeContextId?: string;
   onContextChange?: (contextId: string, type: 'space' | 'group') => void;
   userRole?: string;
-  translations?: TenantSelectorTranslations;
   isLoading?: boolean;
 }
-
-const defaultTranslations: Required<TenantSelectorTranslations> = {
-  title: "ORGANIZACIÓN",
-  searchPlaceholder: "Buscar organización...",
-  noTenantsFound: "No se encontraron organizaciones",
-  activeTenantBadge: "ORGANIZACIÓN ACTIVA",
-  selectTenant: "Seleccionar organización",
-  spacesTitle: "ESPACIOS",
-  groupsTitle: "GRUPOS",
-};
 
 export function TenantSelector({
   activeTenantId,
@@ -58,7 +39,6 @@ export function TenantSelector({
   activeContextId,
   onContextChange,
   userRole = "USER",
-  translations,
   isLoading = false,
 }: TenantSelectorProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -66,7 +46,7 @@ export function TenantSelector({
   const [mounted, setMounted] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const t = { ...defaultTranslations, ...translations };
+  const t = useTranslations('widgets');
 
   // Detect if user has privilege to switch context
   const isSuperAdmin = userRole === "SUPER_ADMIN";
@@ -107,17 +87,7 @@ export function TenantSelector({
     setMounted(true);
   }, []);
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
+  useClickOutside(containerRef, () => setIsOpen(false));
 
   // Reset search query when dropdown closes
   useEffect(() => {
@@ -141,7 +111,7 @@ export function TenantSelector({
   if (!isInteractive) {
     return (
       <div 
-        title={t.activeTenantBadge}
+        title={t('tenant_selector_active_badge', { defaultMessage: 'ORGANIZACIÓN ACTIVA' })}
         className="flex items-center gap-2 px-3 py-2.5 border border-border/80 bg-background/40 text-[10px] font-black uppercase tracking-[0.15em] text-muted-foreground/80 font-sans backdrop-blur-md select-none"
       >
         <Building2 size={13} className="text-muted-foreground/60 shrink-0" />
@@ -189,13 +159,13 @@ export function TenantSelector({
         <div
           className="absolute right-0 mt-3 w-72 bg-background/95 border border-border backdrop-blur-md z-[100] overflow-hidden rounded-none shadow-2xl p-3 origin-top-right animate-in fade-in slide-in-from-top-2 zoom-in-95 duration-200 ease-out"
           role="listbox"
-          aria-label={t.selectTenant}
+          aria-label={t('tenant_selector_select', { defaultMessage: 'Seleccionar organización' })}
         >
           {/* Header */}
           <div className="flex items-center justify-between mb-3 pb-1.5 border-b border-border">
             <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground italic flex items-center gap-1.5">
               <Building2 size={10} className="text-primary" />
-              {t.title}
+              {t('tenant_selector_title', { defaultMessage: 'ORGANIZACIÓN' })}
             </span>
             <button
               type="button"
@@ -214,7 +184,7 @@ export function TenantSelector({
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder={t.searchPlaceholder}
+              placeholder={t('tenant_selector_search', { defaultMessage: 'Buscar organización...' })}
               className="w-full bg-card/60 hover:bg-card focus:bg-card border border-border hover:border-border/80 focus:border-primary/40 focus:ring-0 text-[10px] pl-8 pr-2 py-1.5 rounded-none text-foreground placeholder-muted-foreground font-sans focus:outline-none transition-colors"
               autoFocus
             />
@@ -229,7 +199,7 @@ export function TenantSelector({
                 </div>
               ) : filteredTenants.length === 0 ? (
                 <div className="text-center py-4 text-[10px] text-muted-foreground font-sans uppercase tracking-wider">
-                  {t.noTenantsFound}
+                  {t('tenant_selector_no_found', { defaultMessage: 'No se encontraron organizaciones' })}
                 </div>
               ) : (
                 filteredTenants.map((ten) => {
@@ -271,7 +241,7 @@ export function TenantSelector({
               <div className="mt-3 pt-2 border-t border-border/50">
                 <div className="flex items-center gap-1.5 mb-1.5 px-1">
                   <span className="text-[8px] font-black uppercase tracking-[0.2em] text-muted-foreground italic">
-                    {t.spacesTitle}
+                    {t('tenant_selector_spaces_title', { defaultMessage: 'ESPACIOS' })}
                   </span>
                 </div>
                 <div className="space-y-1">
@@ -312,7 +282,7 @@ export function TenantSelector({
               <div className="mt-3 pt-2 border-t border-border/50">
                 <div className="flex items-center gap-1.5 mb-1.5 px-1">
                   <span className="text-[8px] font-black uppercase tracking-[0.2em] text-muted-foreground italic">
-                    {t.groupsTitle}
+                    {t('tenant_selector_groups_title', { defaultMessage: 'GRUPOS' })}
                   </span>
                 </div>
                 <div className="space-y-1">

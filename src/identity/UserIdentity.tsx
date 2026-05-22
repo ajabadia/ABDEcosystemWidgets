@@ -1,5 +1,8 @@
+'use client';
+
 import React from 'react';
 import { ShieldCheck, Settings, LogOut } from 'lucide-react';
+import Link from 'next/link';
 
 export interface UserIdentityProps {
   name: string;
@@ -11,7 +14,7 @@ export interface UserIdentityProps {
     adminTitle?: string;
     logoutTitle?: string;
   };
-  LinkComponent?: React.ComponentType<any>;
+  LinkComponent?: React.ComponentType<{ href: string; className?: string; title?: string; children?: React.ReactNode }>;
 }
 
 /**
@@ -31,8 +34,8 @@ export function UserIdentity({
   const adminTitle = translations?.adminTitle || 'Admin Console';
   const logoutTitle = translations?.logoutTitle || 'Logout';
 
-  // Fallback to native 'a' if LinkComponent is not supplied
-  const Link = LinkComponent || 'a';
+  // Fallback to next/link if LinkComponent is not supplied to prevent full-page reload
+  const LinkComp = LinkComponent || Link;
 
   return (
     <div className="flex items-center gap-4 p-1 pl-4 bg-card border border-border rounded-md backdrop-blur-sm group transition-all hover:border-primary/20">
@@ -52,22 +55,14 @@ export function UserIdentity({
 
       <div className="flex items-center">
         {isAdmin && (
-          <Link 
-            href={adminHref} 
-            className="p-2 hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors border-r border-border"
-            title={adminTitle}
-          >
-            <Settings className="w-4 h-4" />
-          </Link>
+          <LinkComp href={adminHref} title={adminTitle} className="p-1 hover:bg-muted rounded-none transition-colors text-muted-foreground hover:text-foreground">
+            <Settings size={14} />
+          </LinkComp>
         )}
         
-        <Link 
-          href={logoutHref} 
-          className="p-2 hover:bg-red-500/10 text-muted-foreground hover:text-red-400 transition-colors"
-          title={logoutTitle}
-        >
-          <LogOut className="w-4 h-4" />
-        </Link>
+        <LinkComp href={logoutHref} title={logoutTitle} className="p-1 hover:bg-red-500/10 rounded-none transition-colors text-red-500/70 hover:text-red-500">
+          <LogOut size={14} />
+        </LinkComp>
       </div>
     </div>
   );

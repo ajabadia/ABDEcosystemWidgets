@@ -3,19 +3,9 @@
 import * as React from "react";
 import { useState, useRef, useEffect } from "react";
 import { Settings, X, LogIn, LogOut, Sun, Moon, Monitor, Languages, Check } from "lucide-react";
-import { cn } from "./utils.js";
-
-export interface SystemSettingsTranslations {
-  title?: string;
-  close?: string;
-  language?: string;
-  theme?: string;
-  themeLight?: string;
-  themeDark?: string;
-  themeSystem?: string;
-  logout?: string;
-  login?: string;
-}
+import { cn } from "../utils.js";
+import { useTranslations } from "next-intl";
+import { useClickOutside } from "../hooks/useClickOutside.js";
 
 export interface SystemSettingsProps {
   locale: string;
@@ -25,9 +15,6 @@ export interface SystemSettingsProps {
   // Optional theme state/callback to delegate to parent (e.g. next-themes)
   theme?: string;
   onThemeChange?: (theme: string) => void;
-
-  // Custom translatable strings
-  translations?: SystemSettingsTranslations;
 
   // Authentication props
   isAuthenticated?: boolean;
@@ -46,25 +33,12 @@ export interface SystemSettingsProps {
   versionSignature?: string;
 }
 
-const defaultTranslations: Required<SystemSettingsTranslations> = {
-  title: "CONFIGURACIÓN DEL SISTEMA",
-  close: "Cerrar",
-  language: "IDIOMA",
-  theme: "TEMA",
-  themeLight: "CLARO",
-  themeDark: "OSCURO",
-  themeSystem: "SISTEMA",
-  logout: "TERMINAR SESIÓN",
-  login: "INICIAR SESIÓN",
-};
-
 export function SystemSettings({
   locale,
   onLocaleChange,
   locales = ["es", "en"],
   theme,
   onThemeChange,
-  translations,
   isAuthenticated = false,
   onLogin,
   onLogout,
@@ -92,15 +66,9 @@ export function SystemSettings({
       onThemeChange(newTheme);
     } else {
       setInternalTheme(newTheme);
-      if (typeof window === "undefined") return;
-      localStorage.setItem("theme", newTheme);
-      const root = window.document.documentElement;
-      root.classList.remove("light", "dark");
-      if (newTheme === "system") {
-        const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-        root.classList.add(systemTheme);
-      } else {
-        root.classList.add(newTheme);
+      if (typeof window !== "undefined") {
+        localStorage.setItem("theme", newTheme);
+        console.warn('SystemSettings: onThemeChange prop not provided. Theme state updated internally but DOM was not modified.');
       }
     }
   };
@@ -109,19 +77,9 @@ export function SystemSettings({
     setMounted(true);
   }, []);
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
+  useClickOutside(containerRef, () => setIsOpen(false));
 
-  const t = { ...defaultTranslations, ...translations };
+  const t = useTranslations('widgets');
 
   if (!mounted) {
     return (
@@ -163,10 +121,10 @@ export function SystemSettings({
           {/* Header */}
           <div className="flex items-center justify-between mb-4 pb-2 border-b border-border">
             <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground italic">
-              {t.title}
+              {t('system_settings_title', { defaultMessage: 'CONFIGURACIÓN DEL SISTEMA' })}
             </span>
             <button
-              aria-label={t.close}
+              aria-label={t('system_settings_close', { defaultMessage: 'Cerrar' })}
               onClick={() => setIsOpen(false)}
               className="p-1 hover:bg-muted rounded-none transition-colors text-muted-foreground hover:text-foreground cursor-pointer"
             >
@@ -178,13 +136,13 @@ export function SystemSettings({
           <div className="space-y-2 mb-6">
             <div className="flex items-center gap-2 text-[9px] font-bold text-primary uppercase tracking-widest mb-3">
               <Languages size={12} />
-              {t.language}
+              {t('system_settings_language', { defaultMessage: 'IDIOMA' })}
             </div>
             <div className="grid grid-cols-2 gap-2">
               {locales.map((loc) => (
                 <button
                   key={loc}
-                  aria-label={`${t.language}: ${loc.toUpperCase()}`}
+                  aria-label={`${t('system_settings_language', { defaultMessage: 'IDIOMA' })}: ${loc.toUpperCase()}`}
                   onClick={() => onLocaleChange(loc)}
                   className={cn(
                     "flex items-center justify-between px-3 py-2 text-[10px] font-bold uppercase transition-all duration-200 border cursor-pointer rounded-none",
@@ -204,17 +162,17 @@ export function SystemSettings({
           <div className="space-y-2">
             <div className="flex items-center gap-2 text-[9px] font-bold text-primary uppercase tracking-widest mb-3">
               <Monitor size={12} />
-              {t.theme}
+              {t('system_settings_theme', { defaultMessage: 'TEMA' })}
             </div>
             <div className="flex flex-col gap-1.5">
               {[
-                { id: "light", icon: Sun, label: t.themeLight },
-                { id: "dark", icon: Moon, label: t.themeDark },
-                { id: "system", icon: Monitor, label: t.themeSystem },
+                { id: "light", icon: Sun, label: t('system_settings_theme_light', { defaultMessage: 'CLARO' }) },
+                { id: "dark", icon: Moon, label: t('system_settings_theme_dark', { defaultMessage: 'OSCURO' }) },
+                { id: "system", icon: Monitor, label: t('system_settings_theme_system', { defaultMessage: 'SISTEMA' }) },
               ].map((item) => (
                 <button
                   key={item.id}
-                  aria-label={`${t.theme}: ${item.label}`}
+                  aria-label={`${t('system_settings_theme', { defaultMessage: 'TEMA' })}: ${item.label}`}
                   onClick={() => handleThemeChange(item.id)}
                   className={cn(
                     "flex items-center justify-between px-3 py-2 text-[10px] font-bold uppercase transition-all duration-200 border cursor-pointer rounded-none",
@@ -237,12 +195,12 @@ export function SystemSettings({
               {isAuthenticated ? (
                 onLogout ? (
                   <button
-                    aria-label={t.logout}
+                    aria-label={t('system_settings_logout', { defaultMessage: 'TERMINAR SESIÓN' })}
                     onClick={onLogout}
                     className="w-full flex items-center gap-3 px-3 py-2.5 bg-red-500/10 border border-red-500/20 text-red-500 hover:bg-red-500/20 transition-all duration-200 text-[10px] font-bold uppercase cursor-pointer rounded-none"
                   >
                     <LogOut size={14} />
-                    <span>{t.logout}</span>
+                    <span>{t('system_settings_logout', { defaultMessage: 'TERMINAR SESIÓN' })}</span>
                   </button>
                 ) : (
                   <a
@@ -250,17 +208,17 @@ export function SystemSettings({
                     className="w-full flex items-center gap-3 px-3 py-2.5 bg-red-500/10 border border-red-500/20 text-red-500 hover:bg-red-500/20 transition-all duration-200 text-[10px] font-bold uppercase cursor-pointer rounded-none"
                   >
                     <LogOut size={14} />
-                    <span>{t.logout}</span>
+                    <span>{t('system_settings_logout', { defaultMessage: 'TERMINAR SESIÓN' })}</span>
                   </a>
                 )
               ) : onLogin ? (
                 <button
-                  aria-label={t.login}
+                  aria-label={t('system_settings_login', { defaultMessage: 'INICIAR SESIÓN' })}
                   onClick={onLogin}
                   className="w-full flex items-center gap-3 px-3 py-2.5 bg-primary/10 border border-primary/20 text-primary hover:bg-primary/20 transition-all duration-200 text-[10px] font-bold uppercase cursor-pointer rounded-none"
                 >
                   <LogIn size={14} />
-                  <span>{t.login}</span>
+                  <span>{t('system_settings_login', { defaultMessage: 'INICIAR SESIÓN' })}</span>
                 </button>
               ) : (
                 <a
@@ -268,7 +226,7 @@ export function SystemSettings({
                   className="w-full flex items-center gap-3 px-3 py-2.5 bg-primary/10 border border-primary/20 text-primary hover:bg-primary/20 transition-all duration-200 text-[10px] font-bold uppercase cursor-pointer rounded-none"
                 >
                   <LogIn size={14} />
-                  <span>{t.login}</span>
+                  <span>{t('system_settings_login', { defaultMessage: 'INICIAR SESIÓN' })}</span>
                 </a>
               )}
             </div>

@@ -1,50 +1,56 @@
 {
-    "name":  "@abd/ecosystem-widgets",
-    "version":  "1.0.0",
-    "type":  "module",
-    "description":  "Smart components and widgets for ABD Suite Ecosystem.",
-    "main":  "dist/index.js",
-    "types":  "dist/index.d.ts",
-    "exports":  {
-                    ".":  {
-                              "types":  "./dist/index.d.ts",
-                              "import":  "./dist/index.js"
-                          },
-                    "./dist/*":  "./dist/*"
-                },
-    "files":  [
-                  "dist"
-              ],
-    "scripts":  {
-                    "build":  "tsc \u0026\u0026 powershell -Command \"Copy-Item -Path src/styles -Destination dist -Recurse -Force\"",
-                    "clean":  "rm -rf dist",
-                    "audit":  "powershell ./scripts/abd-audit.ps1"
-                },
-    "keywords":  [
-                     "abd",
-                     "theme",
-                     "multi-tenant",
-                     "branding",
-                     "tailwind",
-                     "yiq"
-                 ],
-    "author":  "Antigravity \u0026 Google Deepmind Team",
-    "license":  "UNLICENSED",
-    "dependencies":  {
-                         "zod":  "^3.23.8",
-                         "@abd/styles":  "workspace:*"
-                     },
-    "peerDependencies":  {
-                             "react":  "^19.0.0",
-                             "lucide-react":  "^0.46.0 || ^1.0.0",
-                             "next-intl":  "^4.12.0"
-                         },
-    "devDependencies":  {
-                            "typescript":  "^5.4.5",
-                            "@types/node":  "^20.12.7",
-                            "react":  "^19.0.0",
-                            "@types/react":  "^19.0.0",
-                            "lucide-react":  "^1.16.0",
-                            "next-intl":  "^4.12.0"
-                        }
+    "name": "@abd/ecosystem-widgets",
+    "version": "1.0.0",
+    "type": "module",
+    "description": "Smart components and widgets for ABD Suite Ecosystem.",
+    "main": "./dist/index.cjs",
+    "module": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js",
+            "require": "./dist/index.cjs"
+        }
+    },
+    "files": [
+        "dist"
+    ],
+    "scripts": {
+        "build": "tsup",
+        "dev": "tsup --watch",
+        "clean": "rm -rf dist",
+        "lint": "tsc --noEmit",
+        "audit": "powershell ./scripts/abd-audit.ps1"
+    },
+    "keywords": [
+        "abd",
+        "theme",
+        "multi-tenant",
+        "branding",
+        "tailwind",
+        "yiq"
+    ],
+    "author": "Antigravity & Google Deepmind Team",
+    "license": "UNLICENSED",
+    "dependencies": {
+        "@abd/styles": "github:ajabadia/ABDStyles#main",
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^2.5.5"
+    },
+    "peerDependencies": {
+        "lucide-react": "^0.46.0 || ^1.0.0",
+        "next-intl": "^4.12.0",
+        "react": "^19.0.0"
+    },
+    "devDependencies": {
+        "@types/node": "^20.12.7",
+        "@types/react": "^19.0.0",
+        "lucide-react": "^1.16.0",
+        "next": "^16.2.6",
+        "next-intl": "^4.12.0",
+        "react": "^19.0.0",
+        "tsup": "^8.0.2",
+        "typescript": "^5.4.5"
+    }
 }

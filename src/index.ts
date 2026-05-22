@@ -1,13 +1,17 @@
 // Identidad
-export * from './identity/TenantSelector';
-export * from './identity/UserIdentity';
+export * from './identity/TenantSelector.js';
+export * from './identity/UserIdentity.js';
 
 // Navegación
-export * from './navigation/CommandPalette';
+export * from './navigation/CommandPalette.js';
 
 // Configuración
-export * from './settings/SystemSettings';
+export * from './settings/SystemSettings.js';
 
 // Auditoría
-export * from './audit/LiveLogViewer';
-export * from './audit/AuditDeltaViewer';
+export * from './audit/LiveLogViewer.js';
+export * from './audit/AuditHistoryModal.js';
+export * from './audit/AuditDeltaViewer.js';
+export * from './audit/ActionBadge.js';
+export * from './utils/featureFlags.js';
+export * from './utils.js';

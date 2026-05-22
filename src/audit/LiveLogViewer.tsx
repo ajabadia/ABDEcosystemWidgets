@@ -3,13 +3,12 @@
 'use client';
 
 import React from 'react';
+import { featureFlags } from '../utils/featureFlags.js';
 import { useLivePolling } from '../hooks/useLivePolling.js';
-import type { AuditLog } from '../hooks/useLivePolling.js';
-import { featureFlags } from '../config/featureFlags.js';
 import { ActionBadge } from './ActionBadge.js';
+import type { AuditLog } from '../types.js';
 import { AuditDeltaViewer } from './AuditDeltaViewer.js';
-// Simple translation fallback
-const t = (key: string, opts?: { defaultMessage?: string }) => opts?.defaultMessage || key;
+import { useTranslations } from 'next-intl';
 import { Activity, Calendar, User, Wifi, WifiOff, ShieldCheck, BookOpen, Building2 } from 'lucide-react';
 
 interface LiveLogViewerProps {
@@ -17,6 +16,7 @@ interface LiveLogViewerProps {
 }
 
 export function LiveLogViewer({ tenantId }: LiveLogViewerProps) {
+  const t = useTranslations('widgets');
 
   const { logs, loading, newLogIds, isLive, toggleLive, lastFetched } = useLivePolling({ tenantId });
 
