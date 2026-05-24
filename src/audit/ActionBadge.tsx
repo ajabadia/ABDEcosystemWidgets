@@ -13,7 +13,7 @@ interface ActionBadgeProps {
 }
 
 export function ActionBadge({ action }: ActionBadgeProps) {
-  const t = (key: string, opts?: any) => opts?.defaultMessage || key;
+  const t = (key: string, opts?: { defaultMessage?: string }) => opts?.defaultMessage || key;
 
   switch (action) {
     case 'CREATE_SPACE':

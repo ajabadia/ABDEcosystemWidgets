@@ -45,7 +45,7 @@ export function TenantSelector({
   const [mounted, setMounted] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const t = (key: string, opts?: any) => opts?.defaultMessage || key;
+  const t = (key: string, opts?: { defaultMessage?: string }) => opts?.defaultMessage || key;
 
   // Detect if user has privilege to switch context
   const isSuperAdmin = userRole === "SUPER_ADMIN";

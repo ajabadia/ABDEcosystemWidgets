@@ -78,7 +78,7 @@ export function SystemSettings({
 
   useClickOutside(containerRef, () => setIsOpen(false));
 
-  const t = (key: string, opts?: any) => opts?.defaultMessage || key;
+  const t = (key: string, opts?: { defaultMessage?: string }) => opts?.defaultMessage || key;
 
   if (!mounted) {
     return (

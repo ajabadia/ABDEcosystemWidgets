@@ -120,7 +120,7 @@ interface AuditLog {
     userEmail?: string;
     changedFields?: Record<string, unknown>;
     previousState?: Record<string, unknown>;
-    [key: string]: any;
+    [key: string]: unknown;
 }
 
 interface AuditDeltaViewerProps {

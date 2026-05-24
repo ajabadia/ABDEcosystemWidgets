@@ -15,7 +15,7 @@ interface LiveLogViewerProps {
 }
 
 export function LiveLogViewer({ tenantId }: LiveLogViewerProps) {
-  const t = (key: string, opts?: any) => opts?.defaultMessage || key;
+  const t = (key: string, opts?: { defaultMessage?: string }) => opts?.defaultMessage || key;
 
   const { logs, loading, newLogIds, isLive, toggleLive, lastFetched } = useLivePolling({ tenantId });
 

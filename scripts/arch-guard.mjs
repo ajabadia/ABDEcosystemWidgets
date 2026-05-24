@@ -20,7 +20,7 @@ let isLibrary = true;
 if (fs.existsSync(pkgPath)) {
   try {
     const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
-    isLibrary = pkg.name === '@abd/styles';
+    isLibrary = pkg.name === '@abd/styles' || pkg.name === '@abd/satellite-sdk' || pkg.name === '@abd/ecosystem-widgets' || pkg.name.endsWith('-sdk') || pkg.name.endsWith('-widgets');
   } catch (e) {}
 }
 
