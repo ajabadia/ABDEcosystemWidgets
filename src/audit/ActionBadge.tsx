@@ -1,6 +1,5 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
 import { 
   Activity, 
   Settings, 
@@ -14,7 +13,7 @@ interface ActionBadgeProps {
 }
 
 export function ActionBadge({ action }: ActionBadgeProps) {
-  const t = useTranslations('admin');
+  const t = (key: string, opts?: any) => opts?.defaultMessage || key;
 
   switch (action) {
     case 'CREATE_SPACE':

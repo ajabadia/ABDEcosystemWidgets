@@ -4,7 +4,6 @@ import * as React from "react";
 import { useState, useRef, useEffect } from "react";
 import { Building2, ChevronDown, Search, X, Check, Loader2 } from "lucide-react";
 import { cn } from "../utils.js";
-import { useTranslations } from "next-intl";
 import { useClickOutside } from "../hooks/useClickOutside.js";
 
 export interface ContextOption {
@@ -46,7 +45,7 @@ export function TenantSelector({
   const [mounted, setMounted] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const t = useTranslations('widgets');
+  const t = (key: string, opts?: any) => opts?.defaultMessage || key;
 
   // Detect if user has privilege to switch context
   const isSuperAdmin = userRole === "SUPER_ADMIN";

@@ -4,7 +4,6 @@ import * as React from "react";
 import { useState, useRef, useEffect } from "react";
 import { Settings, X, LogIn, LogOut, Sun, Moon, Monitor, Languages, Check } from "lucide-react";
 import { cn } from "../utils.js";
-import { useTranslations } from "next-intl";
 import { useClickOutside } from "../hooks/useClickOutside.js";
 
 export interface SystemSettingsProps {
@@ -79,7 +78,7 @@ export function SystemSettings({
 
   useClickOutside(containerRef, () => setIsOpen(false));
 
-  const t = useTranslations('widgets');
+  const t = (key: string, opts?: any) => opts?.defaultMessage || key;
 
   if (!mounted) {
     return (

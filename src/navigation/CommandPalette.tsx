@@ -2,8 +2,6 @@
 
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Search, Terminal, CornerDownLeft } from 'lucide-react';
-import { useTranslations } from 'next-intl';
-
 export interface Command {
   id: string;
   title: string;
@@ -43,7 +41,7 @@ export function CommandPalette({
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
 
-  const t = useTranslations('widgets');
+  const t = (key: string, opts?: any) => opts?.defaultMessage || key;
   const currentPlaceholder = placeholder || t('command_palette_placeholder', { defaultMessage: 'Escribe un comando o busca...' });
 
   // Toggle Command Palette on Ctrl+K / Cmd+K

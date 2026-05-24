@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import { useTranslations } from 'next-intl';
 import { FileCode, Tag } from 'lucide-react';
 import type { AuditLog } from '../types.js';
 
@@ -10,7 +9,7 @@ interface AuditDeltaViewerProps {
 }
 
 export function AuditDeltaViewer({ log }: AuditDeltaViewerProps) {
-  const t = useTranslations('admin');
+  const t = (key: string, opts?: any) => opts?.defaultMessage || key;
   
   const changes = log.changedFields || {};
   const previous = log.previousState || {};

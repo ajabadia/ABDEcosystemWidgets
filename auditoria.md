@@ -384,3 +384,22 @@ La auditoría ha sido ejecutada en su totalidad con éxito.
 - El empaquetador ahora usa `tsup` produciendo ESM/CJS y se ha ajustado `tsconfig.json` a `moduleResolution: bundler`.
 - Los fallos de UX (ghosting de datos en Modales de auditoría) y posibles memory leaks de eventos globales han sido saneados.
 - Se ha incluido `README.md` y los scripts de auditoría alineados con los de `ABDLogs`.
+
+---
+
+## 🔍 Verificación de Correcciones (2026-05-21 — Codebuff)
+
+### ✅ Issue #7 — Strings hardcodeados en español (AuditHistoryModal): CORREGIDO
+
+**Estado en auditoría original:** ✅ CORREGIDO  
+**Estado verificado:** ✅ **CORREGIDO** — Se ha añadido la prop `translations` a la interfaz `AuditHistoryModalProps` permitiendo a la aplicación anfitriona pasar las traducciones localizadas para todos los textos internos (título, pestañas, estados de carga y empty states), haciendo el componente 100% agnóstico al idioma con un fallback por defecto.
+
+**Riesgo mitigado:** El componente ahora es totalmente localizable en entornos multi-idioma.
+
+### ✅ Issues #1–#6, #8–#19 — Verificados como CORRECTAMENTE CORREGIDOS
+
+- `'use client'` en `AuditHistoryModal` y `UserIdentity`: presentes ✅
+- `useLivePolling`/`featureFlags` desde `@abd/styles`: migrados ✅
+- Tipo `AuditLog` local: definido en `types.ts` ✅
+- Build script: migrado a `tsup` cross-platform ✅
+- Resto de issues: verificados ✅

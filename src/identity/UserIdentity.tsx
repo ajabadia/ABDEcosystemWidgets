@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { ShieldCheck, Settings, LogOut } from 'lucide-react';
-import Link from 'next/link';
 
 export interface UserIdentityProps {
   name: string;
@@ -34,8 +33,8 @@ export function UserIdentity({
   const adminTitle = translations?.adminTitle || 'Admin Console';
   const logoutTitle = translations?.logoutTitle || 'Logout';
 
-  // Fallback to next/link if LinkComponent is not supplied to prevent full-page reload
-  const LinkComp = LinkComponent || Link;
+  // Fallback to native anchor if LinkComponent is not supplied
+  const LinkComp = LinkComponent || 'a';
 
   return (
     <div className="flex items-center gap-4 p-1 pl-4 bg-card border border-border rounded-md backdrop-blur-sm group transition-all hover:border-primary/20">

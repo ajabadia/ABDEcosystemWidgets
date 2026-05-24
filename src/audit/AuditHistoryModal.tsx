@@ -13,6 +13,14 @@ interface AuditHistoryModalProps {
   entityType: string;
   entityId: string;
   entityName?: string;
+  translations?: {
+    title?: string;
+    tabHistory?: string;
+    tabStats?: string;
+    loading?: string;
+    emptyEvents?: string;
+    underConstruction?: string;
+  };
 }
 
 export function AuditHistoryModal({
@@ -21,7 +29,8 @@ export function AuditHistoryModal({
   tenantId,
   entityType,
   entityId,
-  entityName
+  entityName,
+  translations
 }: AuditHistoryModalProps) {
   const [activeTab, setActiveTab] = useState<'history' | 'stats'>('history');
   const [logs, setLogs] = useState<AuditLog[]>([]);
@@ -70,7 +79,7 @@ export function AuditHistoryModal({
             </div>
             <div>
               <h2 className="text-sm font-bold uppercase tracking-widest text-foreground">
-                Historial de Auditoría
+                {translations?.title || 'Historial de Auditoría'}
               </h2>
               <p className="text-xs text-muted-foreground font-mono mt-0.5">
                 {entityName ? `${entityName} (${entityId})` : entityId}
@@ -97,7 +106,7 @@ export function AuditHistoryModal({
             )}
           >
             <FileText className="w-4 h-4" />
-            Registro de Eventos
+            {translations?.tabHistory || 'Registro de Eventos'}
           </button>
           <button
             onClick={() => setActiveTab('stats')}
@@ -109,7 +118,7 @@ export function AuditHistoryModal({
             )}
           >
             <BarChart3 className="w-4 h-4" />
-            Estadísticas
+            {translations?.tabStats || 'Estadísticas'}
           </button>
         </div>
 
@@ -119,14 +128,14 @@ export function AuditHistoryModal({
             <div className="flex flex-col items-center justify-center h-48 space-y-3">
               <Loader2 className="w-6 h-6 animate-spin text-primary" />
               <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
-                Cargando historial...
+                {translations?.loading || 'Cargando historial...'}
               </span>
             </div>
           ) : activeTab === 'history' ? (
             logs.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-48 space-y-2 text-muted-foreground">
                 <Activity className="w-8 h-8 opacity-20" />
-                <span className="text-xs font-bold uppercase tracking-widest">No hay eventos registrados</span>
+                <span className="text-xs font-bold uppercase tracking-widest">{translations?.emptyEvents || 'No hay eventos registrados'}</span>
               </div>
             ) : (
               <div className="space-y-3">
@@ -160,7 +169,7 @@ export function AuditHistoryModal({
           ) : (
             <div className="flex flex-col items-center justify-center h-48 space-y-2 text-muted-foreground">
               <BarChart3 className="w-8 h-8 opacity-20" />
-              <span className="text-xs font-bold uppercase tracking-widest">Gráficos en construcción</span>
+              <span className="text-xs font-bold uppercase tracking-widest">{translations?.underConstruction || 'Gráficos en construcción'}</span>
             </div>
           )}
         </div>

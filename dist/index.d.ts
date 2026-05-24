@@ -99,8 +99,16 @@ interface AuditHistoryModalProps {
     entityType: string;
     entityId: string;
     entityName?: string;
+    translations?: {
+        title?: string;
+        tabHistory?: string;
+        tabStats?: string;
+        loading?: string;
+        emptyEvents?: string;
+        underConstruction?: string;
+    };
 }
-declare function AuditHistoryModal({ isOpen, onClose, tenantId, entityType, entityId, entityName }: AuditHistoryModalProps): react_jsx_runtime.JSX.Element | null;
+declare function AuditHistoryModal({ isOpen, onClose, tenantId, entityType, entityId, entityName, translations }: AuditHistoryModalProps): react_jsx_runtime.JSX.Element | null;
 
 interface AuditLog {
     _id?: string;
@@ -125,6 +133,10 @@ interface ActionBadgeProps {
 }
 declare function ActionBadge({ action }: ActionBadgeProps): react_jsx_runtime.JSX.Element;
 
+declare const featureFlags: {
+    liveModeEnabled: boolean;
+};
+
 declare function cn(...inputs: ClassValue[]): string;
 
-export { ActionBadge, AuditDeltaViewer, AuditHistoryModal, type Command, CommandPalette, type CommandPaletteProps, type ContextOption, LiveLogViewer, SystemSettings, type SystemSettingsProps, type TenantOption, TenantSelector, type TenantSelectorProps, UserIdentity, type UserIdentityProps, cn };
+export { ActionBadge, AuditDeltaViewer, AuditHistoryModal, type Command, CommandPalette, type CommandPaletteProps, type ContextOption, LiveLogViewer, SystemSettings, type SystemSettingsProps, type TenantOption, TenantSelector, type TenantSelectorProps, UserIdentity, type UserIdentityProps, cn, featureFlags };

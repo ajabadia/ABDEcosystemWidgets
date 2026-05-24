@@ -8,7 +8,6 @@ import { useLivePolling } from '../hooks/useLivePolling.js';
 import { ActionBadge } from './ActionBadge.js';
 import type { AuditLog } from '../types.js';
 import { AuditDeltaViewer } from './AuditDeltaViewer.js';
-import { useTranslations } from 'next-intl';
 import { Activity, Calendar, User, Wifi, WifiOff, ShieldCheck, BookOpen, Building2 } from 'lucide-react';
 
 interface LiveLogViewerProps {
@@ -16,7 +15,7 @@ interface LiveLogViewerProps {
 }
 
 export function LiveLogViewer({ tenantId }: LiveLogViewerProps) {
-  const t = useTranslations('widgets');
+  const t = (key: string, opts?: any) => opts?.defaultMessage || key;
 
   const { logs, loading, newLogIds, isLive, toggleLive, lastFetched } = useLivePolling({ tenantId });
 

@@ -2,7 +2,7 @@ import { defineConfig } from 'tsup';
 
 export default defineConfig({
   entry: ['src/index.ts'],
-  format: ['cjs', 'esm'],
+  format: ['esm'],
   dts: true,
   splitting: false,
   sourcemap: true,
@@ -12,7 +12,15 @@ export default defineConfig({
     'react', 
     'react-dom', 
     'lucide-react', 
-    'next-intl',
-    '@abd/styles'
+    '@abd/styles',
+    'next',
+    'next/link',
+    'next/image',
+    'next/navigation'
   ],
+  esbuildOptions(options) {
+    options.banner = {
+      js: '"use client";',
+    };
+  },
 });
