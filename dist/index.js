@@ -499,20 +499,38 @@ function SystemSettings({
   const containerRef = useRef(null);
   const [internalTheme, setInternalTheme] = useState(() => {
     if (typeof window !== "undefined") {
+      const match = document.cookie.match(/(?:^|; )abd_theme=([^;]*)/);
+      if (match && match[1]) {
+        return match[1];
+      }
       return localStorage.getItem("theme") || "dark";
     }
     return "dark";
   });
   const activeTheme = theme !== void 0 ? theme : internalTheme;
   const handleThemeChange = (newTheme) => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("theme", newTheme);
+      let domainSuffix = "";
+      const hostname = window.location.hostname;
+      if (hostname !== "localhost" && hostname !== "127.0.0.1") {
+        const parts = hostname.split(".");
+        if (parts.length >= 2) {
+          domainSuffix = `; domain=.${parts.slice(-2).join(".")}`;
+        }
+      }
+      document.cookie = `abd_theme=${newTheme}; path=/; max-age=31536000; SameSite=Lax${domainSuffix}`;
+      if (newTheme === "system") {
+        const isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        document.documentElement.className = isDark ? "dark" : "light";
+      } else {
+        document.documentElement.className = newTheme;
+      }
+    }
     if (onThemeChange) {
       onThemeChange(newTheme);
     } else {
       setInternalTheme(newTheme);
-      if (typeof window !== "undefined") {
-        localStorage.setItem("theme", newTheme);
-        console.warn("SystemSettings: onThemeChange prop not provided. Theme state updated internally but DOM was not modified.");
-      }
     }
   };
   useEffect(() => {

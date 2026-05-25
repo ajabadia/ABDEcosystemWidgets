@@ -53,6 +53,10 @@ export function SystemSettings({
   // Local theme state if not controlled by parent
   const [internalTheme, setInternalTheme] = useState<string>(() => {
     if (typeof window !== "undefined") {
+      const match = document.cookie.match(/(?:^|; )abd_theme=([^;]*)/);
+      if (match && match[1]) {
+        return match[1];
+      }
       return localStorage.getItem("theme") || "dark";
     }
     return "dark";
@@ -61,14 +65,33 @@ export function SystemSettings({
   const activeTheme = theme !== undefined ? theme : internalTheme;
 
   const handleThemeChange = (newTheme: string) => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("theme", newTheme);
+      
+      // Sync cookie across ports on localhost and subdomains in production
+      let domainSuffix = "";
+      const hostname = window.location.hostname;
+      if (hostname !== "localhost" && hostname !== "127.0.0.1") {
+        const parts = hostname.split('.');
+        if (parts.length >= 2) {
+          domainSuffix = `; domain=.${parts.slice(-2).join('.')}`;
+        }
+      }
+      document.cookie = `abd_theme=${newTheme}; path=/; max-age=31536000; SameSite=Lax${domainSuffix}`;
+      
+      // Update DOM class name directly for instant visual change
+      if (newTheme === 'system') {
+        const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        document.documentElement.className = isDark ? 'dark' : 'light';
+      } else {
+        document.documentElement.className = newTheme;
+      }
+    }
+
     if (onThemeChange) {
       onThemeChange(newTheme);
     } else {
       setInternalTheme(newTheme);
-      if (typeof window !== "undefined") {
-        localStorage.setItem("theme", newTheme);
-        console.warn('SystemSettings: onThemeChange prop not provided. Theme state updated internally but DOM was not modified.');
-      }
     }
   };
 
