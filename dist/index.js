@@ -1,9 +1,14 @@
+"use client";
+import * as React7 from 'react';
 import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
-import { Building2, Loader2, ChevronDown, X, Search, Check, ShieldCheck, Settings, LogOut, Terminal, CornerDownLeft, Languages, Monitor, Sun, Moon, LogIn, Shield, Activity, Layers, FileCode, Tag, Wifi, WifiOff, FileText, BarChart3 } from 'lucide-react';
+import { Building2, Loader2, ChevronDown, Search, Check, X, ShieldCheck, Settings, LogOut, Terminal, CornerDownLeft, Shield, Menu, Sun, Languages, Moon, Monitor, User, Info, AlertTriangle, LogIn, Activity, Layers, FileCode, Tag, Wifi, WifiOff, FileText, BarChart3 } from 'lucide-react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import { jsxs, jsx } from 'react/jsx-runtime';
+import { jsxs, jsx, Fragment } from 'react/jsx-runtime';
+import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 
+// src/identity/TenantSelector.tsx
 function cn(...inputs) {
   return twMerge(clsx(inputs));
 }
@@ -30,9 +35,14 @@ function TenantSelector({
   activeContextId,
   onContextChange,
   userRole = "USER",
-  isLoading = false
+  isLoading = false,
+  variant = "dropdown",
+  isOpen: externalIsOpen
 }) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [localIsOpen, setLocalIsOpen] = useState(false);
+  const isOpen = externalIsOpen !== void 0 ? externalIsOpen : localIsOpen;
+  const setIsOpen = externalIsOpen !== void 0 ? () => {
+  } : setLocalIsOpen;
   const [searchQuery, setSearchQuery] = useState("");
   const [mounted, setMounted] = useState(false);
   const containerRef = useRef(null);
@@ -82,6 +92,159 @@ function TenantSelector({
       }
     );
   }
+  if (variant === "trigger") {
+    return /* @__PURE__ */ jsxs(
+      "button",
+      {
+        type: "button",
+        "aria-haspopup": "listbox",
+        "aria-expanded": isOpen,
+        onClick: (e) => {
+          e.preventDefault();
+        },
+        className: cn(
+          "flex items-center justify-between gap-3 px-3 py-2.5 rounded-none border border-border bg-background/80 backdrop-blur-md hover:bg-muted text-foreground transition-all duration-200 cursor-pointer shadow-none text-[10px] font-black uppercase tracking-[0.15em] font-sans min-w-[160px] max-w-[240px]",
+          isOpen && "bg-muted ring-1 ring-primary/20 border-primary/30 text-primary"
+        ),
+        children: [
+          /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 truncate", children: [
+            isLoading ? /* @__PURE__ */ jsx(Loader2, { size: 13, className: "animate-spin text-primary shrink-0" }) : /* @__PURE__ */ jsx(Building2, { size: 13, className: cn("shrink-0 transition-colors", isOpen ? "text-primary" : "text-muted-foreground") }),
+            /* @__PURE__ */ jsx("span", { className: "truncate text-left", children: displayLabel })
+          ] }),
+          /* @__PURE__ */ jsx(
+            ChevronDown,
+            {
+              size: 13,
+              className: cn(
+                "text-muted-foreground shrink-0 transition-transform duration-300",
+                isOpen && "rotate-180 text-primary"
+              )
+            }
+          )
+        ]
+      }
+    );
+  }
+  if (variant === "content") {
+    return /* @__PURE__ */ jsxs(
+      "div",
+      {
+        className: "w-full max-w-md bg-background border border-border backdrop-blur-md p-4 shadow-none rounded-none text-left",
+        role: "listbox",
+        "aria-label": t("tenant_selector_select", { defaultMessage: "Seleccionar organizaci\xF3n" }),
+        children: [
+          /* @__PURE__ */ jsx("div", { className: "flex items-center justify-between mb-3 pb-1.5 border-b border-border", children: /* @__PURE__ */ jsxs("span", { className: "text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground italic flex items-center gap-1.5", children: [
+            /* @__PURE__ */ jsx(Building2, { size: 10, className: "text-primary" }),
+            t("tenant_selector_title", { defaultMessage: "ORGANIZACI\xD3N" })
+          ] }) }),
+          /* @__PURE__ */ jsxs("div", { className: "relative mb-2 flex items-center", children: [
+            /* @__PURE__ */ jsx(Search, { size: 12, className: "absolute left-2.5 text-muted-foreground" }),
+            /* @__PURE__ */ jsx(
+              "input",
+              {
+                type: "text",
+                value: searchQuery,
+                onChange: (e) => setSearchQuery(e.target.value),
+                placeholder: t("tenant_selector_search", { defaultMessage: "Buscar organizaci\xF3n..." }),
+                className: "w-full bg-card/60 hover:bg-card focus:bg-card border border-border hover:border-border/80 focus:border-primary/40 focus:ring-0 text-[10px] pl-8 pr-2 py-1.5 rounded-none text-foreground placeholder-muted-foreground font-sans focus:outline-none transition-colors",
+                autoFocus: true
+              }
+            )
+          ] }),
+          /* @__PURE__ */ jsx("div", { className: "max-h-48 overflow-y-auto space-y-1 pr-1 custom-scrollbar", children: isLoading ? /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-center py-6 text-[10px] text-muted-foreground font-sans gap-2", children: [
+            /* @__PURE__ */ jsx(Loader2, { size: 12, className: "animate-spin text-primary" }),
+            "Cargando organizaciones..."
+          ] }) : filteredTenants.length === 0 ? /* @__PURE__ */ jsx("div", { className: "text-center py-4 text-[10px] text-muted-foreground font-sans uppercase tracking-wider", children: t("tenant_selector_no_found", { defaultMessage: "No se encontraron organizaciones" }) }) : filteredTenants.map((ten) => {
+            const isSelected = ten.tenantId === activeTenantId;
+            return /* @__PURE__ */ jsxs(
+              "button",
+              {
+                type: "button",
+                role: "option",
+                "aria-selected": isSelected,
+                onClick: () => {
+                  if (onTenantChange && !isSelected) {
+                    onTenantChange(ten.tenantId);
+                  }
+                },
+                className: cn(
+                  "w-full text-left px-2.5 py-2 text-[10px] uppercase font-sans tracking-wide transition-all duration-150 flex items-center justify-between border cursor-pointer rounded-none",
+                  isSelected ? "bg-primary/10 border-primary/20 text-primary font-bold" : "bg-card/30 border-transparent hover:bg-muted hover:border-border/50 text-muted-foreground hover:text-foreground"
+                ),
+                children: [
+                  /* @__PURE__ */ jsxs("div", { className: "flex flex-col truncate pr-2", children: [
+                    /* @__PURE__ */ jsx("span", { className: "font-bold truncate", children: ten.name }),
+                    /* @__PURE__ */ jsxs("span", { className: "text-[8px] opacity-60 font-mono lowercase tracking-normal", children: [
+                      "@",
+                      ten.tenantId
+                    ] })
+                  ] }),
+                  isSelected && /* @__PURE__ */ jsx(Check, { size: 12, className: "text-primary shrink-0 ml-2" })
+                ]
+              },
+              ten.tenantId
+            );
+          }) }),
+          filteredSpaces.length > 0 && /* @__PURE__ */ jsxs("div", { className: "mt-3 pt-2 border-t border-border/50", children: [
+            /* @__PURE__ */ jsx("div", { className: "flex items-center gap-1.5 mb-1.5 px-1", children: /* @__PURE__ */ jsx("span", { className: "text-[8px] font-black uppercase tracking-[0.2em] text-muted-foreground italic", children: t("tenant_selector_spaces_title", { defaultMessage: "ESPACIOS" }) }) }),
+            /* @__PURE__ */ jsx("div", { className: "space-y-1", children: filteredSpaces.map((space) => {
+              const isSelected = space.id === activeContextId;
+              return /* @__PURE__ */ jsxs(
+                "button",
+                {
+                  type: "button",
+                  role: "option",
+                  "aria-selected": isSelected,
+                  onClick: () => {
+                    if (onContextChange && !isSelected) {
+                      onContextChange(space.id, "space");
+                    }
+                  },
+                  className: cn(
+                    "w-full text-left px-2.5 py-1.5 text-[9px] uppercase font-sans tracking-wide transition-all duration-150 flex items-center justify-between border cursor-pointer rounded-none",
+                    isSelected ? "bg-primary/10 border-primary/20 text-primary font-bold" : "bg-card/20 border-transparent hover:bg-muted hover:border-border/50 text-muted-foreground hover:text-foreground"
+                  ),
+                  children: [
+                    /* @__PURE__ */ jsx("div", { className: "flex flex-col truncate pr-2", children: /* @__PURE__ */ jsx("span", { className: "font-bold truncate", children: space.name }) }),
+                    isSelected && /* @__PURE__ */ jsx(Check, { size: 10, className: "text-primary shrink-0 ml-2" })
+                  ]
+                },
+                space.id
+              );
+            }) })
+          ] }),
+          filteredGroups.length > 0 && /* @__PURE__ */ jsxs("div", { className: "mt-3 pt-2 border-t border-border/50", children: [
+            /* @__PURE__ */ jsx("div", { className: "flex items-center gap-1.5 mb-1.5 px-1", children: /* @__PURE__ */ jsx("span", { className: "text-[8px] font-black uppercase tracking-[0.2em] text-muted-foreground italic", children: t("tenant_selector_groups_title", { defaultMessage: "GRUPOS" }) }) }),
+            /* @__PURE__ */ jsx("div", { className: "space-y-1", children: filteredGroups.map((group) => {
+              const isSelected = group.id === activeContextId;
+              return /* @__PURE__ */ jsxs(
+                "button",
+                {
+                  type: "button",
+                  role: "option",
+                  "aria-selected": isSelected,
+                  onClick: () => {
+                    if (onContextChange && !isSelected) {
+                      onContextChange(group.id, "group");
+                    }
+                  },
+                  className: cn(
+                    "w-full text-left px-2.5 py-1.5 text-[9px] uppercase font-sans tracking-wide transition-all duration-150 flex items-center justify-between border cursor-pointer rounded-none",
+                    isSelected ? "bg-primary/10 border-primary/20 text-primary font-bold" : "bg-card/20 border-transparent hover:bg-muted hover:border-border/50 text-muted-foreground hover:text-foreground"
+                  ),
+                  children: [
+                    /* @__PURE__ */ jsx("div", { className: "flex flex-col truncate pr-2", children: /* @__PURE__ */ jsx("span", { className: "font-bold truncate", children: group.name }) }),
+                    isSelected && /* @__PURE__ */ jsx(Check, { size: 10, className: "text-primary shrink-0 ml-2" })
+                  ]
+                },
+                group.id
+              );
+            }) })
+          ] })
+        ]
+      }
+    );
+  }
   return /* @__PURE__ */ jsxs("div", { className: "relative inline-block text-left", ref: containerRef, children: [
     /* @__PURE__ */ jsxs(
       "button",
@@ -91,7 +254,7 @@ function TenantSelector({
         "aria-expanded": isOpen,
         onClick: () => setIsOpen(!isOpen),
         className: cn(
-          "flex items-center justify-between gap-3 px-3 py-2.5 rounded-none border border-border bg-background/80 backdrop-blur-md hover:bg-muted text-foreground transition-all duration-200 cursor-pointer shadow-lg text-[10px] font-black uppercase tracking-[0.15em] font-sans min-w-[160px] max-w-[240px]",
+          "flex items-center justify-between gap-3 px-3 py-2.5 rounded-none border border-border bg-background/80 backdrop-blur-md hover:bg-muted text-foreground transition-all duration-200 cursor-pointer shadow-none text-[10px] font-black uppercase tracking-[0.15em] font-sans min-w-[160px] max-w-[240px]",
           isOpen && "bg-muted ring-1 ring-primary/20 border-primary/30 text-primary"
         ),
         children: [
@@ -115,7 +278,7 @@ function TenantSelector({
     isOpen && /* @__PURE__ */ jsxs(
       "div",
       {
-        className: "absolute right-0 mt-3 w-72 bg-background/95 border border-border backdrop-blur-md z-[100] overflow-hidden rounded-none shadow-2xl p-3 origin-top-right animate-in fade-in slide-in-from-top-2 zoom-in-95 duration-200 ease-out",
+        className: "absolute right-0 mt-3 w-72 bg-background border border-border backdrop-blur-md z-[100] overflow-hidden rounded-none shadow-none p-3 origin-top-right animate-in fade-in slide-in-from-top-2 zoom-in-95 duration-200 ease-out",
         role: "listbox",
         "aria-label": t("tenant_selector_select", { defaultMessage: "Seleccionar organizaci\xF3n" }),
         children: [
@@ -480,6 +643,972 @@ function CommandPalette({
     }
   );
 }
+var defaultTranslations = {
+  brandFallback: "ABD SYSTEM",
+  logoutBtn: "TERMINAR SESI\xD3N",
+  identityProvider: "IDENTITY PROVIDER",
+  statusOnline: "ONLINE",
+  emailLabel: "EMAIL"
+};
+function GlobalNavbar({
+  session,
+  links,
+  logoUrl,
+  onLogout,
+  brandName,
+  homeHref = "/dashboard",
+  activeHref,
+  translations,
+  transformHref
+}) {
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const user = {
+    name: session?.user?.name || (session?.authenticated ? "User" : "Guest"),
+    role: session?.user?.role || "PUBLIC",
+    tenantId: session?.user?.tenantId || (session?.authenticated ? "GLOBAL" : ""),
+    email: session?.user?.email || ""
+  };
+  const resolvedBrand = brandName || (session?.user?.tenantId ? session.user.tenantId : "ABD SYSTEM");
+  useEffect(() => {
+    if (isCollapsed) {
+      document.body.classList.add("sidebar-collapsed-layout");
+      document.body.classList.remove("sidebar-expanded-layout");
+    } else {
+      document.body.classList.add("sidebar-expanded-layout");
+      document.body.classList.remove("sidebar-collapsed-layout");
+    }
+    return () => {
+      document.body.classList.remove("sidebar-collapsed-layout", "sidebar-expanded-layout");
+    };
+  }, [isCollapsed]);
+  const t = { ...defaultTranslations, ...translations };
+  const LocalizedLink2 = ({ href, onClick, className, title, children }) => {
+    const finalHref = transformHref ? transformHref(href) : href;
+    const isExternal = finalHref.startsWith("http://") || finalHref.startsWith("https://");
+    if (isExternal) {
+      return /* @__PURE__ */ jsx("a", { href: finalHref, onClick, className, title, children });
+    }
+    if (onClick) {
+      return /* @__PURE__ */ jsx(Link, { href: finalHref, className, onClick, title, children });
+    }
+    return /* @__PURE__ */ jsx(Link, { href: finalHref, className, title, children });
+  };
+  return /* @__PURE__ */ jsx(Fragment, { children: /* @__PURE__ */ jsxs(
+    "aside",
+    {
+      id: "global-navbar-panel",
+      role: "navigation",
+      "aria-label": "Global Navigation",
+      className: cn(
+        "fixed inset-y-0 left-0 z-[50] bg-background border-r border-border shadow-2xl flex flex-col transition-all duration-300 ease-in-out rounded-none overflow-hidden",
+        isCollapsed ? "w-[64px] p-2" : "w-80 p-6"
+      ),
+      children: [
+        /* @__PURE__ */ jsxs("div", { className: cn("flex items-center", isCollapsed ? "justify-center mt-4 mb-8" : "justify-between mb-8 pt-6 border-b border-border pb-4"), children: [
+          !isCollapsed && /* @__PURE__ */ jsxs(
+            LocalizedLink2,
+            {
+              href: homeHref,
+              className: "flex items-center gap-3 overflow-hidden",
+              children: [
+                logoUrl ? /* @__PURE__ */ jsx(
+                  "img",
+                  {
+                    src: logoUrl,
+                    alt: "Logo",
+                    className: "w-6 h-6 object-contain filter drop-shadow-[0_1px_3px_rgba(0,0,0,0.3)] shrink-0"
+                  }
+                ) : /* @__PURE__ */ jsx("div", { className: "w-6 h-6 bg-primary/10 border border-primary/30 flex items-center justify-center shrink-0", children: /* @__PURE__ */ jsx(Shield, { size: 12, className: "text-primary" }) }),
+                /* @__PURE__ */ jsx("span", { className: "font-mono text-xs font-black uppercase tracking-[0.2em] text-foreground truncate", children: user.tenantId || resolvedBrand })
+              ]
+            }
+          ),
+          /* @__PURE__ */ jsx(
+            "button",
+            {
+              "aria-label": "Toggle Navigation",
+              "aria-expanded": !isCollapsed,
+              "aria-controls": "global-navbar-panel",
+              onClick: () => setIsCollapsed(!isCollapsed),
+              className: "p-2 rounded-none hover:bg-muted text-muted-foreground hover:text-foreground transition-all duration-200 cursor-pointer flex-shrink-0",
+              children: isCollapsed ? /* @__PURE__ */ jsx(Menu, { className: "w-5 h-5" }) : /* @__PURE__ */ jsx(Menu, { className: "w-4 h-4" })
+            }
+          )
+        ] }),
+        /* @__PURE__ */ jsx("nav", { className: "flex-1 flex flex-col gap-2 overflow-y-auto overflow-x-hidden no-scrollbar", children: links.map((link) => {
+          const isActive = activeHref ? activeHref === link.href || link.href !== homeHref && activeHref.startsWith(link.href) : false;
+          return /* @__PURE__ */ jsxs(
+            LocalizedLink2,
+            {
+              href: link.href,
+              className: cn(
+                "py-3 rounded-none flex items-center font-mono font-bold uppercase tracking-wider transition-all duration-200 border group",
+                isCollapsed ? "px-0 justify-center text-[12px]" : "px-4 gap-4 text-[10px]",
+                isActive ? "bg-primary/10 border-primary text-primary" : "bg-muted/10 border-border text-muted-foreground hover:border-primary/20 hover:bg-primary/5 hover:text-primary"
+              ),
+              ...isCollapsed ? { title: link.label } : {},
+              children: [
+                /* @__PURE__ */ jsx("span", { className: "shrink-0", children: link.icon }),
+                !isCollapsed && /* @__PURE__ */ jsx("span", { className: "flex-1 truncate", children: link.label })
+              ]
+            },
+            link.href
+          );
+        }) }),
+        /* @__PURE__ */ jsxs("div", { className: cn("border-border mt-auto", isCollapsed ? "pt-4 border-none flex justify-center pb-2" : "border-t pt-6"), children: [
+          isCollapsed ? /* @__PURE__ */ jsx("div", { className: "w-8 h-8 bg-primary/10 border border-primary/20 flex items-center justify-center font-bold text-xs text-primary rounded-none cursor-help", title: user.name, children: user.name?.charAt(0).toUpperCase() || "U" }) : /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-4 p-4 border border-border bg-muted/10 rounded-none relative overflow-hidden", children: [
+            /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3", children: [
+              /* @__PURE__ */ jsx("div", { className: "w-8 h-8 bg-primary/10 border border-primary/20 flex items-center justify-center font-bold text-xs text-primary rounded-none shrink-0", children: user.name?.charAt(0).toUpperCase() || "U" }),
+              /* @__PURE__ */ jsxs("div", { className: "flex-1 min-w-0", children: [
+                /* @__PURE__ */ jsx("p", { className: "text-xs font-black tracking-wider truncate uppercase text-foreground", children: user.name }),
+                /* @__PURE__ */ jsx("p", { className: "font-mono text-[8px] text-muted-foreground/80 uppercase tracking-widest truncate", children: user.role })
+              ] })
+            ] }),
+            /* @__PURE__ */ jsxs("div", { className: "font-mono text-[8px] text-muted-foreground/60 flex flex-col gap-1 border-t border-border/50 pt-2.5", children: [
+              /* @__PURE__ */ jsxs("div", { className: "flex justify-between", children: [
+                /* @__PURE__ */ jsxs("span", { children: [
+                  t.identityProvider,
+                  ":"
+                ] }),
+                /* @__PURE__ */ jsx("span", { className: "text-primary font-bold", children: t.statusOnline })
+              ] }),
+              user.email && /* @__PURE__ */ jsxs("div", { className: "flex justify-between", children: [
+                /* @__PURE__ */ jsxs("span", { children: [
+                  t.emailLabel,
+                  ":"
+                ] }),
+                /* @__PURE__ */ jsx("span", { className: "truncate max-w-[150px]", children: user.email.toLowerCase() })
+              ] })
+            ] }),
+            /* @__PURE__ */ jsxs(
+              "button",
+              {
+                "aria-label": t.logoutBtn,
+                onClick: onLogout,
+                className: "w-full flex items-center justify-center gap-2 px-3 py-2 border border-border text-[9px] font-mono font-black uppercase tracking-widest transition-all rounded-none hover:text-red-400 hover:bg-red-500/10 hover:border-red-500/20 cursor-pointer",
+                children: [
+                  /* @__PURE__ */ jsx(LogOut, { size: 12 }),
+                  /* @__PURE__ */ jsx("span", { children: t.logoutBtn })
+                ]
+              }
+            )
+          ] }),
+          isCollapsed && /* @__PURE__ */ jsx(
+            "button",
+            {
+              "aria-label": t.logoutBtn,
+              onClick: onLogout,
+              className: "mt-4 w-10 h-10 flex items-center justify-center border border-border transition-all rounded-none hover:text-red-400 hover:bg-red-500/10 hover:border-red-500/20 cursor-pointer text-muted-foreground mx-auto",
+              title: t.logoutBtn,
+              children: /* @__PURE__ */ jsx(LogOut, { size: 14 })
+            }
+          )
+        ] })
+      ]
+    }
+  ) });
+}
+function GlobalFooter({
+  label,
+  leftLabel,
+  rightLabel,
+  telemetryItems,
+  showSeparator = true,
+  separatorWidth = "full",
+  className = "",
+  opacity = 30
+}) {
+  const opacityClass = opacity <= 20 ? "text-muted-foreground/20" : opacity >= 40 ? "text-muted-foreground/40" : "text-muted-foreground/30";
+  const isTwoColumn = !!(leftLabel && rightLabel);
+  const containerClass = isTwoColumn ? "mt-auto pt-6 border-t border-border flex flex-col sm:flex-row justify-between items-center gap-4" : "mt-auto pt-12 flex flex-col items-center gap-6";
+  const separatorWidthClass = separatorWidth === "short" ? "w-24 mx-auto" : "w-full";
+  return /* @__PURE__ */ jsxs(
+    "footer",
+    {
+      className: `${containerClass} font-mono text-[9px] uppercase tracking-[0.3em] ${opacityClass} ${className}`,
+      role: "contentinfo",
+      children: [
+        showSeparator && !isTwoColumn && /* @__PURE__ */ jsx(
+          "div",
+          {
+            className: `h-[1px] bg-border/40 ${separatorWidthClass}`,
+            "aria-hidden": "true"
+          }
+        ),
+        telemetryItems && telemetryItems.length > 0 ? (
+          // ── Telemetry mode — centered key-value pairs ──
+          /* @__PURE__ */ jsx("div", { className: "flex flex-wrap justify-center gap-x-12 gap-y-2", children: telemetryItems.map((item, index) => /* @__PURE__ */ jsxs("span", { children: [
+            item.label,
+            ": ",
+            item.value
+          ] }, index)) })
+        ) : isTwoColumn ? (
+          // ── Two-column mode — left / right labels ──
+          /* @__PURE__ */ jsxs(Fragment, { children: [
+            /* @__PURE__ */ jsx("span", { children: leftLabel }),
+            /* @__PURE__ */ jsx("span", { children: rightLabel })
+          ] })
+        ) : (
+          // ── Simple label mode — centered ──
+          label && /* @__PURE__ */ jsx("span", { children: label })
+        )
+      ]
+    }
+  );
+}
+function IndustrialTopBar({
+  locale = "en",
+  children,
+  settings,
+  className = ""
+}) {
+  return /* @__PURE__ */ jsxs(
+    "div",
+    {
+      className: `fixed top-6 right-6 z-40 flex items-center gap-2 ${className}`,
+      children: [
+        children,
+        /* @__PURE__ */ jsxs(
+          "button",
+          {
+            id: "command-palette-trigger",
+            "aria-label": locale === "es" ? "Buscar comandos (Ctrl+K)" : "Search commands (Ctrl+K)",
+            className: "p-2.5 rounded-none border border-border bg-background/80 backdrop-blur-md hover:bg-muted text-foreground transition-all active:scale-90 cursor-pointer shadow-lg flex items-center justify-center gap-2",
+            children: [
+              /* @__PURE__ */ jsx(Search, { size: 18, className: "text-foreground shrink-0" }),
+              /* @__PURE__ */ jsx("span", { className: "hidden md:inline-flex items-center text-[10px] font-black uppercase tracking-[0.15em] text-muted-foreground/80 font-sans", children: locale === "es" ? "BUSCADOR" : "SEARCH" }),
+              /* @__PURE__ */ jsx("kbd", { className: "hidden lg:inline-flex items-center px-1.5 py-0.5 text-[9px] font-mono rounded bg-white/10 text-white/50 border border-white/5 uppercase", children: "Ctrl+K" })
+            ]
+          }
+        ),
+        settings
+      ]
+    }
+  );
+}
+var defaultTranslations2 = {
+  brandFallback: "ABD SYSTEM",
+  logoutBtn: "TERMINAR SESI\xD3N",
+  loginBtn: "INICIAR SESI\xD3N",
+  searchLabel: "BUSCAR...",
+  themeLabel: "TEMA",
+  themeLight: "CLARO",
+  themeDark: "OSCURO",
+  themeSystem: "SISTEMA",
+  profileLabel: "MI PERFIL",
+  identityProvider: "PROVEEDOR",
+  statusOnline: "ONLINE",
+  emailLabel: "EMAIL",
+  languageLabel: "IDIOMA"
+};
+var SlotErrorBoundary = class extends React7.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+  render() {
+    if (this.state.hasError) {
+      return this.props.fallback ?? /* @__PURE__ */ jsx("div", { className: "px-3 py-2 text-[9px] font-mono text-muted-foreground border border-dashed border-border", children: "\u26A0\uFE0F SLOT ERROR" });
+    }
+    return this.props.children;
+  }
+};
+function LocalizedLink({
+  href,
+  transformHref = (h) => h,
+  onClick,
+  className,
+  title,
+  children,
+  "data-testid": dataTestId
+}) {
+  const finalHref = transformHref(href);
+  const isExternal = finalHref.startsWith("http://") || finalHref.startsWith("https://");
+  if (isExternal) {
+    if (onClick) {
+      return /* @__PURE__ */ jsx("a", { href: finalHref, onClick, className, title, "data-testid": dataTestId, children });
+    }
+    return /* @__PURE__ */ jsx("a", { href: finalHref, className, title, "data-testid": dataTestId, children });
+  }
+  if (onClick) {
+    return /* @__PURE__ */ jsx(Link, { href: finalHref, className, onClick, title, "data-testid": dataTestId, children });
+  }
+  return /* @__PURE__ */ jsx(Link, { href: finalHref, className, title, "data-testid": dataTestId, children });
+}
+function SmartNavbar({
+  session,
+  links,
+  logoUrl,
+  brandName,
+  activeHref,
+  locale = "en",
+  onLogout,
+  onLogin,
+  onLocaleChange,
+  transformHref: rawTransformHref,
+  tenantSelectorSlot,
+  settingsSlot,
+  translations,
+  onSearchTrigger
+}) {
+  const transformHref = rawTransformHref ?? ((href) => href);
+  const t = { ...defaultTranslations2, ...translations };
+  const isAuthenticated = session?.authenticated === true;
+  const user = session?.user ?? null;
+  const searchParams = useSearchParams();
+  const activeTenantId = searchParams.get("tenantId") || user?.tenantId || "";
+  const [activeMenu, setActiveMenu] = useState(null);
+  const [lockedMenu, setLockedMenu] = useState(null);
+  const [currentTheme, setCurrentTheme] = useState("dark");
+  const timeoutRef = useRef(null);
+  const navbarRef = useRef(null);
+  useEffect(() => {
+    document.body.classList.remove("sidebar-expanded-layout", "sidebar-collapsed-layout");
+    try {
+      const savedTheme = localStorage.getItem("theme");
+      if (savedTheme) {
+        setCurrentTheme(savedTheme);
+      } else {
+        setCurrentTheme("system");
+      }
+    } catch {
+      setCurrentTheme("system");
+    }
+  }, []);
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") {
+        if (activeMenu) {
+          setActiveMenu(null);
+          setLockedMenu(null);
+        }
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [activeMenu]);
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (lockedMenu && navbarRef.current && !navbarRef.current.contains(e.target)) {
+        setActiveMenu(null);
+        setLockedMenu(null);
+      }
+    };
+    if (lockedMenu) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [lockedMenu]);
+  const handleMouseEnter = useCallback((menuName) => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    if (!lockedMenu || lockedMenu === menuName) {
+      setActiveMenu(menuName);
+    }
+  }, [lockedMenu]);
+  const handleMouseLeave = useCallback(() => {
+    if (lockedMenu) return;
+    timeoutRef.current = setTimeout(() => {
+      setActiveMenu(null);
+    }, 200);
+  }, [lockedMenu]);
+  const handleMenuClick = useCallback((menuName) => {
+    if (lockedMenu === menuName && activeMenu === menuName) {
+      setActiveMenu(null);
+      setLockedMenu(null);
+    } else {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      setActiveMenu(menuName);
+      setLockedMenu(menuName);
+    }
+  }, [lockedMenu, activeMenu]);
+  const setTheme = useCallback((theme) => {
+    const root = document.documentElement;
+    root.classList.remove("light", "dark");
+    if (theme === "system") {
+      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      root.classList.add(prefersDark ? "dark" : "light");
+    } else {
+      root.classList.add(theme);
+    }
+    try {
+      localStorage.setItem("theme", theme);
+    } catch {
+    }
+    setCurrentTheme(theme);
+  }, []);
+  user?.tenantId || (isAuthenticated ? "GLOBAL" : "");
+  const userInitial = user?.name?.charAt(0)?.toUpperCase() || "U";
+  const renderNavLinks = () => links.map((link, idx) => {
+    const isActive = activeHref ? activeHref === link.href || link.href !== "/" && link.href !== "/dashboard" && link.href !== "/admin" && activeHref?.startsWith(link.href + "/") : false;
+    return /* @__PURE__ */ jsx(
+      LocalizedLink,
+      {
+        href: link.href,
+        transformHref,
+        "data-testid": `navbar-link-idx-${idx}`,
+        className: cn(
+          "px-4 py-1.5 font-mono text-[10px] tracking-widest uppercase transition-all duration-200 rounded-none",
+          isActive ? "text-primary font-black" : "text-muted-foreground font-medium hover:text-primary"
+        ),
+        children: /* @__PURE__ */ jsxs("span", { className: "flex items-center gap-2", children: [
+          link.icon,
+          link.label
+        ] })
+      },
+      link.href
+    );
+  });
+  return /* @__PURE__ */ jsx(Fragment, { children: /* @__PURE__ */ jsxs(
+    "div",
+    {
+      ref: navbarRef,
+      "data-testid": "smart-navbar",
+      className: "smart-navbar",
+      onMouseLeave: handleMouseLeave,
+      children: [
+        /* @__PURE__ */ jsxs("div", { className: "max-w-[1600px] mx-auto h-full px-4 flex items-center justify-between gap-2", children: [
+          /* @__PURE__ */ jsx("div", { className: "flex items-center gap-3 min-w-0", children: /* @__PURE__ */ jsxs(
+            LocalizedLink,
+            {
+              href: isAuthenticated ? "/" : "/",
+              transformHref,
+              "data-testid": "navbar-logo",
+              className: "flex items-center gap-3 shrink-0",
+              children: [
+                logoUrl ? /* @__PURE__ */ jsx(
+                  "img",
+                  {
+                    src: logoUrl,
+                    alt: "Logo",
+                    className: "w-6 h-6 object-contain filter drop-shadow-[0_1px_3px_rgba(0,0,0,0.3)]"
+                  }
+                ) : /* @__PURE__ */ jsx("div", { className: "w-6 h-6 bg-primary/10 border border-primary/30 flex items-center justify-center", children: /* @__PURE__ */ jsx(Shield, { size: 12, className: "text-primary" }) }),
+                /* @__PURE__ */ jsxs("div", { className: "flex flex-col text-left", children: [
+                  /* @__PURE__ */ jsx("span", { className: "font-mono text-xs font-black uppercase tracking-[0.2em] text-foreground truncate max-w-[160px] leading-tight", children: brandName || t.brandFallback }),
+                  isAuthenticated && activeTenantId && /* @__PURE__ */ jsx("span", { className: "font-mono text-[9px] opacity-70 uppercase tracking-widest text-muted-foreground leading-none mt-0.5", children: activeTenantId })
+                ] })
+              ]
+            }
+          ) }),
+          isAuthenticated && /* @__PURE__ */ jsx(
+            "nav",
+            {
+              className: "smart-navbar-desktop-only flex items-center gap-1",
+              children: renderNavLinks()
+            }
+          ),
+          /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2", children: [
+            isAuthenticated && /* @__PURE__ */ jsx(
+              "div",
+              {
+                className: "relative",
+                onMouseEnter: () => handleMouseEnter("search"),
+                onClick: () => handleMenuClick("search"),
+                children: /* @__PURE__ */ jsx(
+                  "button",
+                  {
+                    "data-testid": "navbar-menu-search",
+                    className: "p-2 text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all duration-200 cursor-pointer rounded-none",
+                    "aria-haspopup": "true",
+                    "aria-expanded": activeMenu === "search",
+                    children: /* @__PURE__ */ jsx(Search, { size: 16 })
+                  }
+                )
+              }
+            ),
+            /* @__PURE__ */ jsx(
+              "div",
+              {
+                className: "relative",
+                onMouseEnter: () => handleMouseEnter("theme"),
+                onClick: () => handleMenuClick("theme"),
+                children: /* @__PURE__ */ jsx(
+                  "button",
+                  {
+                    "data-testid": "navbar-menu-theme",
+                    className: "p-2 text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all duration-200 cursor-pointer rounded-none",
+                    "aria-haspopup": "true",
+                    "aria-expanded": activeMenu === "theme",
+                    children: /* @__PURE__ */ jsx(Sun, { size: 16 })
+                  }
+                )
+              }
+            ),
+            onLocaleChange && /* @__PURE__ */ jsx(
+              "div",
+              {
+                className: "relative",
+                onMouseEnter: () => handleMouseEnter("language"),
+                onClick: () => handleMenuClick("language"),
+                children: /* @__PURE__ */ jsx(
+                  "button",
+                  {
+                    "data-testid": "navbar-menu-language",
+                    className: "p-2 text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all duration-200 cursor-pointer rounded-none",
+                    "aria-haspopup": "true",
+                    "aria-expanded": activeMenu === "language",
+                    children: /* @__PURE__ */ jsx(Languages, { size: 16 })
+                  }
+                )
+              }
+            ),
+            isAuthenticated && tenantSelectorSlot && /* @__PURE__ */ jsx(
+              "div",
+              {
+                className: "relative",
+                onMouseEnter: () => handleMouseEnter("tenant"),
+                onClick: () => handleMenuClick("tenant"),
+                children: /* @__PURE__ */ jsx(
+                  "button",
+                  {
+                    "data-testid": "navbar-menu-tenant",
+                    className: "p-2 text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all duration-200 cursor-pointer rounded-none",
+                    "aria-haspopup": "true",
+                    "aria-expanded": activeMenu === "tenant",
+                    children: /* @__PURE__ */ jsx(Building2, { size: 16 })
+                  }
+                )
+              }
+            ),
+            isAuthenticated && /* @__PURE__ */ jsx(
+              "div",
+              {
+                className: "relative",
+                onMouseEnter: () => handleMouseEnter("user"),
+                onClick: () => handleMenuClick("user"),
+                children: /* @__PURE__ */ jsx(
+                  "button",
+                  {
+                    "data-testid": "navbar-menu-user",
+                    className: "w-7 h-7 shrink-0 aspect-square flex items-center justify-center bg-primary/10 border border-primary/20 text-primary font-bold text-xs hover:bg-primary/20 transition-all duration-200 cursor-pointer rounded-none",
+                    style: { width: "28px", height: "28px" },
+                    "aria-haspopup": "true",
+                    "aria-expanded": activeMenu === "user",
+                    children: userInitial
+                  }
+                )
+              }
+            ),
+            !isAuthenticated && onLogin && /* @__PURE__ */ jsx(
+              "button",
+              {
+                onClick: onLogin,
+                className: "px-3 py-1.5 font-mono text-[10px] font-bold tracking-widest uppercase border border-border text-muted-foreground hover:text-primary hover:border-primary/30 transition-all duration-200 cursor-pointer rounded-none",
+                children: t.loginBtn
+              }
+            )
+          ] })
+        ] }),
+        /* @__PURE__ */ jsx("div", { className: "absolute bottom-0 left-0 right-0 h-[2px] opacity-0 bg-primary/50 scale-x-0 transition-all duration-300 pointer-events-none" }),
+        activeMenu && /* @__PURE__ */ jsx(
+          "div",
+          {
+            "data-testid": "navbar-dropdown",
+            className: "smart-navbar-dropdown animate-in fade-in slide-in-from-top-1 duration-150",
+            onMouseEnter: () => {
+              if (timeoutRef.current) clearTimeout(timeoutRef.current);
+            },
+            onMouseLeave: handleMouseLeave,
+            children: /* @__PURE__ */ jsxs("div", { className: cn(
+              "max-w-[1600px] mx-auto p-6 flex",
+              activeMenu === "theme" || activeMenu === "language" || activeMenu === "user" ? "justify-end" : "justify-start"
+            ), children: [
+              activeMenu === "navigation" && /* @__PURE__ */ jsx("div", { className: "flex gap-8", children: /* @__PURE__ */ jsxs("div", { children: [
+                /* @__PURE__ */ jsx("h3", { className: "font-mono text-[9px] font-bold tracking-widest uppercase text-muted-foreground mb-3", children: "ACCESOS R\xC1PIDOS" }),
+                /* @__PURE__ */ jsx("div", { className: "flex flex-col gap-2", children: links.map((link, idx) => /* @__PURE__ */ jsxs(
+                  LocalizedLink,
+                  {
+                    href: link.href,
+                    transformHref,
+                    "data-testid": `navbar-link-idx-${idx}`,
+                    className: "flex items-center gap-3 px-3 py-2 font-mono text-[11px] uppercase tracking-wider text-muted-foreground hover:text-primary hover:bg-primary/5 border border-transparent hover:border-primary/20 transition-all duration-200",
+                    children: [
+                      /* @__PURE__ */ jsx("span", { className: "shrink-0", children: link.icon }),
+                      link.label
+                    ]
+                  },
+                  link.href
+                )) })
+              ] }) }),
+              activeMenu === "theme" && /* @__PURE__ */ jsxs("div", { children: [
+                /* @__PURE__ */ jsx("h3", { className: "font-mono text-[9px] font-bold tracking-widest uppercase text-muted-foreground mb-3", children: t.themeLabel }),
+                /* @__PURE__ */ jsx("div", { className: "flex gap-3", children: [
+                  { value: "light", icon: Sun, label: t.themeLight },
+                  { value: "dark", icon: Moon, label: t.themeDark },
+                  { value: "system", icon: Monitor, label: t.themeSystem }
+                ].map(({ value, icon: Icon, label }) => {
+                  const isActive = currentTheme === value;
+                  return /* @__PURE__ */ jsxs(
+                    "button",
+                    {
+                      onClick: () => setTheme(value),
+                      className: cn(
+                        "flex flex-col items-center gap-2 p-4 border transition-all duration-200 cursor-pointer min-w-[100px] rounded-none",
+                        isActive ? "border-primary/60 bg-primary/5 text-primary" : "border-border bg-muted/10 hover:border-primary/40 hover:bg-primary/5 text-muted-foreground"
+                      ),
+                      children: [
+                        /* @__PURE__ */ jsx(Icon, { size: 18, className: isActive ? "text-primary" : "text-muted-foreground" }),
+                        /* @__PURE__ */ jsx("span", { className: cn(
+                          "font-mono text-[9px] font-bold tracking-widest uppercase",
+                          isActive ? "text-primary" : "text-muted-foreground"
+                        ), children: label })
+                      ]
+                    },
+                    value
+                  );
+                }) })
+              ] }),
+              activeMenu === "language" && onLocaleChange && /* @__PURE__ */ jsxs("div", { children: [
+                /* @__PURE__ */ jsx("h3", { className: "font-mono text-[9px] font-bold tracking-widest uppercase text-muted-foreground mb-3", children: t.languageLabel }),
+                /* @__PURE__ */ jsxs("div", { className: "flex gap-3", children: [
+                  /* @__PURE__ */ jsx(
+                    "button",
+                    {
+                      onClick: () => {
+                        onLocaleChange("es");
+                        setActiveMenu(null);
+                        setLockedMenu(null);
+                      },
+                      className: cn(
+                        "flex flex-col items-center justify-center gap-2 p-4 border font-mono text-[9px] font-bold tracking-widest uppercase transition-all duration-200 cursor-pointer min-w-[100px] rounded-none",
+                        locale === "es" ? "border-primary/60 bg-primary/5 text-primary" : "border-border bg-muted/10 hover:border-primary/40 hover:bg-primary/5 text-muted-foreground"
+                      ),
+                      children: /* @__PURE__ */ jsx("span", { children: "ESPA\xD1OL" })
+                    }
+                  ),
+                  /* @__PURE__ */ jsx(
+                    "button",
+                    {
+                      onClick: () => {
+                        onLocaleChange("en");
+                        setActiveMenu(null);
+                        setLockedMenu(null);
+                      },
+                      className: cn(
+                        "flex flex-col items-center justify-center gap-2 p-4 border font-mono text-[9px] font-bold tracking-widest uppercase transition-all duration-200 cursor-pointer min-w-[100px] rounded-none",
+                        locale === "en" ? "border-primary/60 bg-primary/5 text-primary" : "border-border bg-muted/10 hover:border-primary/40 hover:bg-primary/5 text-muted-foreground"
+                      ),
+                      children: /* @__PURE__ */ jsx("span", { children: "ENGLISH" })
+                    }
+                  )
+                ] })
+              ] }),
+              activeMenu === "user" && user && /* @__PURE__ */ jsxs("div", { className: "flex flex-col md:flex-row gap-6 md:gap-8 items-start md:items-center w-full justify-between max-w-4xl", children: [
+                /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3 shrink-0", children: [
+                  /* @__PURE__ */ jsx("div", { className: "w-10 h-10 bg-primary/10 border border-primary/20 flex items-center justify-center font-bold text-sm text-primary rounded-none", children: userInitial }),
+                  /* @__PURE__ */ jsxs("div", { children: [
+                    /* @__PURE__ */ jsx("p", { className: "font-mono text-xs font-bold uppercase text-foreground", children: user.name }),
+                    /* @__PURE__ */ jsx("p", { className: "font-mono text-[9px] text-muted-foreground uppercase tracking-wider", children: user.role })
+                  ] })
+                ] }),
+                /* @__PURE__ */ jsxs("div", { className: "font-mono text-[9px] text-muted-foreground/60 space-y-1 min-w-[240px] border-l border-border/50 pl-6 hidden md:block", children: [
+                  /* @__PURE__ */ jsxs("div", { className: "flex justify-between gap-4", children: [
+                    /* @__PURE__ */ jsxs("span", { children: [
+                      t.identityProvider,
+                      ":"
+                    ] }),
+                    /* @__PURE__ */ jsx("span", { className: "text-primary font-bold", children: t.statusOnline })
+                  ] }),
+                  user.email && /* @__PURE__ */ jsxs("div", { className: "flex justify-between gap-4", children: [
+                    /* @__PURE__ */ jsxs("span", { children: [
+                      t.emailLabel,
+                      ":"
+                    ] }),
+                    /* @__PURE__ */ jsx("span", { className: "truncate max-w-[160px]", children: user.email.toLowerCase() })
+                  ] })
+                ] }),
+                /* @__PURE__ */ jsxs("div", { className: "font-mono text-[9px] text-muted-foreground/60 space-y-1 w-full border-t border-border/50 pt-3 md:hidden", children: [
+                  /* @__PURE__ */ jsxs("div", { className: "flex justify-between", children: [
+                    /* @__PURE__ */ jsxs("span", { children: [
+                      t.identityProvider,
+                      ":"
+                    ] }),
+                    /* @__PURE__ */ jsx("span", { className: "text-primary font-bold", children: t.statusOnline })
+                  ] }),
+                  user.email && /* @__PURE__ */ jsxs("div", { className: "flex justify-between", children: [
+                    /* @__PURE__ */ jsxs("span", { children: [
+                      t.emailLabel,
+                      ":"
+                    ] }),
+                    /* @__PURE__ */ jsx("span", { className: "truncate", children: user.email.toLowerCase() })
+                  ] })
+                ] }),
+                /* @__PURE__ */ jsxs("div", { className: "flex flex-col sm:flex-row gap-2 shrink-0 w-full md:w-auto", children: [
+                  /* @__PURE__ */ jsxs(
+                    LocalizedLink,
+                    {
+                      href: "/profile",
+                      transformHref,
+                      onClick: () => {
+                        setActiveMenu(null);
+                        setLockedMenu(null);
+                      },
+                      className: "flex items-center justify-center gap-2 px-4 py-2 border border-border text-[9px] font-mono font-bold tracking-widest uppercase text-muted-foreground hover:text-primary hover:border-primary/30 transition-all duration-200 rounded-none w-full sm:w-auto",
+                      children: [
+                        /* @__PURE__ */ jsx(User, { size: 12 }),
+                        t.profileLabel
+                      ]
+                    }
+                  ),
+                  /* @__PURE__ */ jsxs(
+                    "button",
+                    {
+                      onClick: () => {
+                        onLogout();
+                        setActiveMenu(null);
+                        setLockedMenu(null);
+                      },
+                      className: "flex items-center justify-center gap-2 px-4 py-2 border border-border text-[9px] font-mono font-bold tracking-widest uppercase text-red-400 hover:bg-red-500/10 hover:border-red-500/20 transition-all duration-200 cursor-pointer rounded-none w-full sm:w-auto",
+                      children: [
+                        /* @__PURE__ */ jsx(LogOut, { size: 12 }),
+                        t.logoutBtn
+                      ]
+                    }
+                  )
+                ] })
+              ] }),
+              activeMenu === "search" && /* @__PURE__ */ jsx("div", { className: "w-full flex justify-center py-2", children: /* @__PURE__ */ jsxs(
+                "button",
+                {
+                  "data-testid": "navbar-mega-search-trigger",
+                  onClick: () => {
+                    onSearchTrigger?.();
+                    setActiveMenu(null);
+                    setLockedMenu(null);
+                  },
+                  className: "flex items-center justify-between gap-4 w-full max-w-lg bg-card/60 border border-border px-4 py-3 text-[11px] text-muted-foreground/75 font-mono hover:bg-card hover:border-primary/50 transition-all duration-200 cursor-pointer rounded-none shadow-none",
+                  children: [
+                    /* @__PURE__ */ jsxs("span", { className: "flex items-center gap-2", children: [
+                      /* @__PURE__ */ jsx(Search, { size: 14, className: "text-primary" }),
+                      locale === "es" ? "ESCRIBE UN COMANDO O BUSCA..." : "TYPE A COMMAND OR SEARCH..."
+                    ] }),
+                    /* @__PURE__ */ jsx("kbd", { className: "px-1.5 py-0.5 text-[9px] font-mono border border-border/50 text-muted-foreground/50 bg-background/50", children: "Ctrl+K" })
+                  ]
+                }
+              ) }),
+              activeMenu === "tenant" && tenantSelectorSlot && /* @__PURE__ */ jsx("div", { className: "w-full flex justify-center", children: /* @__PURE__ */ jsx(SlotErrorBoundary, { children: React7.isValidElement(tenantSelectorSlot) ? React7.cloneElement(tenantSelectorSlot, {
+                variant: "content",
+                isOpen: true
+              }) : tenantSelectorSlot }) })
+            ] })
+          }
+        )
+      ]
+    }
+  ) });
+}
+
+// src/navigation/buildSidebarLinks.ts
+function buildSidebarLinks(configs, role, isLoggedIn = false) {
+  const roleUpper = role?.toUpperCase() ?? "";
+  return configs.filter((link) => {
+    if (link.requiresSuperAdmin) return roleUpper === "SUPER_ADMIN";
+    if (link.requiresAdmin) return roleUpper === "ADMIN" || roleUpper === "SUPER_ADMIN";
+    if (link.requiresAuth) return isLoggedIn;
+    return true;
+  });
+}
+function useConfirmDialog(options) {
+  const { onConfirm } = options;
+  const [open, setOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [data, setData] = useState(null);
+  const trigger = useCallback((d) => {
+    setData(d !== void 0 ? d : null);
+    setOpen(true);
+  }, []);
+  const cancel = useCallback(() => {
+    setOpen(false);
+    setIsLoading(false);
+    setData(null);
+  }, []);
+  const confirm = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      await onConfirm(data);
+    } catch {
+    } finally {
+      setIsLoading(false);
+      setOpen(false);
+      setData(null);
+    }
+  }, [data, onConfirm]);
+  return { open, isLoading, data, trigger, confirm, cancel };
+}
+
+// src/constants.ts
+var ANIM_DURATION = 200;
+var variantStyles = {
+  danger: {
+    icon: AlertTriangle,
+    iconBg: "bg-red-500/10",
+    iconColor: "text-red-500",
+    confirmBg: "bg-red-500/10",
+    confirmBorder: "border-red-500/40",
+    confirmHover: "hover:bg-red-500/20 hover:border-red-500",
+    confirmText: "text-red-500"
+  },
+  warning: {
+    icon: AlertTriangle,
+    iconBg: "bg-amber-500/10",
+    iconColor: "text-amber-500",
+    confirmBg: "bg-amber-500/10",
+    confirmBorder: "border-amber-500/40",
+    confirmHover: "hover:bg-amber-500/20 hover:border-amber-500",
+    confirmText: "text-amber-500"
+  },
+  info: {
+    icon: Info,
+    iconBg: "bg-primary/10",
+    iconColor: "text-primary",
+    confirmBg: "bg-primary/10",
+    confirmBorder: "border-primary/40",
+    confirmHover: "hover:bg-primary/20 hover:border-primary",
+    confirmText: "text-primary"
+  }
+};
+function ConfirmDialog({
+  open,
+  title,
+  message,
+  confirmLabel = "Confirmar",
+  cancelLabel = "Cancelar",
+  variant = "danger",
+  isLoading = false,
+  onConfirm,
+  onCancel
+}) {
+  const cancelRef = useRef(null);
+  const confirmRef = useRef(null);
+  const closeTimerRef = useRef(null);
+  const prevOpenRef = useRef(open);
+  const [mounted, setMounted] = useState(open);
+  useEffect(() => {
+    if (open) {
+      if (closeTimerRef.current) {
+        clearTimeout(closeTimerRef.current);
+        closeTimerRef.current = null;
+      }
+      setMounted(true);
+    } else if (prevOpenRef.current) {
+      closeTimerRef.current = setTimeout(() => {
+        setMounted(false);
+      }, ANIM_DURATION);
+    }
+    prevOpenRef.current = open;
+    return () => {
+      if (closeTimerRef.current) {
+        clearTimeout(closeTimerRef.current);
+        closeTimerRef.current = null;
+      }
+    };
+  }, [open]);
+  const handleKeyDown = useCallback(
+    (e) => {
+      if (e.key === "Escape" && !isLoading) {
+        onCancel();
+      }
+    },
+    [onCancel, isLoading]
+  );
+  if (!mounted) return null;
+  const styles = variantStyles[variant];
+  const IconComponent = styles.icon;
+  return /* @__PURE__ */ jsxs(
+    "div",
+    {
+      className: "fixed inset-0 z-[60] flex items-center justify-center",
+      role: "alertdialog",
+      "aria-modal": "true",
+      "aria-label": title,
+      onKeyDown: handleKeyDown,
+      children: [
+        /* @__PURE__ */ jsx(
+          "div",
+          {
+            className: cn(
+              "absolute inset-0 bg-black/70 backdrop-blur-sm",
+              open ? "animate-in fade-in duration-200" : "animate-out fade-out duration-150"
+            ),
+            onClick: isLoading ? void 0 : onCancel,
+            "aria-hidden": "true"
+          }
+        ),
+        /* @__PURE__ */ jsxs(
+          "div",
+          {
+            className: cn(
+              "relative w-full max-w-sm bg-card border border-border shadow-2xl p-6",
+              open ? "animate-in fade-in zoom-in-95 duration-200" : "animate-out fade-out zoom-out-95 duration-150"
+            ),
+            children: [
+              /* @__PURE__ */ jsx(
+                "button",
+                {
+                  type: "button",
+                  onClick: onCancel,
+                  disabled: isLoading,
+                  "aria-label": cancelLabel,
+                  className: "absolute top-3 right-3 p-1 text-muted-foreground hover:text-foreground transition-colors disabled:opacity-50 disabled:cursor-not-allowed",
+                  children: /* @__PURE__ */ jsx(X, { size: 14 })
+                }
+              ),
+              /* @__PURE__ */ jsxs("div", { className: "flex flex-col items-center text-center gap-4 mb-6", children: [
+                /* @__PURE__ */ jsx("div", { className: cn("p-3 border border-border", styles.iconBg), children: /* @__PURE__ */ jsx(IconComponent, { size: 22, className: styles.iconColor }) }),
+                /* @__PURE__ */ jsx("h2", { className: "text-sm font-black uppercase tracking-wider text-foreground", children: title }),
+                /* @__PURE__ */ jsx("p", { className: "text-[11px] text-muted-foreground leading-relaxed max-w-xs", children: message })
+              ] }),
+              /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-end gap-3", children: [
+                /* @__PURE__ */ jsx(
+                  "button",
+                  {
+                    ref: cancelRef,
+                    type: "button",
+                    onClick: onCancel,
+                    disabled: isLoading,
+                    className: cn(
+                      "px-4 py-2.5 bg-transparent text-muted-foreground border border-border",
+                      "hover:border-muted-foreground/40 hover:bg-white/[0.02]",
+                      "font-mono text-[10px] font-bold uppercase tracking-wider",
+                      "transition-all duration-200 rounded-none active:scale-[0.98]",
+                      "disabled:opacity-50 disabled:cursor-not-allowed"
+                    ),
+                    children: cancelLabel
+                  }
+                ),
+                /* @__PURE__ */ jsx(
+                  "button",
+                  {
+                    ref: confirmRef,
+                    type: "button",
+                    onClick: onConfirm,
+                    disabled: isLoading,
+                    className: cn(
+                      "px-4 py-2.5 font-mono text-[10px] font-black uppercase tracking-wider",
+                      "border transition-all duration-200 rounded-none active:scale-[0.98]",
+                      "disabled:opacity-50 disabled:cursor-not-allowed",
+                      styles.confirmBg,
+                      styles.confirmBorder,
+                      styles.confirmHover,
+                      styles.confirmText
+                    ),
+                    children: isLoading ? /* @__PURE__ */ jsxs("span", { className: "flex items-center gap-2", children: [
+                      /* @__PURE__ */ jsx(Loader2, { size: 12, className: "animate-spin" }),
+                      confirmLabel
+                    ] }) : confirmLabel
+                  }
+                )
+              ] })
+            ]
+          }
+        )
+      ]
+    }
+  );
+}
 function SystemSettings({
   locale,
   onLocaleChange,
@@ -507,32 +1636,6 @@ function SystemSettings({
     }
     return "dark";
   });
-  const activeTheme = theme !== void 0 ? theme : internalTheme;
-  const handleThemeChange = (newTheme) => {
-    if (typeof window !== "undefined") {
-      localStorage.setItem("theme", newTheme);
-      let domainSuffix = "";
-      const hostname = window.location.hostname;
-      if (hostname !== "localhost" && hostname !== "127.0.0.1") {
-        const parts = hostname.split(".");
-        if (parts.length >= 2) {
-          domainSuffix = `; domain=.${parts.slice(-2).join(".")}`;
-        }
-      }
-      document.cookie = `abd_theme=${newTheme}; path=/; max-age=31536000; SameSite=Lax${domainSuffix}`;
-      if (newTheme === "system") {
-        const isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-        document.documentElement.className = isDark ? "dark" : "light";
-      } else {
-        document.documentElement.className = newTheme;
-      }
-    }
-    if (onThemeChange) {
-      onThemeChange(newTheme);
-    } else {
-      setInternalTheme(newTheme);
-    }
-  };
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -549,7 +1652,7 @@ function SystemSettings({
       }
     );
   }
-  return /* @__PURE__ */ jsxs("div", { className: "relative inline-block text-left", ref: containerRef, children: [
+  return /* @__PURE__ */ jsxs("div", { className: "relative inline-block text-left z-[55]", ref: containerRef, children: [
     /* @__PURE__ */ jsx(
       "button",
       {
@@ -589,55 +1692,6 @@ function SystemSettings({
                 children: /* @__PURE__ */ jsx(X, { size: 14 })
               }
             )
-          ] }),
-          /* @__PURE__ */ jsxs("div", { className: "space-y-2 mb-6", children: [
-            /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 text-[9px] font-bold text-primary uppercase tracking-widest mb-3", children: [
-              /* @__PURE__ */ jsx(Languages, { size: 12 }),
-              t("system_settings_language", { defaultMessage: "IDIOMA" })
-            ] }),
-            /* @__PURE__ */ jsx("div", { className: "grid grid-cols-2 gap-2", children: locales.map((loc) => /* @__PURE__ */ jsxs(
-              "button",
-              {
-                "aria-label": `${t("system_settings_language", { defaultMessage: "IDIOMA" })}: ${loc.toUpperCase()}`,
-                onClick: () => onLocaleChange(loc),
-                className: cn(
-                  "flex items-center justify-between px-3 py-2 text-[10px] font-bold uppercase transition-all duration-200 border cursor-pointer rounded-none",
-                  locale === loc ? "bg-primary/10 border-primary/30 text-primary" : "bg-card border-border hover:bg-muted text-muted-foreground"
-                ),
-                children: [
-                  loc,
-                  locale === loc && /* @__PURE__ */ jsx(Check, { size: 10 })
-                ]
-              },
-              loc
-            )) })
-          ] }),
-          /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
-            /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 text-[9px] font-bold text-primary uppercase tracking-widest mb-3", children: [
-              /* @__PURE__ */ jsx(Monitor, { size: 12 }),
-              t("system_settings_theme", { defaultMessage: "TEMA" })
-            ] }),
-            /* @__PURE__ */ jsx("div", { className: "flex flex-col gap-1.5", children: [
-              { id: "light", icon: Sun, label: t("system_settings_theme_light", { defaultMessage: "CLARO" }) },
-              { id: "dark", icon: Moon, label: t("system_settings_theme_dark", { defaultMessage: "OSCURO" }) },
-              { id: "system", icon: Monitor, label: t("system_settings_theme_system", { defaultMessage: "SISTEMA" }) }
-            ].map((item) => /* @__PURE__ */ jsxs(
-              "button",
-              {
-                "aria-label": `${t("system_settings_theme", { defaultMessage: "TEMA" })}: ${item.label}`,
-                onClick: () => handleThemeChange(item.id),
-                className: cn(
-                  "flex items-center justify-between px-3 py-2 text-[10px] font-bold uppercase transition-all duration-200 border cursor-pointer rounded-none",
-                  activeTheme === item.id ? "bg-primary/10 border-primary/30 text-primary" : "bg-card border-border hover:bg-muted text-muted-foreground"
-                ),
-                children: [
-                  /* @__PURE__ */ jsx(item.icon, { size: 12 }),
-                  /* @__PURE__ */ jsx("span", { className: "flex-1 text-left ml-2", children: item.label }),
-                  activeTheme === item.id && /* @__PURE__ */ jsx(Check, { size: 10 })
-                ]
-              },
-              item.id
-            )) })
           ] }),
           (isAuthenticated || showLogin) && /* @__PURE__ */ jsx("div", { className: "mt-6 pt-4 border-t border-border", children: isAuthenticated ? onLogout ? /* @__PURE__ */ jsxs(
             "button",
@@ -690,10 +1744,13 @@ function SystemSettings({
 }
 
 // src/utils/featureFlags.ts
-var featureFlags = {
-  // Enables live telemetry mode globally. Set to false to disable across all apps.
+var _flags = {
   liveModeEnabled: true
 };
+var featureFlags = _flags;
+function configureFeatureFlags(overrides) {
+  Object.assign(_flags, overrides);
+}
 function useLivePolling({ tenantId, pollInterval = 5e3 }) {
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -822,10 +1879,11 @@ function AuditDeltaViewer({ log }) {
     })
   ] });
 }
-function LiveLogViewer({ tenantId }) {
+function LiveLogViewer({ tenantId, liveModeEnabled }) {
   const t = (key, opts) => opts?.defaultMessage || key;
   const { logs, loading, newLogIds, isLive, toggleLive, lastFetched } = useLivePolling({ tenantId });
-  if (!featureFlags.liveModeEnabled) {
+  const isLiveMode = liveModeEnabled ?? featureFlags.liveModeEnabled;
+  if (!isLiveMode) {
     return /* @__PURE__ */ jsx("div", { className: "p-4 text-sm text-muted-foreground", children: "Live telemetry is disabled." });
   }
   return /* @__PURE__ */ jsxs("div", { className: "space-y-4", children: [
@@ -987,6 +2045,6 @@ function AuditHistoryModal({
   ] }) });
 }
 
-export { ActionBadge, AuditDeltaViewer, AuditHistoryModal, CommandPalette, LiveLogViewer, SystemSettings, TenantSelector, UserIdentity, cn, featureFlags };
+export { ANIM_DURATION, ActionBadge, AuditDeltaViewer, AuditHistoryModal, CommandPalette, ConfirmDialog, GlobalFooter, GlobalNavbar, IndustrialTopBar, LiveLogViewer, SmartNavbar, SystemSettings, TenantSelector, UserIdentity, buildSidebarLinks, cn, configureFeatureFlags, featureFlags, useConfirmDialog };
 //# sourceMappingURL=index.js.map
 //# sourceMappingURL=index.js.map

@@ -1,7 +1,5 @@
 // LiveLogViewer component – shared live telemetry UI
 
-'use client';
-
 import React from 'react';
 import { featureFlags } from '../utils/featureFlags.js';
 import { useLivePolling } from '../hooks/useLivePolling.js';
@@ -12,14 +10,17 @@ import { Activity, Calendar, User, Wifi, WifiOff, ShieldCheck, BookOpen, Buildin
 
 interface LiveLogViewerProps {
   tenantId: string;
+  /** Override the global feature flag for live mode on this instance */
+  liveModeEnabled?: boolean;
 }
 
-export function LiveLogViewer({ tenantId }: LiveLogViewerProps) {
+export function LiveLogViewer({ tenantId, liveModeEnabled }: LiveLogViewerProps) {
   const t = (key: string, opts?: { defaultMessage?: string }) => opts?.defaultMessage || key;
 
   const { logs, loading, newLogIds, isLive, toggleLive, lastFetched } = useLivePolling({ tenantId });
 
-  if (!featureFlags.liveModeEnabled) {
+  const isLiveMode = liveModeEnabled ?? featureFlags.liveModeEnabled;
+  if (!isLiveMode) {
     return <div className="p-4 text-sm text-muted-foreground">Live telemetry is disabled.</div>;
   }
 

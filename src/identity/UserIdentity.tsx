@@ -1,5 +1,3 @@
-'use client';
-
 import React from 'react';
 import { ShieldCheck, Settings, LogOut } from 'lucide-react';
 

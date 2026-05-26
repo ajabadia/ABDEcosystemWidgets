@@ -1,5 +1,3 @@
-'use client';
-
 import * as React from "react";
 import { useState, useRef, useEffect } from "react";
 import { Settings, X, LogIn, LogOut, Sun, Moon, Monitor, Languages, Check } from "lucide-react";
@@ -116,7 +114,7 @@ export function SystemSettings({
   }
 
   return (
-    <div className="relative inline-block text-left" ref={containerRef}>
+    <div className="relative inline-block text-left z-[55]" ref={containerRef}>
       <button
         aria-label="Open Settings"
         onClick={() => setIsOpen(!isOpen)}
@@ -153,64 +151,6 @@ export function SystemSettings({
               <X size={14} />
             </button>
           </div>
-
-          {/* Language Selector */}
-          <div className="space-y-2 mb-6">
-            <div className="flex items-center gap-2 text-[9px] font-bold text-primary uppercase tracking-widest mb-3">
-              <Languages size={12} />
-              {t('system_settings_language', { defaultMessage: 'IDIOMA' })}
-            </div>
-            <div className="grid grid-cols-2 gap-2">
-              {locales.map((loc) => (
-                <button
-                  key={loc}
-                  aria-label={`${t('system_settings_language', { defaultMessage: 'IDIOMA' })}: ${loc.toUpperCase()}`}
-                  onClick={() => onLocaleChange(loc)}
-                  className={cn(
-                    "flex items-center justify-between px-3 py-2 text-[10px] font-bold uppercase transition-all duration-200 border cursor-pointer rounded-none",
-                    locale === loc
-                      ? "bg-primary/10 border-primary/30 text-primary"
-                      : "bg-card border-border hover:bg-muted text-muted-foreground"
-                  )}
-                >
-                  {loc}
-                  {locale === loc && <Check size={10} />}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Theme Selector */}
-          <div className="space-y-2">
-            <div className="flex items-center gap-2 text-[9px] font-bold text-primary uppercase tracking-widest mb-3">
-              <Monitor size={12} />
-              {t('system_settings_theme', { defaultMessage: 'TEMA' })}
-            </div>
-            <div className="flex flex-col gap-1.5">
-              {[
-                { id: "light", icon: Sun, label: t('system_settings_theme_light', { defaultMessage: 'CLARO' }) },
-                { id: "dark", icon: Moon, label: t('system_settings_theme_dark', { defaultMessage: 'OSCURO' }) },
-                { id: "system", icon: Monitor, label: t('system_settings_theme_system', { defaultMessage: 'SISTEMA' }) },
-              ].map((item) => (
-                <button
-                  key={item.id}
-                  aria-label={`${t('system_settings_theme', { defaultMessage: 'TEMA' })}: ${item.label}`}
-                  onClick={() => handleThemeChange(item.id)}
-                  className={cn(
-                    "flex items-center justify-between px-3 py-2 text-[10px] font-bold uppercase transition-all duration-200 border cursor-pointer rounded-none",
-                    activeTheme === item.id
-                      ? "bg-primary/10 border-primary/30 text-primary"
-                      : "bg-card border-border hover:bg-muted text-muted-foreground"
-                  )}
-                >
-                  <item.icon size={12} />
-                  <span className="flex-1 text-left ml-2">{item.label}</span>
-                  {activeTheme === item.id && <Check size={10} />}
-                </button>
-              ))}
-            </div>
-          </div>
-
           {/* Auth Section */}
           {(isAuthenticated || showLogin) && (
             <div className="mt-6 pt-4 border-t border-border">

@@ -1,5 +1,3 @@
-'use client';
-
 // Hook for live polling of audit logs
 import { useState, useEffect, useRef, useCallback } from 'react';
 import type { AuditLog } from '../types.js';

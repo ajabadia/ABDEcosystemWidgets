@@ -1,5 +1,3 @@
-'use client';
-
 import React from 'react';
 import { FileCode, Tag } from 'lucide-react';
 import type { AuditLog } from '../types.js';

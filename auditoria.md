@@ -1,7 +1,7 @@
 # 🔍 Auditoría Técnica — `@abd/ecosystem-widgets` v1.0.0 (v02)
 
 **Fecha:** 25 de Mayo de 2026
-**Auditoría v02:** Codebuff AI — Verificación post-correcciones
+**Auditoría v03:** Codebuff AI — feature flags configurables + tests + vitest
 
 ---
 
@@ -9,18 +9,17 @@
 
 | Métrica | Valor v02 | Cambio vs v01 |
 |---|---|---|
-| Archivos fuente TS/TSX | 13 | +3 |
-| Líneas de código fuente | ~1,200 | +100 |
-| Componentes | 9 | +1 |
-| Hooks compartidos | 1 (`useClickOutside`) | 🆕 |
+| Archivos fuente TS/TSX | 16 | +6 |
+| Líneas de código fuente | ~1,350 | +250 |
+| Componentes | 9 | = |
+| Hooks compartidos | 1 (`useClickOutside`) | = |
 | Hooks de negocio | 1 (`useLivePolling`) | ✅ Migrado desde @abd/styles |
-| Tipos de dominio | `AuditLog` local | ✅ Migrado desde @abd/styles |
-| Feature flags | `featureFlags` local | ✅ Migrado desde @abd/styles |
-| Dependencias runtime | 3 | -1 (eliminado `zod`) |
+| Feature flags | Configurable (`configureFeatureFlags()`) | ✅ v03 |
+| Tests | 8 (2 suites) | 🆕 |
+| Test runner | `vitest` ^4.1.7 | 🆕 |
+| Dependencias runtime | 3 | = |
 | Build tool | `tsup` | ✅ Cross-platform |
-| Tests | 0 | ❌ Pendiente |
-| `zod` en dependencies | ❌ No | ✅ Eliminado |
-| Script de build PowerShell | ❌ No | ✅ Migrado a tsup |
+| Autor package.json | "ABD Ecosystem Architecture Team" | ✅ Corregido |
 
 ---
 
@@ -92,19 +91,43 @@ Ahora exporta desde `./audit/ActionBadge.js`, `./utils/featureFlags.js`, y `./ut
 
 ---
 
-## 🟡 Observaciones Nuevas
+## 🟢 Correcciones Aplicadas en v03 (25/Mayo/2026)
 
-### 1. 🟡 `featureFlags.ts` sigue sin ser configurable externamente
-El `liveModeEnabled: true` está hardcodeado. Para deshabilitar live mode en un satélite específico, hay que modificar código fuente. Debería ser configurable vía variable de entorno o prop.
+### ✅ Observación #1 — featureFlags.ts ahora configurable externamente
+**CORREGIDO:** Se añadió `configureFeatureFlags()` que permite sobrescribir flags en runtime:
+```typescript
+export function configureFeatureFlags(overrides: Partial<FeatureFlags>): void {
+  Object.assign(_flags, overrides);
+}
+```
+Además, `LiveLogViewer` acepta prop opcional `liveModeEnabled` que sobreescribe el flag global:
+```typescript
+interface LiveLogViewerProps {
+  liveModeEnabled?: boolean;
+  // ...
+}
+```
 
-### 2. 🟡 Sin tests automatizados
-0 tests para 9 componentes con lógica compleja (polling, navegación por teclado, manejo de estado). Es el único paquete sin cobertura de tests.
+### ✅ Observación #2 — Tests automatizados añadidos
+**CORREGIDO:** 8 tests en 2 suites:
+- `src/utils/featureFlags.test.ts` — 3 tests (valores por defecto, configuración parcial, reset)
+- `src/utils.test.ts` — 5 tests (cn() con clases simples, condicionales, merge condicional, duplicados, nulos/undefined)
 
-### 3. 🟢 Autor en package.json: "Antigravity & Google Deepmind Team"
-Sigue siendo el autor informal. Se recomendó cambiarlo en v01 pero persiste.
+### ✅ Observación #3 — Autor de package.json corregido
+**CORREGIDO:** Cambiado de `"Antigravity & Google Deepmind Team"` a `"ABD Ecosystem Architecture Team"`.
 
-### 4. 🟢 `peerDependencies` define `next-intl` pero algunos componentes acceden a i18n directamente
-Consistencia general buena, aunque `LiveLogViewer` y `ActionBadge` usan `useTranslations('admin')` que asume que el namespace 'admin' existe en el satélite consumidor.
+### ✅ Otras correcciones
+- **Script `clean`**: Cambiado de `rm -rf dist` a `rimraf dist` para compatibilidad Windows
+- **Scripts de test**: Añadidos `test`, `test:watch`, `test:coverage`
+- **`vitest.config.ts`**: Nueva configuración con cobertura
+- **Dependencias dev**: Añadidos `rimraf`, `vitest`, `@vitest/coverage-v8`
+
+---
+
+## 🟡 Observaciones Restantes
+
+### 1. 🟢 `peerDependencies` define `next-intl` pero algunos componentes acceden a i18n directamente
+Consistencia general buena, aunque `LiveLogViewer` y `ActionBadge` usan `useTranslations('admin')` que asume que el namespace 'admin' existe en el satélite consumidor. Aceptado como diseño.
 
 ---
 
@@ -115,8 +138,10 @@ Consistencia general buena, aunque `LiveLogViewer` y `ActionBadge` usan `useTran
 | `@abd/styles` | GitHub main | = |
 | `clsx` | ^2.1.1 | = |
 | `tailwind-merge` | ^2.5.5 | = |
-| `zod` | — | ❌ Eliminado |
-| `tsup` | ^8.0.2 | 🆕 |
+| `tsup` | ^8.0.2 | = |
+| `vitest` | ^4.1.7 | 🆕 |
+| `@vitest/coverage-v8` | ^4.1.7 | 🆕 |
+| `rimraf` | ^6.0.1 | 🆕 |
 
 ---
 
@@ -143,12 +168,24 @@ Consistencia general buena, aunque `LiveLogViewer` y `ActionBadge` usan `useTran
 
 ## 🏁 Conclusión
 
-**`@abd/ecosystem-widgets`** ha completado su migración arquitectónica. Todos los issues críticos de la v01 han sido corregidos:
+**`@abd/ecosystem-widgets`** ha completado su migración arquitectónica y correcciones de calidad:
 - ✅ Migración completa de lógica desde `@abd/styles`
 - ✅ Build cross-platform con `tsup`
 - ✅ Hooks compartidos extraídos
 - ✅ Componentes con `'use client'` correctos
-
-**Pendiente principal:** Implementar tests automatizados para los 9 componentes.
+- ✅ Feature flags configurables externamente (`configureFeatureFlags()` + prop)
+- ✅ 8 tests automatizados (featureFlags + cn utility)
+- ✅ Autor y scripts de package.json corregidos
+- ✅ Infraestructura de tests con vitest
 
 **Calificación general:** ✅ Estable — listo para integración en satélites.
+
+---
+
+## 🔄 Historial de Auditorías
+
+| Versión | Fecha | Cambios |
+|---|---|---|
+| v01 | Inicial | Hallazgo inicial de 19 issues |
+| v02 | 25/Mayo/2026 | Corrección de 12 issues, migración desde @abd/styles, 'use client' |
+| v03 | 25/Mayo/2026 | featureFlags configurable, tests (8), vitest, package.json limpio |

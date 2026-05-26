@@ -18,9 +18,18 @@ export default defineConfig({
     'next/image',
     'next/navigation'
   ],
-  esbuildOptions(options) {
-    options.banner = {
-      js: '"use client";',
-    };
+  onSuccess: async () => {
+    const fs = await import('fs');
+    const js = fs.readFileSync('dist/index.js', 'utf-8');
+    fs.writeFileSync('dist/index.js', '"use client";\n' + js);
+    // Adjust sourcemap offset to account for the prepended line
+    try {
+      const mapPath = 'dist/index.js.map';
+      if (fs.existsSync(mapPath)) {
+        const map = JSON.parse(fs.readFileSync(mapPath, 'utf-8'));
+        map.mappings = ';' + map.mappings;
+        fs.writeFileSync(mapPath, JSON.stringify(map));
+      }
+    } catch {}
   },
 });

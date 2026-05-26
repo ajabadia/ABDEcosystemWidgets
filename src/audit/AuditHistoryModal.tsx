@@ -1,5 +1,3 @@
-'use client';
-
 import React, { useState, useEffect } from 'react';
 import { X, Activity, FileText, BarChart3, Loader2 } from 'lucide-react';
 import { cn } from '../utils.js';
