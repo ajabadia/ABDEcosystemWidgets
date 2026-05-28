@@ -1,4 +1,4 @@
-# `@abd/ecosystem-widgets`
+# `@ajabadia/ecosystem-widgets`
 
 Paquete de componentes React con lógica de negocio (*smart components*) centralizada para el ecosistema ABD. Estos widgets manejan estados, contextos (`next-intl`, temas), peticiones a APIs internas e lógica interactiva avanzada.
 
@@ -11,9 +11,9 @@ Barra de navegación superior unificada que reemplaza `SidebarNavigation` + `Ind
 ### Requisitos de Importación
 
 ```typescript
-import { SmartNavbar } from "@abd/ecosystem-widgets";
-import type { GlobalNavbarSession, SidebarLink } from "@abd/ecosystem-widgets";
-import "@abd/styles/dist/styles/industrial-core.css"; // CSS global: .navbar-top-layout, .smart-navbar, .smart-navbar-dropdown
+import { SmartNavbar } from "@ajabadia/ecosystem-widgets";
+import type { GlobalNavbarSession, SidebarLink } from "@ajabadia/ecosystem-widgets";
+import "@ajabadia/styles/dist/styles/industrial-core.css"; // CSS global: .navbar-top-layout, .smart-navbar, .smart-navbar-dropdown
 ```
 
 ### Props
@@ -116,10 +116,10 @@ interface SmartNavbarTranslations {
 
 ```tsx
 // app/[locale]/layout.tsx
-import { SmartNavbar } from "@abd/ecosystem-widgets";
-import type { GlobalNavbarSession, SidebarLink } from "@abd/ecosystem-widgets";
+import { SmartNavbar } from "@ajabadia/ecosystem-widgets";
+import type { GlobalNavbarSession, SidebarLink } from "@ajabadia/ecosystem-widgets";
 import { TenantSelector } from "@/identity/TenantSelector"; // local
-import { SystemSettings } from "@abd/ecosystem-widgets";
+import { SystemSettings } from "@ajabadia/ecosystem-widgets";
 import { getIndustrialSession } from "@/lib/auth";
 import { resolveTenantBranding } from "@/lib/branding";
 import { buildSidebarLinks } from "@/lib/links";
@@ -219,4 +219,4 @@ export default async function LocaleLayout({
 
 ## Arquitectura
 
-Para mantener la limpieza arquitectónica, los componentes de negocio (Widgets) se empaquetan y versionan independientemente de los tokens de estilo (`@abd/styles`). Todos los widgets están protegidos con `'use client'` para garantizar compatibilidad con RSC.
+Para mantener la limpieza arquitectónica, los componentes de negocio (Widgets) se empaquetan y versionan independientemente de los tokens de estilo (`@ajabadia/styles`). Todos los widgets están protegidos con `'use client'` para garantizar compatibilidad con RSC.

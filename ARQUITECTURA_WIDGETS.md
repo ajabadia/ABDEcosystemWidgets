@@ -8,9 +8,9 @@ Originalmente, componentes con "inteligencia" (que hacían peticiones `fetch`, q
 ## 2. Nueva Frontera Arquitectónica
 Para evitar la proliferación excesiva de paquetes `package.json`, agruparemos los componentes inteligentes en este paquete (`ABDEcosystemWidgets`), pero estructurados en **subcarpetas temáticas**:
 
-* **`@abd/styles`**: SOLO componentes presentacionales "tontos". Reciben `props` y emiten `eventos`. No saben de APIs, ni de fetch, ni de tokens. (Ej: `Button`, `Modal`, `Table`, `Badge`).
-* **`@abd/satellite-sdk`**: SDK puro de backend/frontend para gestionar la criptografía de sesión, JWT, guards de seguridad y utilidades de red. Idealmente sin renderizado complejo de UI.
-* **`@abd/ecosystem-widgets` (Este paquete)**: "Smart Components" o Widgets. Usan `@abd/styles` para pintarse y `@abd/satellite-sdk` para conectarse a las APIs del ecosistema.
+* **`@ajabadia/styles`**: SOLO componentes presentacionales "tontos". Reciben `props` y emiten `eventos`. No saben de APIs, ni de fetch, ni de tokens. (Ej: `Button`, `Modal`, `Table`, `Badge`).
+* **`@ajabadia/satellite-sdk`**: SDK puro de backend/frontend para gestionar la criptografía de sesión, JWT, guards de seguridad y utilidades de red. Idealmente sin renderizado complejo de UI.
+* **`@ajabadia/ecosystem-widgets` (Este paquete)**: "Smart Components" o Widgets. Usan `@ajabadia/styles` para pintarse y `@ajabadia/satellite-sdk` para conectarse a las APIs del ecosistema.
 
 ## 3. Estructura Interna Propuesta (Temática)
 Para mantener el orden interno, dividiremos el código en subdirectorios:
@@ -35,7 +35,7 @@ Dado que el ecosistema NO utiliza un Monorepo a nivel de Git (cada aplicación t
 Para desplegar aplicaciones que usan este paquete, es OBLIGATORIO:
 1. Crear un repositorio en GitHub para `ABDEcosystemWidgets`.
 2. Hacer push de este código.
-3. Referenciarlo en el `package.json` de los satélites usando la sintaxis de GitHub (Ej: `"@abd/ecosystem-widgets": "github:ajabadia/ABDEcosystemWidgets#main"`).
+3. Referenciarlo en el `package.json` de los satélites usando la sintaxis de GitHub (Ej: `"@ajabadia/ecosystem-widgets": "github:ajabadia/ABDEcosystemWidgets#main"`).
 Esto asegura que Vercel, al clonar un satélite, pueda descargar este paquete directamente desde GitHub.
 
 ## 6. Internacionalización estricta con `next-intl`

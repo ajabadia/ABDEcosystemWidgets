@@ -1,7 +1,7 @@
 "use client";
 import * as React7 from 'react';
 import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
-import { Building2, Loader2, ChevronDown, Search, Check, X, ShieldCheck, Settings, LogOut, Terminal, CornerDownLeft, Shield, Menu, Sun, Languages, Moon, Monitor, User, Info, AlertTriangle, LogIn, Activity, Layers, FileCode, Tag, Wifi, WifiOff, FileText, BarChart3 } from 'lucide-react';
+import { Building2, Loader2, ChevronDown, Search, Check, X, ShieldCheck, Settings, LogOut, Terminal, CornerDownLeft, Shield, Menu, Sun, Languages, Info, AlertTriangle, LogIn, Activity, Layers, FileCode, Tag, Wifi, WifiOff, FileText, BarChart3, Moon, Monitor, User } from 'lucide-react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { jsxs, jsx, Fragment } from 'react/jsx-runtime';
@@ -886,6 +886,194 @@ function IndustrialTopBar({
     }
   );
 }
+function LocalizedLink({
+  href,
+  transformHref = (h) => h,
+  onClick,
+  className,
+  title,
+  children,
+  "data-testid": dataTestId
+}) {
+  const finalHref = transformHref(href);
+  const isExternal = finalHref.startsWith("http://") || finalHref.startsWith("https://");
+  if (isExternal) {
+    return /* @__PURE__ */ jsx("a", { href: finalHref, onClick, className, title, "data-testid": dataTestId, children });
+  }
+  if (onClick) {
+    return /* @__PURE__ */ jsx(Link, { href: finalHref, className, onClick, title, "data-testid": dataTestId, children });
+  }
+  return /* @__PURE__ */ jsx(Link, { href: finalHref, className, title, "data-testid": dataTestId, children });
+}
+function SmartNavbarNavMenu({ links, transformHref }) {
+  return /* @__PURE__ */ jsx("div", { className: "flex gap-8", children: /* @__PURE__ */ jsxs("div", { children: [
+    /* @__PURE__ */ jsx("h3", { className: "font-mono text-[9px] font-bold tracking-widest uppercase text-muted-foreground mb-3", children: "ACCESOS R\xC1PIDOS" }),
+    /* @__PURE__ */ jsx("div", { className: "flex flex-col gap-2", children: links.map((link, idx) => /* @__PURE__ */ jsxs(
+      LocalizedLink,
+      {
+        href: link.href,
+        transformHref,
+        "data-testid": `navbar-link-idx-${idx}`,
+        className: "flex items-center gap-3 px-3 py-2 font-mono text-[11px] uppercase tracking-wider text-muted-foreground hover:text-primary hover:bg-primary/5 border border-transparent hover:border-primary/20 transition-all duration-200",
+        children: [
+          /* @__PURE__ */ jsx("span", { className: "shrink-0", children: link.icon }),
+          link.label
+        ]
+      },
+      link.href
+    )) })
+  ] }) });
+}
+function SmartNavbarThemeMenu({ currentTheme, setTheme, t }) {
+  const themes = [
+    { value: "light", icon: Sun, label: t.themeLight },
+    { value: "dark", icon: Moon, label: t.themeDark },
+    { value: "system", icon: Monitor, label: t.themeSystem }
+  ];
+  return /* @__PURE__ */ jsxs("div", { children: [
+    /* @__PURE__ */ jsx("h3", { className: "font-mono text-[9px] font-bold tracking-widest uppercase text-muted-foreground mb-3", children: t.themeLabel }),
+    /* @__PURE__ */ jsx("div", { className: "flex gap-3", children: themes.map(({ value, icon: Icon, label }) => {
+      const isActive = currentTheme === value;
+      return /* @__PURE__ */ jsxs(
+        "button",
+        {
+          onClick: () => setTheme(value),
+          className: cn(
+            "flex flex-col items-center gap-2 p-4 border transition-all duration-200 cursor-pointer min-w-[100px] rounded-none",
+            isActive ? "border-primary/60 bg-primary/5 text-primary" : "border-border bg-muted/10 hover:border-primary/40 hover:bg-primary/5 text-muted-foreground"
+          ),
+          children: [
+            /* @__PURE__ */ jsx(Icon, { size: 18, className: isActive ? "text-primary" : "text-muted-foreground" }),
+            /* @__PURE__ */ jsx("span", { className: cn(
+              "font-mono text-[9px] font-bold tracking-widest uppercase",
+              isActive ? "text-primary" : "text-muted-foreground"
+            ), children: label })
+          ]
+        },
+        value
+      );
+    }) })
+  ] });
+}
+function SmartNavbarLanguageMenu({ locale, onLocaleChange, onClose }) {
+  return /* @__PURE__ */ jsx("div", { children: /* @__PURE__ */ jsx("div", { className: "flex gap-3", children: [
+    { value: "es", label: "ESPA\xD1OL" },
+    { value: "en", label: "ENGLISH" }
+  ].map(({ value, label }) => /* @__PURE__ */ jsx(
+    "button",
+    {
+      onClick: () => {
+        onLocaleChange(value);
+        onClose();
+      },
+      className: cn(
+        "flex flex-col items-center justify-center gap-2 p-4 border font-mono text-[9px] font-bold tracking-widest uppercase transition-all duration-200 cursor-pointer min-w-[100px] rounded-none",
+        locale === value ? "border-primary/60 bg-primary/5 text-primary" : "border-border bg-muted/10 hover:border-primary/40 hover:bg-primary/5 text-muted-foreground"
+      ),
+      children: /* @__PURE__ */ jsx("span", { children: label })
+    },
+    value
+  )) }) });
+}
+function SmartNavbarUserMenu({
+  user,
+  userInitial,
+  t,
+  onLogout,
+  transformHref,
+  onClose
+}) {
+  return /* @__PURE__ */ jsxs("div", { className: "flex flex-col md:flex-row gap-6 md:gap-8 items-start md:items-center w-full justify-between max-w-4xl", children: [
+    /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3 shrink-0", children: [
+      /* @__PURE__ */ jsx("div", { className: "w-10 h-10 bg-primary/10 border border-primary/20 flex items-center justify-center font-bold text-sm text-primary rounded-none", children: userInitial }),
+      /* @__PURE__ */ jsxs("div", { children: [
+        /* @__PURE__ */ jsx("p", { className: "font-mono text-xs font-bold uppercase text-foreground", children: user.name }),
+        /* @__PURE__ */ jsx("p", { className: "font-mono text-[9px] text-muted-foreground uppercase tracking-wider", children: user.role })
+      ] })
+    ] }),
+    /* @__PURE__ */ jsxs("div", { className: "font-mono text-[9px] text-muted-foreground/60 space-y-1 min-w-[240px] border-l border-border/50 pl-6 hidden md:block", children: [
+      /* @__PURE__ */ jsxs("div", { className: "flex justify-between gap-4", children: [
+        /* @__PURE__ */ jsxs("span", { children: [
+          t.identityProvider,
+          ":"
+        ] }),
+        /* @__PURE__ */ jsx("span", { className: "text-primary font-bold", children: t.statusOnline })
+      ] }),
+      user.email && /* @__PURE__ */ jsxs("div", { className: "flex justify-between gap-4", children: [
+        /* @__PURE__ */ jsxs("span", { children: [
+          t.emailLabel,
+          ":"
+        ] }),
+        /* @__PURE__ */ jsx("span", { className: "truncate max-w-[160px]", children: user.email.toLowerCase() })
+      ] })
+    ] }),
+    /* @__PURE__ */ jsxs("div", { className: "font-mono text-[9px] text-muted-foreground/60 space-y-1 w-full border-t border-border/50 pt-3 md:hidden", children: [
+      /* @__PURE__ */ jsxs("div", { className: "flex justify-between", children: [
+        /* @__PURE__ */ jsxs("span", { children: [
+          t.identityProvider,
+          ":"
+        ] }),
+        /* @__PURE__ */ jsx("span", { className: "text-primary font-bold", children: t.statusOnline })
+      ] }),
+      user.email && /* @__PURE__ */ jsxs("div", { className: "flex justify-between", children: [
+        /* @__PURE__ */ jsxs("span", { children: [
+          t.emailLabel,
+          ":"
+        ] }),
+        /* @__PURE__ */ jsx("span", { className: "truncate", children: user.email.toLowerCase() })
+      ] })
+    ] }),
+    /* @__PURE__ */ jsxs("div", { className: "flex flex-col sm:flex-row gap-2 shrink-0 w-full md:w-auto", children: [
+      /* @__PURE__ */ jsxs(
+        LocalizedLink,
+        {
+          href: "/profile",
+          transformHref,
+          onClick: onClose,
+          className: "flex items-center justify-center gap-2 px-4 py-2 border border-border text-[9px] font-mono font-bold tracking-widest uppercase text-muted-foreground hover:text-primary hover:border-primary/30 transition-all duration-200 rounded-none w-full sm:w-auto",
+          children: [
+            /* @__PURE__ */ jsx(User, { size: 12 }),
+            t.profileLabel
+          ]
+        }
+      ),
+      /* @__PURE__ */ jsxs(
+        "button",
+        {
+          onClick: () => {
+            onLogout();
+            onClose();
+          },
+          className: "flex items-center justify-center gap-2 px-4 py-2 border border-border text-[9px] font-mono font-bold tracking-widest uppercase text-red-400 hover:bg-red-500/10 hover:border-red-500/20 transition-all duration-200 cursor-pointer rounded-none w-full sm:w-auto",
+          children: [
+            /* @__PURE__ */ jsx(LogOut, { size: 12 }),
+            t.logoutBtn
+          ]
+        }
+      )
+    ] })
+  ] });
+}
+function SmartNavbarSearchMenu({ locale, onSearchTrigger, onClose }) {
+  return /* @__PURE__ */ jsx("div", { className: "w-full flex justify-center py-2", children: /* @__PURE__ */ jsxs(
+    "button",
+    {
+      "data-testid": "navbar-mega-search-trigger",
+      onClick: () => {
+        onSearchTrigger?.();
+        onClose();
+      },
+      className: "flex items-center justify-between gap-4 w-full max-w-lg bg-card/60 border border-border px-4 py-3 text-[11px] text-muted-foreground/75 font-mono hover:bg-card hover:border-primary/50 transition-all duration-200 cursor-pointer rounded-none shadow-none",
+      children: [
+        /* @__PURE__ */ jsxs("span", { className: "flex items-center gap-2", children: [
+          /* @__PURE__ */ jsx(Search, { size: 14, className: "text-primary" }),
+          locale === "es" ? "ESCRIBE UN COMANDO O BUSCA..." : "TYPE A COMMAND OR SEARCH..."
+        ] }),
+        /* @__PURE__ */ jsx("kbd", { className: "px-1.5 py-0.5 text-[9px] font-mono border border-border/50 text-muted-foreground/50 bg-background/50", children: "Ctrl+K" })
+      ]
+    }
+  ) });
+}
 var defaultTranslations2 = {
   brandFallback: "ABD SYSTEM",
   logoutBtn: "TERMINAR SESI\xD3N",
@@ -916,28 +1104,6 @@ var SlotErrorBoundary = class extends React7.Component {
     return this.props.children;
   }
 };
-function LocalizedLink({
-  href,
-  transformHref = (h) => h,
-  onClick,
-  className,
-  title,
-  children,
-  "data-testid": dataTestId
-}) {
-  const finalHref = transformHref(href);
-  const isExternal = finalHref.startsWith("http://") || finalHref.startsWith("https://");
-  if (isExternal) {
-    if (onClick) {
-      return /* @__PURE__ */ jsx("a", { href: finalHref, onClick, className, title, "data-testid": dataTestId, children });
-    }
-    return /* @__PURE__ */ jsx("a", { href: finalHref, className, title, "data-testid": dataTestId, children });
-  }
-  if (onClick) {
-    return /* @__PURE__ */ jsx(Link, { href: finalHref, className, onClick, title, "data-testid": dataTestId, children });
-  }
-  return /* @__PURE__ */ jsx(Link, { href: finalHref, className, title, "data-testid": dataTestId, children });
-}
 function SmartNavbar({
   session,
   links,
@@ -1024,6 +1190,10 @@ function SmartNavbar({
       setLockedMenu(menuName);
     }
   }, [lockedMenu, activeMenu]);
+  const closeMenus = useCallback(() => {
+    setActiveMenu(null);
+    setLockedMenu(null);
+  }, []);
   const setTheme = useCallback((theme) => {
     const root = document.documentElement;
     root.classList.remove("light", "dark");
@@ -1039,7 +1209,6 @@ function SmartNavbar({
     }
     setCurrentTheme(theme);
   }, []);
-  user?.tenantId || (isAuthenticated ? "GLOBAL" : "");
   const userInitial = user?.name?.charAt(0)?.toUpperCase() || "U";
   const renderNavLinks = () => links.map((link, idx) => {
     const isActive = activeHref ? activeHref === link.href || link.href !== "/" && link.href !== "/dashboard" && link.href !== "/admin" && activeHref?.startsWith(link.href + "/") : false;
@@ -1093,13 +1262,7 @@ function SmartNavbar({
               ]
             }
           ) }),
-          isAuthenticated && /* @__PURE__ */ jsx(
-            "nav",
-            {
-              className: "smart-navbar-desktop-only flex items-center gap-1",
-              children: renderNavLinks()
-            }
-          ),
+          isAuthenticated && /* @__PURE__ */ jsx("nav", { className: "smart-navbar-desktop-only flex items-center gap-1", children: renderNavLinks() }),
           /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2", children: [
             isAuthenticated && /* @__PURE__ */ jsx(
               "div",
@@ -1184,7 +1347,6 @@ function SmartNavbar({
                   {
                     "data-testid": "navbar-menu-user",
                     className: "w-7 h-7 shrink-0 aspect-square flex items-center justify-center bg-primary/10 border border-primary/20 text-primary font-bold text-xs hover:bg-primary/20 transition-all duration-200 cursor-pointer rounded-none",
-                    style: { width: "28px", height: "28px" },
                     "aria-haspopup": "true",
                     "aria-expanded": activeMenu === "user",
                     children: userInitial
@@ -1216,179 +1378,48 @@ function SmartNavbar({
               "max-w-[1600px] mx-auto p-6 flex",
               activeMenu === "theme" || activeMenu === "language" || activeMenu === "user" ? "justify-end" : "justify-start"
             ), children: [
-              activeMenu === "navigation" && /* @__PURE__ */ jsx("div", { className: "flex gap-8", children: /* @__PURE__ */ jsxs("div", { children: [
-                /* @__PURE__ */ jsx("h3", { className: "font-mono text-[9px] font-bold tracking-widest uppercase text-muted-foreground mb-3", children: "ACCESOS R\xC1PIDOS" }),
-                /* @__PURE__ */ jsx("div", { className: "flex flex-col gap-2", children: links.map((link, idx) => /* @__PURE__ */ jsxs(
-                  LocalizedLink,
-                  {
-                    href: link.href,
-                    transformHref,
-                    "data-testid": `navbar-link-idx-${idx}`,
-                    className: "flex items-center gap-3 px-3 py-2 font-mono text-[11px] uppercase tracking-wider text-muted-foreground hover:text-primary hover:bg-primary/5 border border-transparent hover:border-primary/20 transition-all duration-200",
-                    children: [
-                      /* @__PURE__ */ jsx("span", { className: "shrink-0", children: link.icon }),
-                      link.label
-                    ]
-                  },
-                  link.href
-                )) })
-              ] }) }),
-              activeMenu === "theme" && /* @__PURE__ */ jsxs("div", { children: [
-                /* @__PURE__ */ jsx("h3", { className: "font-mono text-[9px] font-bold tracking-widest uppercase text-muted-foreground mb-3", children: t.themeLabel }),
-                /* @__PURE__ */ jsx("div", { className: "flex gap-3", children: [
-                  { value: "light", icon: Sun, label: t.themeLight },
-                  { value: "dark", icon: Moon, label: t.themeDark },
-                  { value: "system", icon: Monitor, label: t.themeSystem }
-                ].map(({ value, icon: Icon, label }) => {
-                  const isActive = currentTheme === value;
-                  return /* @__PURE__ */ jsxs(
-                    "button",
-                    {
-                      onClick: () => setTheme(value),
-                      className: cn(
-                        "flex flex-col items-center gap-2 p-4 border transition-all duration-200 cursor-pointer min-w-[100px] rounded-none",
-                        isActive ? "border-primary/60 bg-primary/5 text-primary" : "border-border bg-muted/10 hover:border-primary/40 hover:bg-primary/5 text-muted-foreground"
-                      ),
-                      children: [
-                        /* @__PURE__ */ jsx(Icon, { size: 18, className: isActive ? "text-primary" : "text-muted-foreground" }),
-                        /* @__PURE__ */ jsx("span", { className: cn(
-                          "font-mono text-[9px] font-bold tracking-widest uppercase",
-                          isActive ? "text-primary" : "text-muted-foreground"
-                        ), children: label })
-                      ]
-                    },
-                    value
-                  );
-                }) })
-              ] }),
-              activeMenu === "language" && onLocaleChange && /* @__PURE__ */ jsxs("div", { children: [
-                /* @__PURE__ */ jsx("h3", { className: "font-mono text-[9px] font-bold tracking-widest uppercase text-muted-foreground mb-3", children: t.languageLabel }),
-                /* @__PURE__ */ jsxs("div", { className: "flex gap-3", children: [
-                  /* @__PURE__ */ jsx(
-                    "button",
-                    {
-                      onClick: () => {
-                        onLocaleChange("es");
-                        setActiveMenu(null);
-                        setLockedMenu(null);
-                      },
-                      className: cn(
-                        "flex flex-col items-center justify-center gap-2 p-4 border font-mono text-[9px] font-bold tracking-widest uppercase transition-all duration-200 cursor-pointer min-w-[100px] rounded-none",
-                        locale === "es" ? "border-primary/60 bg-primary/5 text-primary" : "border-border bg-muted/10 hover:border-primary/40 hover:bg-primary/5 text-muted-foreground"
-                      ),
-                      children: /* @__PURE__ */ jsx("span", { children: "ESPA\xD1OL" })
-                    }
-                  ),
-                  /* @__PURE__ */ jsx(
-                    "button",
-                    {
-                      onClick: () => {
-                        onLocaleChange("en");
-                        setActiveMenu(null);
-                        setLockedMenu(null);
-                      },
-                      className: cn(
-                        "flex flex-col items-center justify-center gap-2 p-4 border font-mono text-[9px] font-bold tracking-widest uppercase transition-all duration-200 cursor-pointer min-w-[100px] rounded-none",
-                        locale === "en" ? "border-primary/60 bg-primary/5 text-primary" : "border-border bg-muted/10 hover:border-primary/40 hover:bg-primary/5 text-muted-foreground"
-                      ),
-                      children: /* @__PURE__ */ jsx("span", { children: "ENGLISH" })
-                    }
-                  )
-                ] })
-              ] }),
-              activeMenu === "user" && user && /* @__PURE__ */ jsxs("div", { className: "flex flex-col md:flex-row gap-6 md:gap-8 items-start md:items-center w-full justify-between max-w-4xl", children: [
-                /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3 shrink-0", children: [
-                  /* @__PURE__ */ jsx("div", { className: "w-10 h-10 bg-primary/10 border border-primary/20 flex items-center justify-center font-bold text-sm text-primary rounded-none", children: userInitial }),
-                  /* @__PURE__ */ jsxs("div", { children: [
-                    /* @__PURE__ */ jsx("p", { className: "font-mono text-xs font-bold uppercase text-foreground", children: user.name }),
-                    /* @__PURE__ */ jsx("p", { className: "font-mono text-[9px] text-muted-foreground uppercase tracking-wider", children: user.role })
-                  ] })
-                ] }),
-                /* @__PURE__ */ jsxs("div", { className: "font-mono text-[9px] text-muted-foreground/60 space-y-1 min-w-[240px] border-l border-border/50 pl-6 hidden md:block", children: [
-                  /* @__PURE__ */ jsxs("div", { className: "flex justify-between gap-4", children: [
-                    /* @__PURE__ */ jsxs("span", { children: [
-                      t.identityProvider,
-                      ":"
-                    ] }),
-                    /* @__PURE__ */ jsx("span", { className: "text-primary font-bold", children: t.statusOnline })
-                  ] }),
-                  user.email && /* @__PURE__ */ jsxs("div", { className: "flex justify-between gap-4", children: [
-                    /* @__PURE__ */ jsxs("span", { children: [
-                      t.emailLabel,
-                      ":"
-                    ] }),
-                    /* @__PURE__ */ jsx("span", { className: "truncate max-w-[160px]", children: user.email.toLowerCase() })
-                  ] })
-                ] }),
-                /* @__PURE__ */ jsxs("div", { className: "font-mono text-[9px] text-muted-foreground/60 space-y-1 w-full border-t border-border/50 pt-3 md:hidden", children: [
-                  /* @__PURE__ */ jsxs("div", { className: "flex justify-between", children: [
-                    /* @__PURE__ */ jsxs("span", { children: [
-                      t.identityProvider,
-                      ":"
-                    ] }),
-                    /* @__PURE__ */ jsx("span", { className: "text-primary font-bold", children: t.statusOnline })
-                  ] }),
-                  user.email && /* @__PURE__ */ jsxs("div", { className: "flex justify-between", children: [
-                    /* @__PURE__ */ jsxs("span", { children: [
-                      t.emailLabel,
-                      ":"
-                    ] }),
-                    /* @__PURE__ */ jsx("span", { className: "truncate", children: user.email.toLowerCase() })
-                  ] })
-                ] }),
-                /* @__PURE__ */ jsxs("div", { className: "flex flex-col sm:flex-row gap-2 shrink-0 w-full md:w-auto", children: [
-                  /* @__PURE__ */ jsxs(
-                    LocalizedLink,
-                    {
-                      href: "/profile",
-                      transformHref,
-                      onClick: () => {
-                        setActiveMenu(null);
-                        setLockedMenu(null);
-                      },
-                      className: "flex items-center justify-center gap-2 px-4 py-2 border border-border text-[9px] font-mono font-bold tracking-widest uppercase text-muted-foreground hover:text-primary hover:border-primary/30 transition-all duration-200 rounded-none w-full sm:w-auto",
-                      children: [
-                        /* @__PURE__ */ jsx(User, { size: 12 }),
-                        t.profileLabel
-                      ]
-                    }
-                  ),
-                  /* @__PURE__ */ jsxs(
-                    "button",
-                    {
-                      onClick: () => {
-                        onLogout();
-                        setActiveMenu(null);
-                        setLockedMenu(null);
-                      },
-                      className: "flex items-center justify-center gap-2 px-4 py-2 border border-border text-[9px] font-mono font-bold tracking-widest uppercase text-red-400 hover:bg-red-500/10 hover:border-red-500/20 transition-all duration-200 cursor-pointer rounded-none w-full sm:w-auto",
-                      children: [
-                        /* @__PURE__ */ jsx(LogOut, { size: 12 }),
-                        t.logoutBtn
-                      ]
-                    }
-                  )
-                ] })
-              ] }),
-              activeMenu === "search" && /* @__PURE__ */ jsx("div", { className: "w-full flex justify-center py-2", children: /* @__PURE__ */ jsxs(
-                "button",
+              activeMenu === "navigation" && links && /* @__PURE__ */ jsx(
+                SmartNavbarNavMenu,
                 {
-                  "data-testid": "navbar-mega-search-trigger",
-                  onClick: () => {
-                    onSearchTrigger?.();
-                    setActiveMenu(null);
-                    setLockedMenu(null);
-                  },
-                  className: "flex items-center justify-between gap-4 w-full max-w-lg bg-card/60 border border-border px-4 py-3 text-[11px] text-muted-foreground/75 font-mono hover:bg-card hover:border-primary/50 transition-all duration-200 cursor-pointer rounded-none shadow-none",
-                  children: [
-                    /* @__PURE__ */ jsxs("span", { className: "flex items-center gap-2", children: [
-                      /* @__PURE__ */ jsx(Search, { size: 14, className: "text-primary" }),
-                      locale === "es" ? "ESCRIBE UN COMANDO O BUSCA..." : "TYPE A COMMAND OR SEARCH..."
-                    ] }),
-                    /* @__PURE__ */ jsx("kbd", { className: "px-1.5 py-0.5 text-[9px] font-mono border border-border/50 text-muted-foreground/50 bg-background/50", children: "Ctrl+K" })
-                  ]
+                  links,
+                  transformHref
                 }
-              ) }),
+              ),
+              activeMenu === "theme" && /* @__PURE__ */ jsx(
+                SmartNavbarThemeMenu,
+                {
+                  currentTheme,
+                  setTheme,
+                  t
+                }
+              ),
+              activeMenu === "language" && onLocaleChange && /* @__PURE__ */ jsx(
+                SmartNavbarLanguageMenu,
+                {
+                  locale,
+                  onLocaleChange,
+                  onClose: closeMenus
+                }
+              ),
+              activeMenu === "user" && user && /* @__PURE__ */ jsx(
+                SmartNavbarUserMenu,
+                {
+                  user,
+                  userInitial,
+                  t,
+                  onLogout,
+                  transformHref,
+                  onClose: closeMenus
+                }
+              ),
+              activeMenu === "search" && /* @__PURE__ */ jsx(
+                SmartNavbarSearchMenu,
+                {
+                  locale,
+                  onSearchTrigger,
+                  onClose: closeMenus
+                }
+              ),
               activeMenu === "tenant" && tenantSelectorSlot && /* @__PURE__ */ jsx("div", { className: "w-full flex justify-center", children: /* @__PURE__ */ jsx(SlotErrorBoundary, { children: React7.isValidElement(tenantSelectorSlot) ? React7.cloneElement(tenantSelectorSlot, {
                 variant: "content",
                 isOpen: true
@@ -1406,7 +1437,7 @@ function buildSidebarLinks(configs, role, isLoggedIn = false) {
   const roleUpper = role?.toUpperCase() ?? "";
   return configs.filter((link) => {
     if (link.requiresSuperAdmin) return roleUpper === "SUPER_ADMIN";
-    if (link.requiresAdmin) return roleUpper === "ADMIN" || roleUpper === "SUPER_ADMIN";
+    if (link.requiresAdmin) return roleUpper === "ADMIN" || roleUpper === "PROFESSOR" || roleUpper === "SUPER_ADMIN";
     if (link.requiresAuth) return isLoggedIn;
     return true;
   });

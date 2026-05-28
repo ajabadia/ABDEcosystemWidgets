@@ -20,7 +20,7 @@ export const featureFlags: Readonly<FeatureFlags> = _flags;
  *
  * @example
  * ```ts
- * import { configureFeatureFlags } from '@abd/ecosystem-widgets';
+ * import { configureFeatureFlags } from '@ajabadia/ecosystem-widgets';
  * configureFeatureFlags({ liveModeEnabled: false });
  * ```
  */

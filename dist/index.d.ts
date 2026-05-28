@@ -246,11 +246,11 @@ interface SidebarBuildResult {
  * Build a filtered sidebar link array based on the user's session state.
  *
  * - Links with `requiresSuperAdmin` are only included if role === 'SUPER_ADMIN'
- * - Links with `requiresAdmin` are only included if role is ADMIN or SUPER_ADMIN
+ * - Links with `requiresAdmin` are only included if role is ADMIN, PROFESSOR, or SUPER_ADMIN
  * - Links with `requiresAuth` are only included if the user is logged in
  *
  * @param configs - All possible link definitions
- * @param role    - The current user's role (e.g. 'USER' | 'ADMIN' | 'SUPER_ADMIN')
+ * @param role    - The current user's role (e.g. 'USER' | 'ADMIN' | 'PROFESSOR' | 'SUPER_ADMIN')
  * @param isLoggedIn - Whether the user is authenticated
  */
 declare function buildSidebarLinks(configs: readonly NavLinkConfig[], role?: string, isLoggedIn?: boolean): SidebarBuildResult[];

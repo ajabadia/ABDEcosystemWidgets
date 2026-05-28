@@ -22,7 +22,7 @@ export interface GlobalFooterProps {
 /**
  * 🏁 GlobalFooter — Unified Industrial Footer
  *
- * Consolidates the old `Footer` (from @abd/styles) and `GlobalFooter` (from widgets)
+ * Consolidates the old `Footer` (from @ajabadia/styles) and `GlobalFooter` (from widgets)
  * into a single component that supports three layout modes:
  *
  * 1. **Telemetry mode** — renders `telemetryItems[]` as centered key-value pairs

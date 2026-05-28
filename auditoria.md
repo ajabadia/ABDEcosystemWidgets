@@ -1,4 +1,4 @@
-# 🔍 Auditoría Técnica — `@abd/ecosystem-widgets` v1.0.0 (v02)
+# 🔍 Auditoría Técnica — `@ajabadia/ecosystem-widgets` v1.0.0 (v02)
 
 **Fecha:** 25 de Mayo de 2026
 **Auditoría v03:** Codebuff AI — feature flags configurables + tests + vitest
@@ -13,7 +13,7 @@
 | Líneas de código fuente | ~1,350 | +250 |
 | Componentes | 9 | = |
 | Hooks compartidos | 1 (`useClickOutside`) | = |
-| Hooks de negocio | 1 (`useLivePolling`) | ✅ Migrado desde @abd/styles |
+| Hooks de negocio | 1 (`useLivePolling`) | ✅ Migrado desde @ajabadia/styles |
 | Feature flags | Configurable (`configureFeatureFlags()`) | ✅ v03 |
 | Tests | 8 (2 suites) | 🆕 |
 | Test runner | `vitest` ^4.1.7 | 🆕 |
@@ -31,13 +31,13 @@ El archivo `src/audit/AuditHistoryModal.tsx` ahora incluye `'use client'` como p
 ### ✅ Issue #2 — `UserIdentity` sin `'use client'`: CORREGIDO
 El archivo `src/identity/UserIdentity.tsx` ahora incluye `'use client'`.
 
-### ✅ Issue #3 — `useLivePolling`/`featureFlags` desde @abd/styles: CORREGIDO
+### ✅ Issue #3 — `useLivePolling`/`featureFlags` desde @ajabadia/styles: CORREGIDO
 Ambos han sido migrados al paquete:
 - `src/hooks/useLivePolling.ts` — hook de polling local
 - `src/utils/featureFlags.ts` — feature flags locales
 - `src/types.ts` — tipo `AuditLog` local
 
-### ✅ Issue #4 — Tipo `AuditLog` desde @abd/styles: CORREGIDO
+### ✅ Issue #4 — Tipo `AuditLog` desde @ajabadia/styles: CORREGIDO
 Ahora definido localmente en `src/types.ts` con interfaz completa.
 
 ### ✅ Issue #5 — Build script PowerShell: CORREGIDO
@@ -73,7 +73,7 @@ El `useEffect` ahora incluye cleanup completo.
 ### ✅ Issue #18 — AuditHistoryModal no resetea estado al cerrar: CORREGIDO
 Resetea `logs` y `loading` al cerrar.
 
-### ✅ Issue #19 — `cn()` duplica @abd/styles: CORREGIDO
+### ✅ Issue #19 — `cn()` duplica @ajabadia/styles: CORREGIDO
 `utils.ts` ahora usa `clsx` + `tailwind-merge`.
 
 ---
@@ -135,7 +135,7 @@ Consistencia general buena, aunque `LiveLogViewer` y `ActionBadge` usan `useTran
 
 | Dependencia | Versión | Cambio |
 |---|---|---|
-| `@abd/styles` | GitHub main | = |
+| `@ajabadia/styles` | GitHub main | = |
 | `clsx` | ^2.1.1 | = |
 | `tailwind-merge` | ^2.5.5 | = |
 | `tsup` | ^8.0.2 | = |
@@ -168,8 +168,8 @@ Consistencia general buena, aunque `LiveLogViewer` y `ActionBadge` usan `useTran
 
 ## 🏁 Conclusión
 
-**`@abd/ecosystem-widgets`** ha completado su migración arquitectónica y correcciones de calidad:
-- ✅ Migración completa de lógica desde `@abd/styles`
+**`@ajabadia/ecosystem-widgets`** ha completado su migración arquitectónica y correcciones de calidad:
+- ✅ Migración completa de lógica desde `@ajabadia/styles`
 - ✅ Build cross-platform con `tsup`
 - ✅ Hooks compartidos extraídos
 - ✅ Componentes con `'use client'` correctos
@@ -187,5 +187,5 @@ Consistencia general buena, aunque `LiveLogViewer` y `ActionBadge` usan `useTran
 | Versión | Fecha | Cambios |
 |---|---|---|
 | v01 | Inicial | Hallazgo inicial de 19 issues |
-| v02 | 25/Mayo/2026 | Corrección de 12 issues, migración desde @abd/styles, 'use client' |
+| v02 | 25/Mayo/2026 | Corrección de 12 issues, migración desde @ajabadia/styles, 'use client' |
 | v03 | 25/Mayo/2026 | featureFlags configurable, tests (8), vitest, package.json limpio |

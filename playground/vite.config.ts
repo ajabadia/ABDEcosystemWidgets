@@ -9,7 +9,7 @@ export default defineConfig({
     alias: {
       "next/link": path.resolve(__dirname, "./src/mock-next-link.tsx"),
       "next/image": path.resolve(__dirname, "./src/mock-next-link.tsx"),
-      "@abd/styles": path.resolve(__dirname, "../../ABDStyles"),
+      "@ajabadia/styles": path.resolve(__dirname, "../../ABDStyles"),
     },
   },
 });

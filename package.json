@@ -1,9 +1,16 @@
 {
-    "name": "@abd/ecosystem-widgets",
+    "name": "@ajabadia/ecosystem-widgets",
     "version": "1.0.0",
     "type": "module",
     "description": "Smart components and widgets for ABD Suite Ecosystem.",
     "main": "./dist/index.js",
+    "publishConfig": {
+        "registry": "https://npm.pkg.github.com"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/ajabadia/ABDEcosystemWidgets.git"
+    },
     "module": "./dist/index.js",
     "types": "./dist/index.d.ts",
     "exports": {
@@ -36,7 +43,7 @@
     "author": "ABD Ecosystem Architecture Team",
     "license": "UNLICENSED",
     "dependencies": {
-        "@abd/styles": "file:../ABDStyles",
+        "@ajabadia/styles": "file:../ABDStyles",
         "clsx": "^2.1.1",
         "tailwind-merge": "^3.6.0"
     },

@@ -12,7 +12,7 @@ export default defineConfig({
     'react', 
     'react-dom', 
     'lucide-react', 
-    '@abd/styles',
+    '@ajabadia/styles',
     'next',
     'next/link',
     'next/image',

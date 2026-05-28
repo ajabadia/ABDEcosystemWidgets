@@ -1,9 +1,9 @@
-# 🔍 Auditoría Técnica Integral — `@abd/ecosystem-widgets` v1.0.0
+# 🔍 Auditoría Técnica Integral — `@ajabadia/ecosystem-widgets` v1.0.0
 
 **Fecha:** 2026-05-21
 **Alcance:** Código fuente, documentación, configuración de build, dependencias y arquitectura
 **Archivos analizados:** 10 source files (8 TSX + 1 TS barrel + 1 TS util), ARQUITECTURA_WIDGETS.md, package.json, tsconfig.json, dist output
-**Estado:** En migración activa (componentes extrayéndose de `@abd/styles`)
+**Estado:** En migración activa (componentes extrayéndose de `@ajabadia/styles`)
 
 ---
 
@@ -11,10 +11,10 @@
 
 | Propiedad | Valor |
 |---|---|
-| **Nombre** | `@abd/ecosystem-widgets` |
+| **Nombre** | `@ajabadia/ecosystem-widgets` |
 | **Versión** | 1.0.0 |
 | **Rol** | "Smart Components" / Widgets con lógica de negocio para el ecosistema ABD |
-| **Dependencias runtime** | `@abd/styles` (GitHub), `zod`, `clsx`, `tailwind-merge` |
+| **Dependencias runtime** | `@ajabadia/styles` (GitHub), `zod`, `clsx`, `tailwind-merge` |
 | **Peer dependencies** | `react` ^19, `lucide-react` ^0.46+, `next-intl` ^4.12 |
 | **Build tool** | `tsc` (TypeScript compiler nativo, sin bundler) |
 | **Tamaño source** | ~1,100 líneas TypeScript/TSX en 10 archivos |
@@ -29,7 +29,7 @@
 La separación en subdirectorios (`identity/`, `audit/`, `navigation/`, `settings/`) refleja claramente el dominio de cada componente. El documento `ARQUITECTURA_WIDGETS.md` explica el "por qué" arquitectónico de forma excelente.
 
 ### 2. Principio de separación de responsabilidades
-El paquete resuelve el problema arquitectónico de tener componentes "inteligentes" (que hacen fetch, leen JWT, conocen APIs) mezclados con componentes presentacionales puros en `@abd/styles`.
+El paquete resuelve el problema arquitectónico de tener componentes "inteligentes" (que hacen fetch, leen JWT, conocen APIs) mezclados con componentes presentacionales puros en `@ajabadia/styles`.
 
 ### 3. APIs de componentes ricas y tipadas
 Cada componente expone interfaces TypeScript completas con props bien documentadas:
@@ -80,25 +80,25 @@ Error: useState only works in Client Components.
 
 **Recomendación:** Añadir `'use client'` como primera línea en ambos archivos.
 
-### 2. `LiveLogViewer` importa hooks/lógica de negocio desde `@abd/styles`
+### 2. `LiveLogViewer` importa hooks/lógica de negocio desde `@ajabadia/styles`
 **Archivo:** `src/audit/LiveLogViewer.tsx:6-7`
 ```typescript
-import { useLivePolling, featureFlags } from '@abd/styles';
+import { useLivePolling, featureFlags } from '@ajabadia/styles';
 ```
 
-`useLivePolling` es un hook con lógica de polling, `featureFlags` es un objeto de configuración. Ambos violan el principio arquitectónico de que `@abd/styles` debe ser **solo componentes presentacionales**. Esto contradice directamente `ARQUITECTURA_WIDGETS.md`.
+`useLivePolling` es un hook con lógica de polling, `featureFlags` es un objeto de configuración. Ambos violan el principio arquitectónico de que `@ajabadia/styles` debe ser **solo componentes presentacionales**. Esto contradice directamente `ARQUITECTURA_WIDGETS.md`.
 
-**Recomendación:** Mover `useLivePolling` y `featureFlags` a este paquete (`src/audit/useLivePolling.ts`) o a `@abd/satellite-sdk`. Eliminar la dependencia de `@abd/styles` para lógica de negocio.
+**Recomendación:** Mover `useLivePolling` y `featureFlags` a este paquete (`src/audit/useLivePolling.ts`) o a `@ajabadia/satellite-sdk`. Eliminar la dependencia de `@ajabadia/styles` para lógica de negocio.
 
-### 3. Importación de tipo `AuditLog` desde `@abd/styles`
+### 3. Importación de tipo `AuditLog` desde `@ajabadia/styles`
 **Archivos:** `ActionBadge.tsx:8`, `AuditDeltaViewer.tsx:6`, `AuditHistoryModal.tsx:5`, `LiveLogViewer.tsx:8`
 ```typescript
-import type { AuditLog } from '@abd/styles';
+import type { AuditLog } from '@ajabadia/styles';
 ```
 
-El tipo `AuditLog` es un modelo de datos (no un componente presentacional). Importarlo desde `@abd/styles` crea un acoplamiento incorrecto: el design system no debería definir modelos de datos del dominio.
+El tipo `AuditLog` es un modelo de datos (no un componente presentacional). Importarlo desde `@ajabadia/styles` crea un acoplamiento incorrecto: el design system no debería definir modelos de datos del dominio.
 
-**Recomendación:** Definir `AuditLog` localmente en este paquete o en `@abd/satellite-sdk`, o crear un paquete compartido de tipos (`@abd/types`).
+**Recomendación:** Definir `AuditLog` localmente en este paquete o en `@ajabadia/satellite-sdk`, o crear un paquete compartido de tipos (`@abd/types`).
 
 ### 4. `AuditDeltaViewer` importa React sin usarlo explícitamente
 **Archivo:** `src/audit/AuditDeltaViewer.tsx:3`
@@ -253,8 +253,8 @@ El `switch (action)` tiene casos explícitos pero el `default` muestra `action` 
 ### 22. `AuditHistoryModal` no limpia el estado al cerrar
 Cuando se cierra el modal, `logs` y `loading` mantienen su estado anterior. Si se reabre para otra entidad, muestra datos viejos durante el fetch.
 
-### 23. `cn()` duplica funcionalidad de `@abd/styles`
-El `cn()` en `utils.ts` es idéntico al que probablemente exporta `@abd/styles`. Debería re-exportarse desde allí.
+### 23. `cn()` duplica funcionalidad de `@ajabadia/styles`
+El `cn()` en `utils.ts` es idéntico al que probablemente exporta `@ajabadia/styles`. Debería re-exportarse desde allí.
 
 ### 24. `ActionBadge` tiene un fallback de traducción inseguro
 ```typescript
@@ -267,10 +267,10 @@ Si `useTranslations('admin')` no encuentra la key en los mensajes de `next-intl`
 ## 🛠️ Mejoras Arquitectónicas Recomendadas
 
 ### A. Extraer tipos compartidos a un paquete `@abd/types`
-`AuditLog`, `TenantInfo`, `UserProfile`, `FederatedSession` se importan desde `@abd/styles` y `@abd/satellite-sdk` de forma cruzada. Un paquete de tipos compartidos eliminaría este acoplamiento circular.
+`AuditLog`, `TenantInfo`, `UserProfile`, `FederatedSession` se importan desde `@ajabadia/styles` y `@ajabadia/satellite-sdk` de forma cruzada. Un paquete de tipos compartidos eliminaría este acoplamiento circular.
 
 ### B. Mover `useLivePolling` a este paquete
-Es lógica de negocio de auditoría. Pertenece a `@abd/ecosystem-widgets`, no a `@abd/styles`.
+Es lógica de negocio de auditoría. Pertenece a `@ajabadia/ecosystem-widgets`, no a `@ajabadia/styles`.
 
 ### C. Crear hooks compartidos internos
 Extraer `useClickOutside`, `useMounted` (SSR-safe), y `useDebounce` a `src/hooks/` para reutilizar entre componentes.
@@ -298,7 +298,7 @@ Según `ARQUITECTURA_WIDGETS.md`, el paso #1 pendiente es crear un repo en GitHu
 | Dev dependencies | 4 |
 | Cobertura de tests | 0% |
 | Componentes sin `'use client'` (usan hooks) | 2 |
-| Importaciones desde `@abd/styles` (lógica/tipos) | 7 |
+| Importaciones desde `@ajabadia/styles` (lógica/tipos) | 7 |
 | Strings hardcodeados sin i18n | 15+ |
 | Hooks duplicados sin extraer | 2 (`useClickOutside`) |
 
@@ -344,8 +344,8 @@ Según `ARQUITECTURA_WIDGETS.md`, el paso #1 pendiente es crear un repo en GitHu
 |---|---|---|---|---|
 | 1 | ✅ Corregido: `AuditHistoryModal` sin `'use client'` (hooks) | 🔴 Crítica | Bajo | Runtime error |
 | 2 | ✅ Corregido: `UserIdentity` sin `'use client'` (seguridad) | 🔴 Crítica | Bajo | Runtime error |
-| 3 | ✅ Corregido: `useLivePolling`/`featureFlags` desde `@abd/styles` | 🔴 Crítica | Alto | Arquitectura |
-| 4 | ✅ Corregido: Tipo `AuditLog` desde `@abd/styles` (4 archivos) | 🟡 Alta | Medio | Acoplamiento |
+| 3 | ✅ Corregido: `useLivePolling`/`featureFlags` desde `@ajabadia/styles` | 🔴 Crítica | Alto | Arquitectura |
+| 4 | ✅ Corregido: Tipo `AuditLog` desde `@ajabadia/styles` (4 archivos) | 🟡 Alta | Medio | Acoplamiento |
 | 5 | ✅ Corregido: Build script PowerShell Windows-only + `src/styles` fantasma | 🟡 Alta | Medio | Build roto |
 | 6 | ✅ Corregido: `LiveLogViewer` fallback i18n primitivo | 🟡 Alta | Medio | Inconsistencia |
 | 7 | ✅ Corregido: Strings hardcodeados español (3 componentes) | 🟡 Alta | Medio | i18n |
@@ -360,16 +360,16 @@ Según `ARQUITECTURA_WIDGETS.md`, el paso #1 pendiente es crear un repo en GitHu
 | 16 | ✅ Corregido: `UserIdentity` `React.ComponentType<any>` | 🟢 Baja | Bajo | Type safety |
 | 17 | ✅ Corregido: `CommandPalette` no limpia event listeners | 🟢 Baja | Bajo | Memory leak |
 | 18 | ✅ Corregido: `AuditHistoryModal` no resetea estado al cerrar | 🟢 Baja | Bajo | UX |
-| 19 | ✅ Corregido (Aceptado): `cn()` duplica `@abd/styles` | 🟢 Baja | Bajo | DRY |
+| 19 | ✅ Corregido (Aceptado): `cn()` duplica `@ajabadia/styles` | 🟢 Baja | Bajo | DRY |
 
 ---
 
 ## 🏁 Conclusión
 
-`@abd/ecosystem-widgets` es un paquete con **excelente diseño visual y de interacción** (estilo Tech-Noir premium, accesibilidad, APIs de componentes ricas), pero con **debilidades técnicas significativas** derivadas de estar en migración activa:
+`@ajabadia/ecosystem-widgets` es un paquete con **excelente diseño visual y de interacción** (estilo Tech-Noir premium, accesibilidad, APIs de componentes ricas), pero con **debilidades técnicas significativas** derivadas de estar en migración activa:
 
 - **2 bugs críticos:** `AuditHistoryModal` y `UserIdentity` carecen de `'use client'` y romperán en Next.js App Router.
-- **Deuda arquitectónica:** Importa lógica (`useLivePolling`, `featureFlags`) y tipos (`AuditLog`) desde `@abd/styles`, violando el principio de separación que el propio `ARQUITECTURA_WIDGETS.md` establece.
+- **Deuda arquitectónica:** Importa lógica (`useLivePolling`, `featureFlags`) y tipos (`AuditLog`) desde `@ajabadia/styles`, violando el principio de separación que el propio `ARQUITECTURA_WIDGETS.md` establece.
 - **Build frágil:** Script PowerShell Windows-only que referencia una carpeta inexistente.
 - **i18n inconsistente:** 3 estrategias diferentes de traducción entre componentes.
 
@@ -380,7 +380,7 @@ Según `ARQUITECTURA_WIDGETS.md`, el paso #1 pendiente es crear un repo en GitHu
 ### ✅ Estado de Refactorización
 
 La auditoría ha sido ejecutada en su totalidad con éxito.
-- Todos los componentes han sido purgados de dependencias hacia lógicas internas de `@abd/styles`.
+- Todos los componentes han sido purgados de dependencias hacia lógicas internas de `@ajabadia/styles`.
 - El empaquetador ahora usa `tsup` produciendo ESM/CJS y se ha ajustado `tsconfig.json` a `moduleResolution: bundler`.
 - Los fallos de UX (ghosting de datos en Modales de auditoría) y posibles memory leaks de eventos globales han sido saneados.
 - Se ha incluido `README.md` y los scripts de auditoría alineados con los de `ABDLogs`.
@@ -399,7 +399,7 @@ La auditoría ha sido ejecutada en su totalidad con éxito.
 ### ✅ Issues #1–#6, #8–#19 — Verificados como CORRECTAMENTE CORREGIDOS
 
 - `'use client'` en `AuditHistoryModal` y `UserIdentity`: presentes ✅
-- `useLivePolling`/`featureFlags` desde `@abd/styles`: migrados ✅
+- `useLivePolling`/`featureFlags` desde `@ajabadia/styles`: migrados ✅
 - Tipo `AuditLog` local: definido en `types.ts` ✅
 - Build script: migrado a `tsup` cross-platform ✅
 - Resto de issues: verificados ✅

@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 
 /**
  * A link definition with optional role/permission requirements.
- * Extends the base `SidebarLink` shape from @abd/styles with RBAC fields.
+ * Extends the base `SidebarLink` shape from @ajabadia/styles with RBAC fields.
  */
 export interface NavLinkConfig {
   href: string;
@@ -26,11 +26,11 @@ export interface SidebarBuildResult {
  * Build a filtered sidebar link array based on the user's session state.
  *
  * - Links with `requiresSuperAdmin` are only included if role === 'SUPER_ADMIN'
- * - Links with `requiresAdmin` are only included if role is ADMIN or SUPER_ADMIN
+ * - Links with `requiresAdmin` are only included if role is ADMIN, PROFESSOR, or SUPER_ADMIN
  * - Links with `requiresAuth` are only included if the user is logged in
  *
  * @param configs - All possible link definitions
- * @param role    - The current user's role (e.g. 'USER' | 'ADMIN' | 'SUPER_ADMIN')
+ * @param role    - The current user's role (e.g. 'USER' | 'ADMIN' | 'PROFESSOR' | 'SUPER_ADMIN')
  * @param isLoggedIn - Whether the user is authenticated
  */
 export function buildSidebarLinks(
@@ -42,7 +42,7 @@ export function buildSidebarLinks(
 
   return configs.filter((link) => {
     if (link.requiresSuperAdmin) return roleUpper === 'SUPER_ADMIN';
-    if (link.requiresAdmin) return roleUpper === 'ADMIN' || roleUpper === 'SUPER_ADMIN';
+    if (link.requiresAdmin) return roleUpper === 'ADMIN' || roleUpper === 'PROFESSOR' || roleUpper === 'SUPER_ADMIN';
     if (link.requiresAuth) return isLoggedIn;
     return true; // public link
   });
