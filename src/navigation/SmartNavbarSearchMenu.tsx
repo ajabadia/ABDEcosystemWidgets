@@ -1,5 +1,6 @@
 'use client';
 
+import { memo } from 'react';
 import { Search } from 'lucide-react';
 
 interface SmartNavbarSearchMenuProps {
@@ -11,7 +12,7 @@ interface SmartNavbarSearchMenuProps {
 /**
  * Renders the search/command mega menu with a trigger button.
  */
-export function SmartNavbarSearchMenu({ locale, onSearchTrigger, onClose }: SmartNavbarSearchMenuProps) {
+export const SmartNavbarSearchMenu = memo(function SmartNavbarSearchMenu({ locale, onSearchTrigger, onClose }: SmartNavbarSearchMenuProps) {
   return (
     <div className="w-full flex justify-center py-2">
       <button
@@ -32,4 +33,4 @@ export function SmartNavbarSearchMenu({ locale, onSearchTrigger, onClose }: Smar
       </button>
     </div>
   );
-}
+});

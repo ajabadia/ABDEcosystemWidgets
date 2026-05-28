@@ -1,5 +1,6 @@
 'use client';
 
+import { memo } from 'react';
 import { cn } from '../utils.js';
 
 interface SmartNavbarLanguageMenuProps {
@@ -11,7 +12,7 @@ interface SmartNavbarLanguageMenuProps {
 /**
  * Renders the language selection mega menu with ES/EN options.
  */
-export function SmartNavbarLanguageMenu({ locale, onLocaleChange, onClose }: SmartNavbarLanguageMenuProps) {
+export const SmartNavbarLanguageMenu = memo(function SmartNavbarLanguageMenu({ locale, onLocaleChange, onClose }: SmartNavbarLanguageMenuProps) {
   return (
     <div>
       <div className="flex gap-3">
@@ -38,4 +39,4 @@ export function SmartNavbarLanguageMenu({ locale, onLocaleChange, onClose }: Sma
       </div>
     </div>
   );
-}
+});

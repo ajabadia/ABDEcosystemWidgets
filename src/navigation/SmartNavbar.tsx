@@ -1,10 +1,10 @@
 'use client';
 
 import * as React from 'react';
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback, memo, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import {
-  Shield, Sun, Search, Languages, Building2,
+  Shield, Sun, Search, Languages, Building2, Menu, X,
 } from 'lucide-react';
 import { cn } from '../utils.js';
 import { LocalizedLink } from './LocalizedLink.js';
@@ -99,9 +99,40 @@ class SlotErrorBoundary extends React.Component<
   }
 }
 
-// ── SmartNavbar Component ──
+// ── Focusable element selector ──
+const FOCUSABLE_SELECTOR = 'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
-export function SmartNavbar({
+// ══════════════════════════════════════════
+//  FALLBACK (shown during Suspense hydration)
+// ══════════════════════════════════════════
+
+function SmartNavbarFallback({ logoUrl, brandName, translations }: Partial<SmartNavbarProps>) {
+  const t = { ...defaultTranslations, ...translations };
+  return (
+    <div className="smart-navbar" data-testid="smart-navbar">
+      <div className="max-w-[1600px] mx-auto h-full px-4 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          {logoUrl ? (
+            <img src={logoUrl} alt="Logo" className="w-6 h-6 object-contain" />
+          ) : (
+            <div className="w-6 h-6 bg-primary/10 border border-primary/30 flex items-center justify-center">
+              <Shield size={12} className="text-primary" />
+            </div>
+          )}
+          <span className="font-mono text-xs font-black uppercase tracking-[0.2em] text-foreground">
+            {brandName || t.brandFallback}
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ══════════════════════════════════════════
+//  INNER CONTENT (uses useSearchParams)
+// ══════════════════════════════════════════
+
+function SmartNavbarContent({
   session,
   links,
   logoUrl,
@@ -128,8 +159,12 @@ export function SmartNavbar({
   const [activeMenu, setActiveMenu] = useState<MenuName | null>(null);
   const [lockedMenu, setLockedMenu] = useState<MenuName | null>(null);
   const [currentTheme, setCurrentTheme] = useState<'light' | 'dark' | 'system'>('dark');
+  const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
+
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const navbarRef = useRef<HTMLDivElement>(null);
+  const activeTriggerRef = useRef<HTMLElement | null>(null);
+  const mobileToggleRef = useRef<HTMLButtonElement>(null);
 
   // ── Initialize theme state on mount & Cleanup sidebar legacy classes ──
   useEffect(() => {
@@ -146,19 +181,41 @@ export function SmartNavbar({
     }
   }, []);
 
+  // ── Lock body scroll when mobile drawer is open ──
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isMobileMenuOpen]);
+
   // ── Escape key handler ──
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
+        if (isMobileMenuOpen) {
+          setMobileMenuOpen(false);
+          mobileToggleRef.current?.focus();
+          return;
+        }
         if (activeMenu) {
           setActiveMenu(null);
           setLockedMenu(null);
+          // Return focus to the trigger that opened the menu
+          if (activeTriggerRef.current) {
+            activeTriggerRef.current.focus();
+            activeTriggerRef.current = null;
+          }
         }
       }
     };
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [activeMenu]);
+  }, [activeMenu, isMobileMenuOpen]);
 
   // ── Click outside handler for locked menus ──
   useEffect(() => {
@@ -173,6 +230,49 @@ export function SmartNavbar({
     }
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [lockedMenu]);
+
+  // ── Focus trap for mega‑menus & mobile drawer ──
+  useEffect(() => {
+    if (activeMenu || isMobileMenuOpen) {
+      const container = isMobileMenuOpen
+        ? navbarRef.current?.querySelector('[data-testid="navbar-mobile-drawer"]')
+        : navbarRef.current?.querySelector('[data-testid="navbar-dropdown"]');
+
+      if (!container) return;
+
+      // Small delay so the DOM has rendered
+      const raf = requestAnimationFrame(() => {
+        const focusable = container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR);
+        if (focusable.length > 0) focusable[0].focus();
+      });
+
+      const handleTabTrap = (e: KeyboardEvent) => {
+        if (e.key !== 'Tab') return;
+        const focusable = container?.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR);
+        if (!focusable || focusable.length === 0) return;
+        const arr = Array.from(focusable);
+        const currentIndex = arr.indexOf(document.activeElement as HTMLElement);
+
+        if (e.shiftKey) {
+          if (currentIndex <= 0) {
+            e.preventDefault();
+            arr[arr.length - 1].focus();
+          }
+        } else {
+          if (currentIndex === arr.length - 1) {
+            e.preventDefault();
+            arr[0].focus();
+          }
+        }
+      };
+
+      document.addEventListener('keydown', handleTabTrap);
+      return () => {
+        cancelAnimationFrame(raf);
+        document.removeEventListener('keydown', handleTabTrap);
+      };
+    }
+  }, [activeMenu, isMobileMenuOpen]);
 
   // ── Hover handlers ──
   const handleMouseEnter = useCallback((menuName: MenuName) => {
@@ -190,7 +290,7 @@ export function SmartNavbar({
   }, [lockedMenu]);
 
   // ── Click-to-lock ──
-  const handleMenuClick = useCallback((menuName: MenuName) => {
+  const handleMenuClick = useCallback((menuName: MenuName, triggerEl: HTMLElement | null) => {
     if (lockedMenu === menuName && activeMenu === menuName) {
       setActiveMenu(null);
       setLockedMenu(null);
@@ -198,6 +298,7 @@ export function SmartNavbar({
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
       setActiveMenu(menuName);
       setLockedMenu(menuName);
+      activeTriggerRef.current = triggerEl;
     }
   }, [lockedMenu, activeMenu]);
 
@@ -256,6 +357,36 @@ export function SmartNavbar({
       );
     });
 
+  // ── Mobile drawer nav links ──
+  const renderMobileNavLinks = () => {
+    if (!isAuthenticated) return null;
+    return links.map((link, idx) => {
+      const isActive = activeHref
+        ? activeHref === link.href ||
+          (link.href !== '/' && link.href !== '/dashboard' && link.href !== '/admin' && activeHref?.startsWith(link.href + '/'))
+        : false;
+
+      return (
+        <LocalizedLink
+          key={link.href}
+          href={link.href}
+          transformHref={transformHref}
+          data-testid={`navbar-link-idx-${idx}`}
+          onClick={() => setMobileMenuOpen(false)}
+          className={cn(
+            'flex items-center gap-3 px-4 py-3.5 font-mono text-xs font-bold uppercase tracking-widest transition-all duration-200 border-b border-border/40',
+            isActive
+              ? 'text-primary'
+              : 'text-muted-foreground hover:text-primary'
+          )}
+        >
+          <span className="shrink-0">{link.icon}</span>
+          {link.label}
+        </LocalizedLink>
+      );
+    });
+  };
+
   // ══════════════════════════════════════════
   //  RENDER
   // ══════════════════════════════════════════
@@ -270,7 +401,7 @@ export function SmartNavbar({
         onMouseLeave={handleMouseLeave}
       >
         <div className="max-w-[1600px] mx-auto h-full px-4 flex items-center justify-between gap-2">
-          {/* ═══ LEFT: Logo + Debug Tag + Tenant Selector ═══ */}
+          {/* ═══ LEFT: Logo + Debug Tag ═══ */}
           <div className="flex items-center gap-3 min-w-0">
             <LocalizedLink
               href={isAuthenticated ? '/' : '/'}
@@ -311,12 +442,12 @@ export function SmartNavbar({
 
           {/* ═══ RIGHT: Utilities ═══ */}
           <div className="flex items-center gap-2">
-            {/* Search Icon Button */}
+            {/* Search Icon Button (desktop) */}
             {isAuthenticated && (
               <div
-                className="relative"
+                className="relative smart-navbar-desktop-only"
                 onMouseEnter={() => handleMouseEnter('search')}
-                onClick={() => handleMenuClick('search')}
+                onClick={(e) => handleMenuClick('search', e.currentTarget as HTMLElement)}
               >
                 <button
                   data-testid="navbar-menu-search"
@@ -331,9 +462,9 @@ export function SmartNavbar({
 
             {/* Theme Toggle Button */}
             <div
-              className="relative"
+              className="relative smart-navbar-desktop-only"
               onMouseEnter={() => handleMouseEnter('theme')}
-              onClick={() => handleMenuClick('theme')}
+              onClick={(e) => handleMenuClick('theme', e.currentTarget as HTMLElement)}
             >
               <button
                 data-testid="navbar-menu-theme"
@@ -348,9 +479,9 @@ export function SmartNavbar({
             {/* Language Toggle Button */}
             {onLocaleChange && (
               <div
-                className="relative"
+                className="relative smart-navbar-desktop-only"
                 onMouseEnter={() => handleMouseEnter('language')}
-                onClick={() => handleMenuClick('language')}
+                onClick={(e) => handleMenuClick('language', e.currentTarget as HTMLElement)}
               >
                 <button
                   data-testid="navbar-menu-language"
@@ -363,12 +494,12 @@ export function SmartNavbar({
               </div>
             )}
 
-            {/* Tenant Selector Button */}
+            {/* Tenant Selector Button (desktop) */}
             {isAuthenticated && tenantSelectorSlot && (
               <div
-                className="relative"
+                className="relative smart-navbar-desktop-only"
                 onMouseEnter={() => handleMouseEnter('tenant')}
-                onClick={() => handleMenuClick('tenant')}
+                onClick={(e) => handleMenuClick('tenant', e.currentTarget as HTMLElement)}
               >
                 <button
                   data-testid="navbar-menu-tenant"
@@ -384,9 +515,9 @@ export function SmartNavbar({
             {/* User Menu (authenticated only) */}
             {isAuthenticated && (
               <div
-                className="relative"
+                className="relative smart-navbar-desktop-only"
                 onMouseEnter={() => handleMouseEnter('user')}
-                onClick={() => handleMenuClick('user')}
+                onClick={(e) => handleMenuClick('user', e.currentTarget as HTMLElement)}
               >
                 <button
                   data-testid="navbar-menu-user"
@@ -399,7 +530,7 @@ export function SmartNavbar({
               </div>
             )}
 
-            {/* Login Button (public mode only) */}
+            {/* Login Button (public mode only) — visible on all screens */}
             {!isAuthenticated && onLogin && (
               <button
                 onClick={onLogin}
@@ -408,6 +539,18 @@ export function SmartNavbar({
                 {t.loginBtn}
               </button>
             )}
+
+            {/* Mobile Hamburger Toggle — visible only on mobile */}
+            <button
+              ref={mobileToggleRef}
+              data-testid="navbar-mobile-toggle"
+              className="smart-navbar-mobile-only p-2 text-muted-foreground hover:text-foreground transition-all duration-200 cursor-pointer rounded-none"
+              onClick={() => setMobileMenuOpen((prev) => !prev)}
+              aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={isMobileMenuOpen}
+            >
+              {isMobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
+            </button>
           </div>
         </div>
 
@@ -492,6 +635,130 @@ export function SmartNavbar({
           </div>
         )}
       </div>
+
+      {/* ═══ Mobile Drawer ═══ */}
+      {isMobileMenuOpen && (
+        <>
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 bg-black/20 z-30 md:hidden animate-in fade-in duration-200"
+            onClick={() => {
+              setMobileMenuOpen(false);
+              mobileToggleRef.current?.focus();
+            }}
+            aria-hidden="true"
+          />
+          {/* Drawer Panel */}
+          <div
+            data-testid="navbar-mobile-drawer"
+            className="fixed left-0 right-0 top-[56px] bottom-0 bg-background/98 backdrop-blur-lg border-t border-border z-40 overflow-y-auto animate-in slide-in-from-top-2 duration-200 md:hidden"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Mobile navigation"
+          >
+            <div className="flex flex-col min-h-full pb-8">
+              {/* Nav Links */}
+              {isAuthenticated && links.length > 0 && (
+                <div className="border-b border-border/30 pb-2">
+                  <div className="px-4 py-3 font-mono text-[9px] font-bold tracking-widest uppercase text-muted-foreground/50">
+                    NAVEGACIÓN
+                  </div>
+                  {renderMobileNavLinks()}
+                </div>
+              )}
+
+              {/* Tenant Selector Slot */}
+              {isAuthenticated && tenantSelectorSlot && (
+                <div className="border-b border-border/30 px-4 py-3">
+                  <div className="font-mono text-[9px] font-bold tracking-widest uppercase text-muted-foreground/50 mb-2">
+                    ORGANIZACIÓN
+                  </div>
+                  <SlotErrorBoundary>
+                    {tenantSelectorSlot}
+                  </SlotErrorBoundary>
+                </div>
+              )}
+
+              {/* Settings Slot (theme + language) */}
+              {settingsSlot && (
+                <div className="border-b border-border/30 px-4 py-3">
+                  <div className="font-mono text-[9px] font-bold tracking-widest uppercase text-muted-foreground/50 mb-2">
+                    CONFIGURACIÓN
+                  </div>
+                  <SlotErrorBoundary>
+                    {settingsSlot}
+                  </SlotErrorBoundary>
+                </div>
+              )}
+
+              {/* User Card + Logout */}
+              {isAuthenticated && user && (
+                <div className="mt-auto px-4 pt-4 border-t border-border/30">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-9 h-9 bg-primary/10 border border-primary/20 flex items-center justify-center font-bold text-sm text-primary rounded-none">
+                      {userInitial}
+                    </div>
+                    <div>
+                      <p className="font-mono text-xs font-bold uppercase text-foreground">
+                        {user.name}
+                      </p>
+                      <p className="font-mono text-[9px] text-muted-foreground uppercase tracking-wider">
+                        {user.role}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <LocalizedLink
+                      href="/profile"
+                      transformHref={transformHref}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="flex items-center justify-center gap-2 px-4 py-2.5 border border-border text-[10px] font-mono font-bold tracking-widest uppercase text-muted-foreground hover:text-primary hover:border-primary/30 transition-all duration-200 rounded-none w-full"
+                    >
+                      {t.profileLabel}
+                    </LocalizedLink>
+                    <button
+                      onClick={() => { onLogout(); setMobileMenuOpen(false); }}
+                      className="flex items-center justify-center gap-2 px-4 py-2.5 border border-border text-[10px] font-mono font-bold tracking-widest uppercase text-red-400 hover:bg-red-500/10 hover:border-red-500/20 transition-all duration-200 cursor-pointer rounded-none w-full"
+                    >
+                      {t.logoutBtn}
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Login for public mode */}
+              {!isAuthenticated && onLogin && (
+                <div className="px-4 pt-4">
+                  <button
+                    onClick={() => { onLogin(); setMobileMenuOpen(false); }}
+                    className="w-full px-4 py-2.5 font-mono text-[10px] font-bold tracking-widest uppercase border border-primary/50 text-primary hover:bg-primary/10 transition-all duration-200 cursor-pointer rounded-none"
+                  >
+                    {t.loginBtn}
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </>
+      )}
     </>
+  );
+}
+
+// ══════════════════════════════════════════
+//  PUBLIC WRAPPER (with Suspense boundary)
+// ══════════════════════════════════════════
+
+/**
+ * SmartNavbar — unified top navigation bar for all ABD Suite apps.
+ *
+ * Wraps the inner content in a Suspense boundary to satisfy Next.js 15+
+ * requirements for `useSearchParams()` and prevents SSR bailouts.
+ */
+export function SmartNavbar(props: SmartNavbarProps) {
+  return (
+    <Suspense fallback={<SmartNavbarFallback {...props} />}>
+      <SmartNavbarContent {...props} />
+    </Suspense>
   );
 }

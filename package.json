@@ -43,7 +43,7 @@
     "author": "ABD Ecosystem Architecture Team",
     "license": "UNLICENSED",
     "dependencies": {
-        "@ajabadia/styles": "file:../ABDStyles",
+        "@ajabadia/styles": "latest",
         "clsx": "^2.1.1",
         "tailwind-merge": "^3.6.0"
     },

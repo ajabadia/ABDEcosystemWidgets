@@ -1,5 +1,6 @@
 'use client';
 
+import { memo } from 'react';
 import { LogOut, User as UserIcon } from 'lucide-react';
 import { LocalizedLink } from './LocalizedLink.js';
 import type { SmartNavbarTranslations } from './SmartNavbar.js';
@@ -21,7 +22,7 @@ interface SmartNavbarUserMenuProps {
 /**
  * Renders the user profile mega menu with details and action buttons.
  */
-export function SmartNavbarUserMenu({
+export const SmartNavbarUserMenu = memo(function SmartNavbarUserMenu({
   user,
   userInitial,
   t,
@@ -95,4 +96,4 @@ export function SmartNavbarUserMenu({
       </div>
     </div>
   );
-}
+});

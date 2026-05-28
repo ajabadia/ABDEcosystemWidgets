@@ -1,5 +1,6 @@
 'use client';
 
+import { memo } from 'react';
 import { LocalizedLink } from './LocalizedLink.js';
 import type { SidebarLink } from './GlobalNavbar.js';
 
@@ -11,7 +12,7 @@ interface SmartNavbarNavMenuProps {
 /**
  * Renders the navigation mega menu showing quick-access links.
  */
-export function SmartNavbarNavMenu({ links, transformHref }: SmartNavbarNavMenuProps) {
+export const SmartNavbarNavMenu = memo(function SmartNavbarNavMenu({ links, transformHref }: SmartNavbarNavMenuProps) {
   return (
     <div className="flex gap-8">
       <div>
@@ -35,4 +36,4 @@ export function SmartNavbarNavMenu({ links, transformHref }: SmartNavbarNavMenuP
       </div>
     </div>
   );
-}
+});

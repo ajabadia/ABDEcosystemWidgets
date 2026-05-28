@@ -1,5 +1,6 @@
 'use client';
 
+import { memo } from 'react';
 import { Sun, Moon, Monitor } from 'lucide-react';
 import { cn } from '../utils.js';
 import type { SmartNavbarTranslations } from './SmartNavbar.js';
@@ -13,7 +14,7 @@ interface SmartNavbarThemeMenuProps {
 /**
  * Renders the theme selection mega menu with light, dark, and system options.
  */
-export function SmartNavbarThemeMenu({ currentTheme, setTheme, t }: SmartNavbarThemeMenuProps) {
+export const SmartNavbarThemeMenu = memo(function SmartNavbarThemeMenu({ currentTheme, setTheme, t }: SmartNavbarThemeMenuProps) {
   const themes = [
     { value: 'light' as const, icon: Sun, label: t.themeLight },
     { value: 'dark' as const, icon: Moon, label: t.themeDark },
@@ -52,4 +53,4 @@ export function SmartNavbarThemeMenu({ currentTheme, setTheme, t }: SmartNavbarT
       </div>
     </div>
   );
-}
+});

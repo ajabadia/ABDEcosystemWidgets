@@ -220,7 +220,13 @@ interface SmartNavbarProps {
     translations?: SmartNavbarTranslations;
     onSearchTrigger?: () => void;
 }
-declare function SmartNavbar({ session, links, logoUrl, brandName, activeHref, locale, onLogout, onLogin, onLocaleChange, transformHref: rawTransformHref, tenantSelectorSlot, settingsSlot, translations, onSearchTrigger, }: SmartNavbarProps): react_jsx_runtime.JSX.Element;
+/**
+ * SmartNavbar — unified top navigation bar for all ABD Suite apps.
+ *
+ * Wraps the inner content in a Suspense boundary to satisfy Next.js 15+
+ * requirements for `useSearchParams()` and prevents SSR bailouts.
+ */
+declare function SmartNavbar(props: SmartNavbarProps): react_jsx_runtime.JSX.Element;
 
 /**
  * A link definition with optional role/permission requirements.
