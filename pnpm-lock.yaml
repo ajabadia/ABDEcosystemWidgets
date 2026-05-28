@@ -8,7 +8,7 @@ importers:
 
   .:
     dependencies:
-      '@abd/styles':
+      '@ajabadia/styles':
         specifier: file:../ABDStyles
         version: file:../ABDStyles(lucide-react@1.16.0(react@19.2.6))(next-intl@4.12.0(next@16.2.6(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(react@19.2.6)(typescript@5.9.3))(react@19.2.6)
       clsx:
@@ -72,15 +72,15 @@ importers:
 
 packages:
 
-  '@abd/styles@file:../ABDStyles':
+  '@adobe/css-tools@4.5.0':
+    resolution: {integrity: sha512-6OzddxPio9UiWTCemp4N8cYLV2ZN1ncRnV1cVGtve7dhPOtRkleRyx32GQCYSwDYgaHU3USMm84tNsvKzRCa1Q==}
+
+  '@ajabadia/styles@file:../ABDStyles':
     resolution: {directory: ../ABDStyles, type: directory}
     peerDependencies:
       lucide-react: ^0.46.0 || ^1.0.0
       next-intl: ^4.12.0
       react: ^19.0.0
-
-  '@adobe/css-tools@4.5.0':
-    resolution: {integrity: sha512-6OzddxPio9UiWTCemp4N8cYLV2ZN1ncRnV1cVGtve7dhPOtRkleRyx32GQCYSwDYgaHU3USMm84tNsvKzRCa1Q==}
 
   '@asamuzakjp/css-color@5.1.11':
     resolution: {integrity: sha512-KVw6qIiCTUQhByfTd78h2yD1/00waTmm9uy/R7Ck/ctUyAPj+AEDLkQIdJW0T8+qGgj3j5bpNKK7Q3G+LedJWg==}
@@ -1834,7 +1834,9 @@ packages:
 
 snapshots:
 
-  '@abd/styles@file:../ABDStyles(lucide-react@1.16.0(react@19.2.6))(next-intl@4.12.0(next@16.2.6(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(react@19.2.6)(typescript@5.9.3))(react@19.2.6)':
+  '@adobe/css-tools@4.5.0': {}
+
+  '@ajabadia/styles@file:../ABDStyles(lucide-react@1.16.0(react@19.2.6))(next-intl@4.12.0(next@16.2.6(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(react@19.2.6)(typescript@5.9.3))(react@19.2.6)':
     dependencies:
       clsx: 2.1.1
       lucide-react: 1.16.0(react@19.2.6)
@@ -1842,8 +1844,6 @@ snapshots:
       react: 19.2.6
       tailwind-merge: 3.6.0
       zod: 4.4.3
-
-  '@adobe/css-tools@4.5.0': {}
 
   '@asamuzakjp/css-color@5.1.11':
     dependencies:

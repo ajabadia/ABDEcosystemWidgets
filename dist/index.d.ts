@@ -136,7 +136,7 @@ interface GlobalFooterProps {
 /**
  * 🏁 GlobalFooter — Unified Industrial Footer
  *
- * Consolidates the old `Footer` (from @abd/styles) and `GlobalFooter` (from widgets)
+ * Consolidates the old `Footer` (from @ajabadia/styles) and `GlobalFooter` (from widgets)
  * into a single component that supports three layout modes:
  *
  * 1. **Telemetry mode** — renders `telemetryItems[]` as centered key-value pairs
@@ -224,7 +224,7 @@ declare function SmartNavbar({ session, links, logoUrl, brandName, activeHref, l
 
 /**
  * A link definition with optional role/permission requirements.
- * Extends the base `SidebarLink` shape from @abd/styles with RBAC fields.
+ * Extends the base `SidebarLink` shape from @ajabadia/styles with RBAC fields.
  */
 interface NavLinkConfig {
     href: string;
@@ -401,7 +401,7 @@ declare const featureFlags: Readonly<FeatureFlags>;
  *
  * @example
  * ```ts
- * import { configureFeatureFlags } from '@abd/ecosystem-widgets';
+ * import { configureFeatureFlags } from '@ajabadia/ecosystem-widgets';
  * configureFeatureFlags({ liveModeEnabled: false });
  * ```
  */
