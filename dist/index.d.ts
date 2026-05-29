@@ -1,6 +1,7 @@
 import * as react_jsx_runtime from 'react/jsx-runtime';
 import * as React from 'react';
-import React__default, { ReactNode } from 'react';
+import React__default, { ReactNode, ComponentType } from 'react';
+import { Dialog } from 'radix-ui';
 import { ClassValue } from 'clsx';
 
 interface ContextOption {
@@ -27,6 +28,13 @@ interface TenantSelectorProps {
 }
 declare function TenantSelector({ activeTenantId, tenants, onTenantChange, spaces, groups, activeContextId, onContextChange, userRole, isLoading, variant, isOpen: externalIsOpen, }: TenantSelectorProps): react_jsx_runtime.JSX.Element;
 
+interface TenantMegaMenuValue {
+    variant: 'dropdown' | 'trigger' | 'content';
+    isOpen: boolean;
+}
+declare const TenantMegaMenuProvider: React.Provider<TenantMegaMenuValue | null>;
+declare function useTenantMegaMenu(): TenantMegaMenuValue | null;
+
 interface UserIdentityProps {
     name: string;
     email: string;
@@ -50,6 +58,33 @@ interface UserIdentityProps {
  * Keep it pure, stateless, and style-compliant.
  */
 declare function UserIdentity({ name, email, isAdmin, adminHref, logoutHref, translations, LinkComponent }: UserIdentityProps): react_jsx_runtime.JSX.Element;
+
+interface TenantSelectorConnectorProps {
+    sessionUser?: {
+        id?: string;
+        email?: string;
+        role?: string;
+        tenantId?: string;
+    };
+    /** Enable spaces/groups context support (needed by tenantGobernance) */
+    enableContexts?: boolean;
+    /** Optional server action to fire after setting cookie (e.g. switchTenantAction) */
+    onTenantSwitch?: (tenantId: string) => Promise<unknown>;
+    /** Use next/navigation router.push instead of window.location.href */
+    useRouterPush?: boolean;
+    /** Label for the SYSTEM tenant (default: 'Sistema Global') */
+    systemTenantLabel?: string;
+    /** Optional callback fired when onTenantSwitch (server action) throws */
+    onError?: (error: unknown, context: {
+        action: "tenantSwitch";
+        tenantId: string;
+    }) => void;
+    /** Rendering variant when used inside SmartNavbar mega menu */
+    variant?: 'dropdown' | 'trigger' | 'content';
+    /** External open state control (used by SmartNavbar via cloneElement) */
+    isOpen?: boolean;
+}
+declare function TenantSelectorConnector({ sessionUser, enableContexts, onTenantSwitch, useRouterPush, systemTenantLabel, onError, variant, isOpen, }: TenantSelectorConnectorProps): react_jsx_runtime.JSX.Element | null;
 
 interface Command {
     id: string;
@@ -209,6 +244,8 @@ interface SmartNavbarProps {
     links: SidebarLink[];
     logoUrl?: string | null;
     brandName?: string;
+    /** Optional short identifier for the satellite app (e.g. 'LOGS', 'GOV', 'QUIZ', 'AUTH') */
+    appBadge?: string;
     activeHref?: string;
     locale?: string;
     onLogout: () => void;
@@ -323,6 +360,47 @@ interface ConfirmDialogProps {
 }
 declare function ConfirmDialog({ open, title, message, confirmLabel, cancelLabel, variant, isLoading, onConfirm, onCancel, }: ConfirmDialogProps): react_jsx_runtime.JSX.Element | null;
 
+interface IndustrialSelectSearchItem {
+    id: string;
+    label: string;
+    subLabel?: string;
+}
+interface IndustrialSelectSearchProps {
+    items: IndustrialSelectSearchItem[];
+    value: string;
+    onChange: (id: string) => void;
+    placeholder?: string;
+    noResultsLabel?: string;
+    ariaLabel?: string;
+}
+declare function IndustrialSelectSearch({ items, value, onChange, placeholder, noResultsLabel, ariaLabel, }: IndustrialSelectSearchProps): react_jsx_runtime.JSX.Element;
+
+interface IndustrialModalHeaderProps {
+    title: string;
+    subtitle?: string;
+    icon: ComponentType<{
+        size?: number;
+    }>;
+    onClose: () => void;
+}
+declare function IndustrialModalHeader({ title, subtitle, icon: Icon, onClose }: IndustrialModalHeaderProps): react_jsx_runtime.JSX.Element;
+
+interface IndustrialSearchInputProps {
+    value: string;
+    onChange: (value: string) => void;
+    placeholder?: string;
+    ariaLabel?: string;
+}
+declare function IndustrialSearchInput({ value, onChange, placeholder, ariaLabel }: IndustrialSearchInputProps): react_jsx_runtime.JSX.Element;
+
+declare function DialogHeader({ className, ...props }: Omit<React.HTMLAttributes<HTMLDivElement>, 'ref'>): react_jsx_runtime.JSX.Element;
+declare function DialogFooter({ className, showCloseButton, closeLabel, children, ...props }: Omit<React.HTMLAttributes<HTMLDivElement>, 'ref'> & {
+    showCloseButton?: boolean;
+    closeLabel?: string;
+}): react_jsx_runtime.JSX.Element;
+declare function DialogTitle({ className, ...props }: React.ComponentProps<typeof Dialog.Title>): react_jsx_runtime.JSX.Element;
+declare function DialogDescription({ className, ...props }: React.ComponentProps<typeof Dialog.Description>): react_jsx_runtime.JSX.Element;
+
 interface SystemSettingsProps {
     locale: string;
     onLocaleChange: (locale: string) => void;
@@ -415,4 +493,4 @@ declare function configureFeatureFlags(overrides: Partial<FeatureFlags>): void;
 
 declare function cn(...inputs: ClassValue[]): string;
 
-export { ANIM_DURATION, ActionBadge, AuditDeltaViewer, AuditHistoryModal, type Command, CommandPalette, type CommandPaletteProps, ConfirmDialog, type ConfirmDialogProps, type ConfirmVariant, type ContextOption, GlobalFooter, type GlobalFooterProps, GlobalNavbar, type GlobalNavbarProps, type GlobalNavbarSession, IndustrialTopBar, type IndustrialTopBarProps, LiveLogViewer, type NavLinkConfig, type NavUser, type NavbarTranslations, type SidebarBuildResult, type SidebarLink, SmartNavbar, type SmartNavbarProps, type SmartNavbarTranslations, SystemSettings, type SystemSettingsProps, type TenantOption, TenantSelector, type TenantSelectorProps, type UseConfirmDialogOptions, type UseConfirmDialogReturn, UserIdentity, type UserIdentityProps, buildSidebarLinks, cn, configureFeatureFlags, featureFlags, useConfirmDialog };
+export { ANIM_DURATION, ActionBadge, AuditDeltaViewer, AuditHistoryModal, type Command, CommandPalette, type CommandPaletteProps, ConfirmDialog, type ConfirmDialogProps, type ConfirmVariant, type ContextOption, DialogDescription, DialogFooter, DialogHeader, DialogTitle, GlobalFooter, type GlobalFooterProps, GlobalNavbar, type GlobalNavbarProps, type GlobalNavbarSession, IndustrialModalHeader, type IndustrialModalHeaderProps, IndustrialSearchInput, type IndustrialSearchInputProps, IndustrialSelectSearch, type IndustrialSelectSearchItem, IndustrialTopBar, type IndustrialTopBarProps, LiveLogViewer, type NavLinkConfig, type NavUser, type NavbarTranslations, type SidebarBuildResult, type SidebarLink, SmartNavbar, type SmartNavbarProps, type SmartNavbarTranslations, SystemSettings, type SystemSettingsProps, TenantMegaMenuProvider, type TenantMegaMenuValue, type TenantOption, TenantSelector, TenantSelectorConnector, type TenantSelectorConnectorProps, type TenantSelectorProps, type UseConfirmDialogOptions, type UseConfirmDialogReturn, UserIdentity, type UserIdentityProps, buildSidebarLinks, cn, configureFeatureFlags, featureFlags, useConfirmDialog, useTenantMegaMenu };

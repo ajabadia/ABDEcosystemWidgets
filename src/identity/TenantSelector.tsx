@@ -99,7 +99,7 @@ export function TenantSelector({
     }
   }, [isOpen]);
 
-  if (!mounted) {
+  if (!mounted && variant !== 'content') {
     return (
       <div className="flex items-center gap-2 px-3 py-2 border border-border bg-background/50 text-[10px] font-bold text-muted-foreground">
         <Building2 size={14} className="animate-pulse" />
@@ -111,7 +111,8 @@ export function TenantSelector({
   }
 
   // Render non-interactive badge for standard users/admins with single tenant
-  if (!isInteractive) {
+  // Only apply when NOT in 'content' variant (mega menu always shows the full panel)
+  if (!isInteractive && variant !== 'content') {
     return (
       <div 
         title={t('tenant_selector_active_badge', { defaultMessage: 'ORGANIZACIÓN ACTIVA' })}

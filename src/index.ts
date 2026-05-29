@@ -1,6 +1,10 @@
 // Identidad
 export * from './identity/TenantSelector.js';
+export * from './identity/TenantMegaMenuContext.js';
 export * from './identity/UserIdentity.js';
+
+// Conectores
+export * from './connectors/TenantSelectorConnector.js';
 
 // Navegación
 export * from './navigation/CommandPalette.js';
@@ -15,6 +19,10 @@ export * from './hooks/useConfirmDialog.js';
 
 // UI reutilizable
 export * from './ui/ConfirmDialog.js';
+export * from './ui/SelectSearch.js';
+export * from './ui/IndustrialModalHeader.js';
+export * from './ui/IndustrialSearchInput.js';
+export * from './ui/dialog-elements.js';
 
 // Constantes compartidas
 export * from './constants.js';

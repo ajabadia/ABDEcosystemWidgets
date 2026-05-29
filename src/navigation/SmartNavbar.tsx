@@ -14,6 +14,7 @@ import { SmartNavbarLanguageMenu } from './SmartNavbarLanguageMenu.js';
 import { SmartNavbarUserMenu } from './SmartNavbarUserMenu.js';
 import { SmartNavbarSearchMenu } from './SmartNavbarSearchMenu.js';
 import type { GlobalNavbarSession, SidebarLink } from './GlobalNavbar.js';
+import { TenantMegaMenuProvider } from '../identity/TenantMegaMenuContext.js';
 
 // ── Translations ──
 
@@ -56,6 +57,8 @@ export interface SmartNavbarProps {
   links: SidebarLink[];
   logoUrl?: string | null;
   brandName?: string;
+  /** Optional short identifier for the satellite app (e.g. 'LOGS', 'GOV', 'QUIZ', 'AUTH') */
+  appBadge?: string;
   activeHref?: string;
   locale?: string;
   onLogout: () => void;
@@ -106,7 +109,7 @@ const FOCUSABLE_SELECTOR = 'a[href], button:not([disabled]), input:not([disabled
 //  FALLBACK (shown during Suspense hydration)
 // ══════════════════════════════════════════
 
-function SmartNavbarFallback({ logoUrl, brandName, translations }: Partial<SmartNavbarProps>) {
+function SmartNavbarFallback({ logoUrl, brandName, appBadge, translations }: Partial<SmartNavbarProps>) {
   const t = { ...defaultTranslations, ...translations };
   return (
     <div className="smart-navbar" data-testid="smart-navbar">
@@ -118,6 +121,11 @@ function SmartNavbarFallback({ logoUrl, brandName, translations }: Partial<Smart
             <div className="w-6 h-6 bg-primary/10 border border-primary/30 flex items-center justify-center">
               <Shield size={12} className="text-primary" />
             </div>
+          )}
+          {appBadge && (
+            <span className="font-mono text-[9px] font-bold tracking-wider text-primary/80 border border-primary/20 bg-primary/5 px-1.5 py-[1px] leading-none">
+              {appBadge}
+            </span>
           )}
           <span className="font-mono text-xs font-black uppercase tracking-[0.2em] text-foreground">
             {brandName || t.brandFallback}
@@ -137,6 +145,7 @@ function SmartNavbarContent({
   links,
   logoUrl,
   brandName,
+  appBadge,
   activeHref,
   locale = 'en',
   onLogout,
@@ -402,7 +411,7 @@ function SmartNavbarContent({
       >
         <div className="max-w-[1600px] mx-auto h-full px-4 flex items-center justify-between gap-2">
           {/* ═══ LEFT: Logo + Debug Tag ═══ */}
-          <div className="flex items-center gap-3 min-w-0">
+          <div className="flex items-center gap-3 min-w-0" role="region" aria-label={brandName || t.brandFallback}>
             <LocalizedLink
               href={isAuthenticated ? '/' : '/'}
               transformHref={transformHref}
@@ -421,6 +430,11 @@ function SmartNavbarContent({
                 </div>
               )}
               <div className="flex flex-col text-left">
+                {appBadge && (
+                  <span className="font-mono text-[9px] font-bold tracking-wider text-primary/80 border border-primary/20 bg-primary/5 px-1.5 py-[1px] leading-none">
+                    {appBadge}
+                  </span>
+                )}
                 <span className="font-mono text-xs font-black uppercase tracking-[0.2em] text-foreground truncate max-w-[160px] leading-tight">
                   {brandName || t.brandFallback}
                 </span>
@@ -465,15 +479,15 @@ function SmartNavbarContent({
               className="relative smart-navbar-desktop-only"
               onMouseEnter={() => handleMouseEnter('theme')}
               onClick={(e) => handleMenuClick('theme', e.currentTarget as HTMLElement)}
-            >
-              <button
-                data-testid="navbar-menu-theme"
-                className="p-2 text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all duration-200 cursor-pointer rounded-none"
-                aria-haspopup="true"
-                aria-expanded={activeMenu === 'theme'}
-              >
-                <Sun size={16} />
-              </button>
+            >                <button
+                  data-testid="navbar-menu-theme"
+                  className="p-2 text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all duration-200 cursor-pointer rounded-none"
+                  aria-haspopup="true"
+                  aria-expanded={activeMenu === 'theme'}
+                  aria-label={t.themeLabel}
+                >
+                  <Sun size={16} />
+                </button>
             </div>
 
             {/* Language Toggle Button */}
@@ -488,6 +502,7 @@ function SmartNavbarContent({
                   className="p-2 text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all duration-200 cursor-pointer rounded-none"
                   aria-haspopup="true"
                   aria-expanded={activeMenu === 'language'}
+                  aria-label={t.languageLabel}
                 >
                   <Languages size={16} />
                 </button>
@@ -622,12 +637,9 @@ function SmartNavbarContent({
               {activeMenu === 'tenant' && tenantSelectorSlot && (
                 <div className="w-full flex justify-center">
                   <SlotErrorBoundary>
-                    {React.isValidElement(tenantSelectorSlot)
-                      ? React.cloneElement(tenantSelectorSlot as React.ReactElement<any>, {
-                          variant: 'content',
-                          isOpen: true,
-                        })
-                      : tenantSelectorSlot}
+                    <TenantMegaMenuProvider value={{ variant: 'content', isOpen: true }}>
+                      {tenantSelectorSlot}
+                    </TenantMegaMenuProvider>
                   </SlotErrorBoundary>
                 </div>
               )}

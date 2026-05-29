@@ -1,12 +1,13 @@
 "use client";
 import * as React7 from 'react';
-import { memo, useState, useRef, useEffect, useMemo, Suspense, useCallback } from 'react';
+import { createContext, memo, useState, useRef, useEffect, useContext, useMemo, useCallback, Suspense } from 'react';
 import { Sun, Moon, Monitor, User, LogOut, Search, Building2, Loader2, ChevronDown, Check, X, ShieldCheck, Settings, Terminal, CornerDownLeft, Shield, Menu, Info, AlertTriangle, LogIn, Activity, Layers, FileCode, Tag, Wifi, WifiOff, FileText, BarChart3, Languages } from 'lucide-react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { jsx, jsxs, Fragment } from 'react/jsx-runtime';
+import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { Dialog } from 'radix-ui';
 
 // src/identity/TenantSelector.tsx
 function cn(...inputs) {
@@ -73,13 +74,13 @@ function TenantSelector({
       setSearchQuery("");
     }
   }, [isOpen]);
-  if (!mounted) {
+  if (!mounted && variant !== "content") {
     return /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 px-3 py-2 border border-border bg-background/50 text-[10px] font-bold text-muted-foreground", children: [
       /* @__PURE__ */ jsx(Building2, { size: 14, className: "animate-pulse" }),
       /* @__PURE__ */ jsx("span", { className: "truncate max-w-[120px] uppercase tracking-wider", children: displayLabel })
     ] });
   }
-  if (!isInteractive) {
+  if (!isInteractive && variant !== "content") {
     return /* @__PURE__ */ jsxs(
       "div",
       {
@@ -410,6 +411,11 @@ function TenantSelector({
     )
   ] });
 }
+var TenantMegaMenuContext = createContext(null);
+var TenantMegaMenuProvider = TenantMegaMenuContext.Provider;
+function useTenantMegaMenu() {
+  return useContext(TenantMegaMenuContext);
+}
 function UserIdentity({
   name,
   email,
@@ -436,6 +442,167 @@ function UserIdentity({
       /* @__PURE__ */ jsx(LinkComp, { href: logoutHref, title: logoutTitle, className: "p-1 hover:bg-red-500/10 rounded-none transition-colors text-red-500/70 hover:text-red-500", children: /* @__PURE__ */ jsx(LogOut, { size: 14 }) })
     ] })
   ] });
+}
+function TenantSelectorConnector({
+  sessionUser,
+  enableContexts = false,
+  onTenantSwitch,
+  useRouterPush = false,
+  systemTenantLabel = "Sistema Global",
+  onError,
+  variant,
+  isOpen
+}) {
+  const searchParams = useSearchParams();
+  const nextPathname = usePathname();
+  const nextRouter = useRouter();
+  const megaMenu = useTenantMegaMenu();
+  const effectiveVariant = variant ?? megaMenu?.variant;
+  const effectiveIsOpen = isOpen ?? megaMenu?.isOpen;
+  const [superAdminTenants, setSuperAdminTenants] = useState([]);
+  const [spaces, setSpaces] = useState([]);
+  const [groups, setGroups] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const userRole = sessionUser?.role || "USER";
+  const defaultTenantId = sessionUser?.tenantId || "";
+  const activeTenantId = searchParams.get("tenantId") || defaultTenantId;
+  const activeContextId = searchParams.get("contextId") || "";
+  const tenants = useMemo(() => {
+    if (userRole !== "SUPER_ADMIN") {
+      if (!defaultTenantId) return [];
+      return [
+        {
+          tenantId: defaultTenantId,
+          name: defaultTenantId === "SYSTEM" ? systemTenantLabel : `Org: ${defaultTenantId}`
+        }
+      ];
+    }
+    return superAdminTenants;
+  }, [userRole, defaultTenantId, superAdminTenants, systemTenantLabel]);
+  useEffect(() => {
+    if (userRole !== "SUPER_ADMIN") return;
+    const fetchAllTenants = async () => {
+      setIsLoading(true);
+      try {
+        const res = await fetch("/api/admin/tenants");
+        if (res.ok) {
+          const data = await res.json();
+          const options = data.map(
+            (t) => ({
+              tenantId: t.tenantId,
+              name: t.name || t.tenantId,
+              active: t.active
+            })
+          );
+          setSuperAdminTenants(options);
+        }
+      } catch (error) {
+        console.error("[TENANT_SELECTOR_FETCH_ERROR]", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchAllTenants();
+  }, [userRole]);
+  useEffect(() => {
+    if (!enableContexts || !activeTenantId) return;
+    const fetchContexts = async () => {
+      try {
+        const [spacesRes, groupsRes] = await Promise.all([
+          fetch(`/api/admin/spaces?tenantId=${activeTenantId}`),
+          fetch(`/api/admin/permissions/groups?tenantId=${activeTenantId}`)
+        ]);
+        if (spacesRes.ok) {
+          const resJson = await spacesRes.json();
+          const items = Array.isArray(resJson) ? resJson : resJson.data || resJson.items || [];
+          setSpaces(
+            items.map(
+              (s) => ({
+                id: s._id || s.id || "",
+                name: s.name
+              })
+            )
+          );
+        }
+        if (groupsRes.ok) {
+          const resJson = await groupsRes.json();
+          const items = Array.isArray(resJson) ? resJson : resJson.data || resJson.items || [];
+          setGroups(
+            items.map(
+              (g) => ({
+                id: g._id || g.id || "",
+                name: g.name
+              })
+            )
+          );
+        }
+      } catch (error) {
+        console.error("[TENANT_SELECTOR_CONTEXT_FETCH_ERROR]", error);
+      }
+    };
+    fetchContexts();
+  }, [enableContexts, activeTenantId]);
+  const navigate = useCallback(
+    (query) => {
+      if (useRouterPush) {
+        nextRouter.push(`${nextPathname}${query}`);
+      } else {
+        window.location.href = `${window.location.pathname}${query}`;
+      }
+    },
+    [useRouterPush, nextPathname, nextRouter]
+  );
+  const handleTenantChange = useCallback(
+    async (newTenantId) => {
+      document.cookie = `active_tenant_id=${newTenantId}; path=/; max-age=2592000; SameSite=Lax`;
+      if (onTenantSwitch) {
+        try {
+          await onTenantSwitch(newTenantId);
+        } catch (err) {
+          console.error("[TENANT_SELECTOR_SWITCH_ERROR]", err);
+          onError?.(err, { action: "tenantSwitch", tenantId: newTenantId });
+        }
+      }
+      const current = new URLSearchParams(window.location.search);
+      current.set("tenantId", newTenantId);
+      if (enableContexts) {
+        current.delete("contextId");
+        current.delete("contextType");
+      }
+      const query = current.toString() ? `?${current.toString()}` : "";
+      navigate(query);
+    },
+    [onTenantSwitch, enableContexts, navigate]
+  );
+  const handleContextChange = useCallback(
+    (newContextId, type) => {
+      const current = new URLSearchParams(window.location.search);
+      current.set("contextId", newContextId);
+      current.set("contextType", type);
+      const query = current.toString() ? `?${current.toString()}` : "";
+      navigate(query);
+    },
+    [navigate]
+  );
+  if (!sessionUser) return null;
+  return /* @__PURE__ */ jsx(
+    TenantSelector,
+    {
+      activeTenantId,
+      tenants,
+      onTenantChange: handleTenantChange,
+      userRole,
+      isLoading,
+      ...effectiveVariant !== void 0 ? { variant: effectiveVariant } : {},
+      ...effectiveIsOpen !== void 0 ? { isOpen: effectiveIsOpen } : {},
+      ...enableContexts ? {
+        spaces,
+        groups,
+        activeContextId,
+        onContextChange: handleContextChange
+      } : {}
+    }
+  );
 }
 function CommandPalette({
   commands,
@@ -1105,10 +1272,11 @@ var SlotErrorBoundary = class extends React7.Component {
   }
 };
 var FOCUSABLE_SELECTOR = 'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])';
-function SmartNavbarFallback({ logoUrl, brandName, translations }) {
+function SmartNavbarFallback({ logoUrl, brandName, appBadge, translations }) {
   const t = { ...defaultTranslations2, ...translations };
   return /* @__PURE__ */ jsx("div", { className: "smart-navbar", "data-testid": "smart-navbar", children: /* @__PURE__ */ jsx("div", { className: "max-w-[1600px] mx-auto h-full px-4 flex items-center justify-between", children: /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3", children: [
     logoUrl ? /* @__PURE__ */ jsx("img", { src: logoUrl, alt: "Logo", className: "w-6 h-6 object-contain" }) : /* @__PURE__ */ jsx("div", { className: "w-6 h-6 bg-primary/10 border border-primary/30 flex items-center justify-center", children: /* @__PURE__ */ jsx(Shield, { size: 12, className: "text-primary" }) }),
+    appBadge && /* @__PURE__ */ jsx("span", { className: "font-mono text-[9px] font-bold tracking-wider text-primary/80 border border-primary/20 bg-primary/5 px-1.5 py-[1px] leading-none", children: appBadge }),
     /* @__PURE__ */ jsx("span", { className: "font-mono text-xs font-black uppercase tracking-[0.2em] text-foreground", children: brandName || t.brandFallback })
   ] }) }) });
 }
@@ -1117,6 +1285,7 @@ function SmartNavbarContent({
   links,
   logoUrl,
   brandName,
+  appBadge,
   activeHref,
   locale = "en",
   onLogout,
@@ -1328,7 +1497,7 @@ function SmartNavbarContent({
         onMouseLeave: handleMouseLeave,
         children: [
           /* @__PURE__ */ jsxs("div", { className: "max-w-[1600px] mx-auto h-full px-4 flex items-center justify-between gap-2", children: [
-            /* @__PURE__ */ jsx("div", { className: "flex items-center gap-3 min-w-0", children: /* @__PURE__ */ jsxs(
+            /* @__PURE__ */ jsx("div", { className: "flex items-center gap-3 min-w-0", role: "region", "aria-label": brandName || t.brandFallback, children: /* @__PURE__ */ jsxs(
               LocalizedLink,
               {
                 href: isAuthenticated ? "/" : "/",
@@ -1345,6 +1514,7 @@ function SmartNavbarContent({
                     }
                   ) : /* @__PURE__ */ jsx("div", { className: "w-6 h-6 bg-primary/10 border border-primary/30 flex items-center justify-center", children: /* @__PURE__ */ jsx(Shield, { size: 12, className: "text-primary" }) }),
                   /* @__PURE__ */ jsxs("div", { className: "flex flex-col text-left", children: [
+                    appBadge && /* @__PURE__ */ jsx("span", { className: "font-mono text-[9px] font-bold tracking-wider text-primary/80 border border-primary/20 bg-primary/5 px-1.5 py-[1px] leading-none", children: appBadge }),
                     /* @__PURE__ */ jsx("span", { className: "font-mono text-xs font-black uppercase tracking-[0.2em] text-foreground truncate max-w-[160px] leading-tight", children: brandName || t.brandFallback }),
                     isAuthenticated && activeTenantId && /* @__PURE__ */ jsx("span", { className: "font-mono text-[9px] opacity-70 uppercase tracking-widest text-muted-foreground leading-none mt-0.5", children: activeTenantId })
                   ] })
@@ -1371,22 +1541,26 @@ function SmartNavbarContent({
                   )
                 }
               ),
-              /* @__PURE__ */ jsx(
+              /* @__PURE__ */ jsxs(
                 "div",
                 {
                   className: "relative smart-navbar-desktop-only",
                   onMouseEnter: () => handleMouseEnter("theme"),
                   onClick: (e) => handleMenuClick("theme", e.currentTarget),
-                  children: /* @__PURE__ */ jsx(
-                    "button",
-                    {
-                      "data-testid": "navbar-menu-theme",
-                      className: "p-2 text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all duration-200 cursor-pointer rounded-none",
-                      "aria-haspopup": "true",
-                      "aria-expanded": activeMenu === "theme",
-                      children: /* @__PURE__ */ jsx(Sun, { size: 16 })
-                    }
-                  )
+                  children: [
+                    "                ",
+                    /* @__PURE__ */ jsx(
+                      "button",
+                      {
+                        "data-testid": "navbar-menu-theme",
+                        className: "p-2 text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all duration-200 cursor-pointer rounded-none",
+                        "aria-haspopup": "true",
+                        "aria-expanded": activeMenu === "theme",
+                        "aria-label": t.themeLabel,
+                        children: /* @__PURE__ */ jsx(Sun, { size: 16 })
+                      }
+                    )
+                  ]
                 }
               ),
               onLocaleChange && /* @__PURE__ */ jsx(
@@ -1402,6 +1576,7 @@ function SmartNavbarContent({
                       className: "p-2 text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all duration-200 cursor-pointer rounded-none",
                       "aria-haspopup": "true",
                       "aria-expanded": activeMenu === "language",
+                      "aria-label": t.languageLabel,
                       children: /* @__PURE__ */ jsx(Languages, { size: 16 })
                     }
                   )
@@ -1521,10 +1696,7 @@ function SmartNavbarContent({
                     onClose: closeMenus
                   }
                 ),
-                activeMenu === "tenant" && tenantSelectorSlot && /* @__PURE__ */ jsx("div", { className: "w-full flex justify-center", children: /* @__PURE__ */ jsx(SlotErrorBoundary, { children: React7.isValidElement(tenantSelectorSlot) ? React7.cloneElement(tenantSelectorSlot, {
-                  variant: "content",
-                  isOpen: true
-                }) : tenantSelectorSlot }) })
+                activeMenu === "tenant" && tenantSelectorSlot && /* @__PURE__ */ jsx("div", { className: "w-full flex justify-center", children: /* @__PURE__ */ jsx(SlotErrorBoundary, { children: /* @__PURE__ */ jsx(TenantMegaMenuProvider, { value: { variant: "content", isOpen: true }, children: tenantSelectorSlot }) }) })
               ] })
             }
           )
@@ -1822,6 +1994,195 @@ function ConfirmDialog({
           }
         )
       ]
+    }
+  );
+}
+function IndustrialSelectSearch({
+  items,
+  value,
+  onChange,
+  placeholder = "Search...",
+  noResultsLabel = "No results",
+  ariaLabel
+}) {
+  const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState("");
+  const containerRef = useRef(null);
+  const selectedItem = useMemo(() => items.find((i) => i.id === value), [items, value]);
+  const filtered = useMemo(
+    () => items.filter(
+      (i) => i.label.toLowerCase().includes(query.toLowerCase()) || i.subLabel && i.subLabel.toLowerCase().includes(query.toLowerCase())
+    ),
+    [items, query]
+  );
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (containerRef.current && !containerRef.current.contains(e.target)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+  return /* @__PURE__ */ jsxs("div", { ref: containerRef, className: "relative", children: [
+    /* @__PURE__ */ jsxs(
+      "button",
+      {
+        type: "button",
+        "aria-label": ariaLabel,
+        onClick: () => setOpen(!open),
+        className: "w-full h-10 px-4 bg-secondary/30 border border-border focus:border-primary focus:ring-1 focus:ring-primary/30 font-mono text-xs outline-none text-foreground rounded-none flex items-center justify-between gap-2",
+        children: [
+          /* @__PURE__ */ jsx("span", { className: selectedItem ? "text-foreground" : "text-muted-foreground", children: selectedItem ? selectedItem.label : placeholder }),
+          /* @__PURE__ */ jsx(ChevronDown, { size: 14, className: "text-muted-foreground shrink-0" })
+        ]
+      }
+    ),
+    open && /* @__PURE__ */ jsxs("div", { className: "absolute z-50 mt-1 w-full bg-card border border-border shadow-xl rounded-none max-h-64 flex flex-col", children: [
+      /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 p-2 border-b border-border", children: [
+        /* @__PURE__ */ jsx(Search, { size: 14, className: "text-muted-foreground shrink-0" }),
+        /* @__PURE__ */ jsx(
+          "input",
+          {
+            type: "text",
+            value: query,
+            onChange: (e) => setQuery(e.target.value),
+            placeholder: "Search...",
+            className: "w-full bg-transparent border-none focus:ring-0 text-xs text-foreground placeholder:text-muted-foreground outline-none",
+            autoFocus: true
+          }
+        )
+      ] }),
+      /* @__PURE__ */ jsx("div", { className: "overflow-y-auto flex-1", children: filtered.length === 0 ? /* @__PURE__ */ jsx("div", { className: "p-4 text-center font-mono text-[10px] text-muted-foreground uppercase", children: noResultsLabel }) : filtered.map((item) => /* @__PURE__ */ jsxs(
+        "button",
+        {
+          type: "button",
+          "aria-label": item.label,
+          onClick: () => {
+            onChange(item.id);
+            setOpen(false);
+            setQuery("");
+          },
+          className: `w-full flex items-center gap-3 px-4 py-2.5 text-left transition-colors hover:bg-primary/[0.03] ${item.id === value ? "bg-primary/5" : ""}`,
+          children: [
+            /* @__PURE__ */ jsxs("div", { className: "flex-1 min-w-0", children: [
+              /* @__PURE__ */ jsx("div", { className: "font-sans text-xs font-bold text-foreground truncate", children: item.label }),
+              item.subLabel && /* @__PURE__ */ jsx("div", { className: "font-mono text-[9px] text-muted-foreground truncate", children: item.subLabel })
+            ] }),
+            item.id === value && /* @__PURE__ */ jsx(Check, { size: 14, className: "text-primary shrink-0" })
+          ]
+        },
+        item.id
+      )) })
+    ] })
+  ] });
+}
+function IndustrialModalHeader({ title, subtitle, icon: Icon, onClose }) {
+  return /* @__PURE__ */ jsxs("header", { className: "p-6 border-b border-border flex justify-between items-center bg-card", children: [
+    /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3", children: [
+      /* @__PURE__ */ jsx("div", { className: "w-10 h-10 bg-primary/10 rounded-md flex items-center justify-center text-primary border border-primary/20", children: /* @__PURE__ */ jsx(Icon, { size: 20, "aria-hidden": "true" }) }),
+      /* @__PURE__ */ jsxs("div", { children: [
+        /* @__PURE__ */ jsx("h3", { className: "text-sm font-black uppercase tracking-widest leading-none text-foreground italic", children: title }),
+        subtitle && /* @__PURE__ */ jsx("p", { className: "text-[10px] text-muted-foreground font-mono uppercase tracking-wider mt-1.5", children: subtitle })
+      ] })
+    ] }),
+    /* @__PURE__ */ jsx(
+      "button",
+      {
+        onClick: onClose,
+        className: "p-2 hover:bg-muted rounded-full transition-colors text-muted-foreground hover:text-foreground outline-none",
+        "aria-label": "Close",
+        children: /* @__PURE__ */ jsx(X, { size: 18 })
+      }
+    )
+  ] });
+}
+function IndustrialSearchInput({ value, onChange, placeholder, ariaLabel }) {
+  return /* @__PURE__ */ jsx("div", { className: "flex items-center gap-4 bg-card p-2 rounded-md border border-border shadow-sm", children: /* @__PURE__ */ jsxs("div", { className: "relative flex-1", children: [
+    /* @__PURE__ */ jsx(Search, { className: "absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground", size: 14, "aria-hidden": "true" }),
+    /* @__PURE__ */ jsx(
+      "input",
+      {
+        type: "text",
+        "aria-label": ariaLabel,
+        placeholder,
+        value,
+        onChange: (e) => onChange(e.target.value),
+        className: "w-full bg-transparent border-none focus:ring-0 text-xs pl-10 h-8 text-foreground placeholder:text-muted-foreground/50 outline-none"
+      }
+    )
+  ] }) });
+}
+function DialogHeader({ className, ...props }) {
+  return /* @__PURE__ */ jsx(
+    "div",
+    {
+      "data-slot": "dialog-header",
+      className: cn("flex flex-col gap-2", className),
+      ...props
+    }
+  );
+}
+function DialogFooter({
+  className,
+  showCloseButton = false,
+  closeLabel = "Close",
+  children,
+  ...props
+}) {
+  return /* @__PURE__ */ jsxs(
+    "div",
+    {
+      "data-slot": "dialog-footer",
+      className: cn(
+        "-mx-4 -mb-4 flex flex-col-reverse gap-2 rounded-b-xl border-t bg-muted/50 p-4 sm:flex-row sm:justify-end",
+        className
+      ),
+      ...props,
+      children: [
+        children,
+        showCloseButton && /* @__PURE__ */ jsx(Dialog.Close, { asChild: true, children: /* @__PURE__ */ jsx(
+          "button",
+          {
+            type: "button",
+            "aria-label": closeLabel,
+            className: "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2",
+            children: closeLabel
+          }
+        ) })
+      ]
+    }
+  );
+}
+function DialogTitle({
+  className,
+  ...props
+}) {
+  return /* @__PURE__ */ jsx(
+    Dialog.Title,
+    {
+      "data-slot": "dialog-title",
+      className: cn(
+        "font-heading text-base leading-none font-medium",
+        className
+      ),
+      ...props
+    }
+  );
+}
+function DialogDescription({
+  className,
+  ...props
+}) {
+  return /* @__PURE__ */ jsx(
+    Dialog.Description,
+    {
+      "data-slot": "dialog-description",
+      className: cn(
+        "text-sm text-muted-foreground *:[a]:underline *:[a]:underline-offset-3 *:[a]:hover:text-foreground",
+        className
+      ),
+      ...props
     }
   );
 }
@@ -2261,6 +2622,6 @@ function AuditHistoryModal({
   ] }) });
 }
 
-export { ANIM_DURATION, ActionBadge, AuditDeltaViewer, AuditHistoryModal, CommandPalette, ConfirmDialog, GlobalFooter, GlobalNavbar, IndustrialTopBar, LiveLogViewer, SmartNavbar, SystemSettings, TenantSelector, UserIdentity, buildSidebarLinks, cn, configureFeatureFlags, featureFlags, useConfirmDialog };
+export { ANIM_DURATION, ActionBadge, AuditDeltaViewer, AuditHistoryModal, CommandPalette, ConfirmDialog, DialogDescription, DialogFooter, DialogHeader, DialogTitle, GlobalFooter, GlobalNavbar, IndustrialModalHeader, IndustrialSearchInput, IndustrialSelectSearch, IndustrialTopBar, LiveLogViewer, SmartNavbar, SystemSettings, TenantMegaMenuProvider, TenantSelector, TenantSelectorConnector, UserIdentity, buildSidebarLinks, cn, configureFeatureFlags, featureFlags, useConfirmDialog, useTenantMegaMenu };
 //# sourceMappingURL=index.js.map
 //# sourceMappingURL=index.js.map

@@ -1,7 +1,11 @@
 import { defineConfig } from 'tsup';
 
 export default defineConfig({
-  entry: ['src/index.ts'],
+  entry: {
+    index: 'src/index.ts',
+    'api/spaces': 'src/api/spaces.ts',
+    'api/groups': 'src/api/groups.ts',
+  },
   format: ['esm'],
   dts: true,
   splitting: false,
@@ -12,11 +16,15 @@ export default defineConfig({
     'react', 
     'react-dom', 
     'lucide-react', 
+    'radix-ui',
     '@ajabadia/styles',
+    '@ajabadia/satellite-sdk',
+    'mongoose',
     'next',
     'next/link',
     'next/image',
-    'next/navigation'
+    'next/navigation',
+    'next/server',
   ],
   onSuccess: async () => {
     const fs = await import('fs');
