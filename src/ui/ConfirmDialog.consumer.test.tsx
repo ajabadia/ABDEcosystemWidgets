@@ -3,7 +3,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, act, waitFor } from '@testing-library/react';
 import { act as reactAct } from 'react';
-import { ConfirmDialog, ANIM_DURATION } from './ConfirmDialog.js';
+import { ConfirmDialog } from './ConfirmDialog.js';
+import { ANIM_DURATION } from '../constants.js';
 import { useConfirmDialog } from '../hooks/useConfirmDialog.js';
 
 /**

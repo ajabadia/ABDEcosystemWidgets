@@ -1,3 +1,5 @@
+'use client';
+
 import * as React from "react";
 import { useState, useRef, useEffect } from "react";
 import { Building2, ChevronDown, Search, X, Check, Loader2 } from "lucide-react";

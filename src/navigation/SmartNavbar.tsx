@@ -67,6 +67,7 @@ export interface SmartNavbarProps {
   transformHref?: (href: string) => string;
   tenantSelectorSlot?: React.ReactNode;
   settingsSlot?: React.ReactNode;
+  notificationsSlot?: React.ReactNode;
   translations?: SmartNavbarTranslations;
   onSearchTrigger?: () => void;
 }
@@ -154,6 +155,7 @@ function SmartNavbarContent({
   transformHref: rawTransformHref,
   tenantSelectorSlot,
   settingsSlot,
+  notificationsSlot,
   translations,
   onSearchTrigger,
 }: SmartNavbarProps) {
@@ -527,6 +529,15 @@ function SmartNavbarContent({
               </div>
             )}
 
+            {/* Notifications Slot (desktop) */}
+            {isAuthenticated && notificationsSlot && (
+              <div className="relative smart-navbar-desktop-only">
+                <SlotErrorBoundary>
+                  {notificationsSlot}
+                </SlotErrorBoundary>
+              </div>
+            )}
+
             {/* User Menu (authenticated only) */}
             {isAuthenticated && (
               <div
@@ -687,6 +698,18 @@ function SmartNavbarContent({
                   </div>
                   <SlotErrorBoundary>
                     {tenantSelectorSlot}
+                  </SlotErrorBoundary>
+                </div>
+              )}
+
+              {/* Notifications Slot (mobile) */}
+              {notificationsSlot && (
+                <div className="border-b border-border/30 px-4 py-3">
+                  <div className="font-mono text-[9px] font-bold tracking-widest uppercase text-muted-foreground/50 mb-2">
+                    NOTIFICACIONES
+                  </div>
+                  <SlotErrorBoundary>
+                    {notificationsSlot}
                   </SlotErrorBoundary>
                 </div>
               )}

@@ -15,7 +15,7 @@ export interface GlobalFooterProps {
   separatorWidth?: 'full' | 'short';
   /** Additional className for the footer element */
   className?: string;
-  /** Opacity level (0-100). Default 30. */
+  /** Opacity level (0-100). Default 80. */
   opacity?: number;
 }
 
@@ -39,14 +39,18 @@ export function GlobalFooter({
   showSeparator = true,
   separatorWidth = 'full',
   className = '',
-  opacity = 30,
+  opacity = 80,
 }: GlobalFooterProps) {
   const opacityClass =
     opacity <= 20
       ? 'text-muted-foreground/20'
-      : opacity >= 40
+      : opacity <= 40
         ? 'text-muted-foreground/40'
-        : 'text-muted-foreground/30';
+        : opacity <= 60
+          ? 'text-muted-foreground/60'
+          : opacity <= 80
+            ? 'text-muted-foreground/80'
+            : 'text-muted-foreground';
 
   const isTwoColumn = !!(leftLabel && rightLabel);
 

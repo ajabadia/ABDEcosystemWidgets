@@ -165,7 +165,7 @@ interface GlobalFooterProps {
     separatorWidth?: 'full' | 'short';
     /** Additional className for the footer element */
     className?: string;
-    /** Opacity level (0-100). Default 30. */
+    /** Opacity level (0-100). Default 80. */
     opacity?: number;
 }
 /**
@@ -254,6 +254,7 @@ interface SmartNavbarProps {
     transformHref?: (href: string) => string;
     tenantSelectorSlot?: React.ReactNode;
     settingsSlot?: React.ReactNode;
+    notificationsSlot?: React.ReactNode;
     translations?: SmartNavbarTranslations;
     onSearchTrigger?: () => void;
 }
@@ -343,9 +344,6 @@ interface UseConfirmDialogReturn<TData> {
  */
 declare function useConfirmDialog<TData = void>(options: UseConfirmDialogOptions<TData>): UseConfirmDialogReturn<TData>;
 
-/** Duration (ms) for dialog entrance and exit animations */
-declare const ANIM_DURATION = 200;
-
 type ConfirmVariant = 'danger' | 'warning' | 'info';
 interface ConfirmDialogProps {
     open: boolean;
@@ -400,6 +398,9 @@ declare function DialogFooter({ className, showCloseButton, closeLabel, children
 }): react_jsx_runtime.JSX.Element;
 declare function DialogTitle({ className, ...props }: React.ComponentProps<typeof Dialog.Title>): react_jsx_runtime.JSX.Element;
 declare function DialogDescription({ className, ...props }: React.ComponentProps<typeof Dialog.Description>): react_jsx_runtime.JSX.Element;
+
+/** Duration (ms) for dialog entrance and exit animations */
+declare const ANIM_DURATION = 200;
 
 interface SystemSettingsProps {
     locale: string;

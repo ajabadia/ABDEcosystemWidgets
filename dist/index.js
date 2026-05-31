@@ -983,9 +983,9 @@ function GlobalFooter({
   showSeparator = true,
   separatorWidth = "full",
   className = "",
-  opacity = 30
+  opacity = 80
 }) {
-  const opacityClass = opacity <= 20 ? "text-muted-foreground/20" : opacity >= 40 ? "text-muted-foreground/40" : "text-muted-foreground/30";
+  const opacityClass = opacity <= 20 ? "text-muted-foreground/20" : opacity <= 40 ? "text-muted-foreground/40" : opacity <= 60 ? "text-muted-foreground/60" : opacity <= 80 ? "text-muted-foreground/80" : "text-muted-foreground";
   const isTwoColumn = !!(leftLabel && rightLabel);
   const containerClass = isTwoColumn ? "mt-auto pt-6 border-t border-border flex flex-col sm:flex-row justify-between items-center gap-4" : "mt-auto pt-12 flex flex-col items-center gap-6";
   const separatorWidthClass = separatorWidth === "short" ? "w-24 mx-auto" : "w-full";
@@ -1294,6 +1294,7 @@ function SmartNavbarContent({
   transformHref: rawTransformHref,
   tenantSelectorSlot,
   settingsSlot,
+  notificationsSlot,
   translations,
   onSearchTrigger
 }) {
@@ -1600,6 +1601,7 @@ function SmartNavbarContent({
                   )
                 }
               ),
+              isAuthenticated && notificationsSlot && /* @__PURE__ */ jsx("div", { className: "relative smart-navbar-desktop-only", children: /* @__PURE__ */ jsx(SlotErrorBoundary, { children: notificationsSlot }) }),
               isAuthenticated && /* @__PURE__ */ jsx(
                 "div",
                 {
@@ -1731,6 +1733,10 @@ function SmartNavbarContent({
             isAuthenticated && tenantSelectorSlot && /* @__PURE__ */ jsxs("div", { className: "border-b border-border/30 px-4 py-3", children: [
               /* @__PURE__ */ jsx("div", { className: "font-mono text-[9px] font-bold tracking-widest uppercase text-muted-foreground/50 mb-2", children: "ORGANIZACI\xD3N" }),
               /* @__PURE__ */ jsx(SlotErrorBoundary, { children: tenantSelectorSlot })
+            ] }),
+            notificationsSlot && /* @__PURE__ */ jsxs("div", { className: "border-b border-border/30 px-4 py-3", children: [
+              /* @__PURE__ */ jsx("div", { className: "font-mono text-[9px] font-bold tracking-widest uppercase text-muted-foreground/50 mb-2", children: "NOTIFICACIONES" }),
+              /* @__PURE__ */ jsx(SlotErrorBoundary, { children: notificationsSlot })
             ] }),
             settingsSlot && /* @__PURE__ */ jsxs("div", { className: "border-b border-border/30 px-4 py-3", children: [
               /* @__PURE__ */ jsx("div", { className: "font-mono text-[9px] font-bold tracking-widest uppercase text-muted-foreground/50 mb-2", children: "CONFIGURACI\xD3N" }),

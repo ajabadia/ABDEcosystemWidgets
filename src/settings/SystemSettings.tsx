@@ -1,3 +1,5 @@
+"use client";
+
 import * as React from "react";
 import { useState, useRef, useEffect } from "react";
 import { Settings, X, LogIn, LogOut, Sun, Moon, Monitor, Languages, Check } from "lucide-react";

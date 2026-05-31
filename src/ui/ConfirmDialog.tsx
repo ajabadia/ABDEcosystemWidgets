@@ -6,8 +6,6 @@ import { AlertTriangle, Info, X, Loader2 } from 'lucide-react';
 import { cn } from '../utils.js';
 import { ANIM_DURATION } from '../constants.js';
 
-export { ANIM_DURATION };
-
 export type ConfirmVariant = 'danger' | 'warning' | 'info';
 
 export interface ConfirmDialogProps {

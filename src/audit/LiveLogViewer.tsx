@@ -1,3 +1,5 @@
+"use client";
+
 // LiveLogViewer component – shared live telemetry UI
 
 import React from 'react';

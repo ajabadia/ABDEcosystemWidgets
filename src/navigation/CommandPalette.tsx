@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Search, Terminal, CornerDownLeft } from 'lucide-react';
 export interface Command {
