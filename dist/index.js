@@ -1,11 +1,12 @@
 "use client";
-import * as React7 from 'react';
-import { createContext, memo, useState, useRef, useEffect, useContext, useMemo, useCallback, Suspense } from 'react';
-import { Sun, Moon, Monitor, User, LogOut, Search, Building2, Loader2, ChevronDown, Check, X, ShieldCheck, Settings, Terminal, CornerDownLeft, Shield, Menu, Info, AlertTriangle, LogIn, Activity, Layers, FileCode, Tag, Wifi, WifiOff, FileText, BarChart3, Languages } from 'lucide-react';
+import * as React8 from 'react';
+import { createContext, memo, useState, useRef, useEffect, useContext, Suspense, useMemo, useCallback } from 'react';
+import { Sun, Moon, Monitor, User, LogOut, Search, Building2, Loader2, ChevronDown, Check, X, ShieldCheck, Settings, AlertTriangle, LogIn, ArrowLeft, Terminal, CornerDownLeft, Shield, Menu, Info, Activity, Layers, FileCode, Tag, Wifi, WifiOff, FileText, BarChart3, Languages } from 'lucide-react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { jsx, jsxs, Fragment } from 'react/jsx-runtime';
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
+import { logger } from '@ajabadia/satellite-sdk/client';
 import Link from 'next/link';
 import { Dialog } from 'radix-ui';
 
@@ -440,6 +441,106 @@ function UserIdentity({
     /* @__PURE__ */ jsxs("div", { className: "flex items-center", children: [
       isAdmin && /* @__PURE__ */ jsx(LinkComp, { href: adminHref, title: adminTitle, className: "p-1 hover:bg-muted rounded-none transition-colors text-muted-foreground hover:text-foreground", children: /* @__PURE__ */ jsx(Settings, { size: 14 }) }),
       /* @__PURE__ */ jsx(LinkComp, { href: logoutHref, title: logoutTitle, className: "p-1 hover:bg-red-500/10 rounded-none transition-colors text-red-500/70 hover:text-red-500", children: /* @__PURE__ */ jsx(LogOut, { size: 14 }) })
+    ] })
+  ] });
+}
+function LogoutSuccessView(props) {
+  return /* @__PURE__ */ jsx(Suspense, { fallback: /* @__PURE__ */ jsx("main", { className: "min-h-screen flex items-center justify-center bg-background text-foreground font-sans", children: /* @__PURE__ */ jsxs("div", { className: "animate-pulse flex flex-col items-center gap-4", children: [
+    /* @__PURE__ */ jsx("div", { className: "w-12 h-12 rounded-full bg-muted" }),
+    /* @__PURE__ */ jsx("div", { className: "h-4 w-32 bg-muted rounded" })
+  ] }) }), children: /* @__PURE__ */ jsx(LogoutSuccessContent, { ...props }) });
+}
+function LogoutSuccessContent({
+  signInUrl = "/admin",
+  homeUrl = "/",
+  appTitle = "ABDFiles",
+  translations,
+  LinkComponent
+}) {
+  const searchParams = useSearchParams();
+  const error = searchParams ? searchParams.get("error") : null;
+  const [hasLogged, setHasLogged] = useState(false);
+  const t = (key, fallback) => {
+    return translations?.[key] || fallback;
+  };
+  useEffect(() => {
+    if (error && !hasLogged) {
+      setHasLogged(true);
+      logger.audit({
+        tenantId: "SYSTEM",
+        action: "LOGOUT_SECURITY_ALERT",
+        entityType: "TENANT",
+        entityId: error === "tenant_not_found" ? "UNKNOWN" : error,
+        userId: "anonymous",
+        userEmail: "anonymous@system.local",
+        changedFields: { error, context: "logout_success_screen" }
+      }).catch((err) => {
+        console.warn("[Widgets Audit] Failed to replicate audit log to ABDLogs:", err);
+      });
+    }
+  }, [error, hasLogged]);
+  const LinkComp = LinkComponent || "a";
+  return /* @__PURE__ */ jsxs("main", { className: "min-h-screen flex flex-col items-center justify-center bg-background text-foreground font-sans relative overflow-hidden p-6", children: [
+    /* @__PURE__ */ jsx("div", { className: "absolute inset-0 bg-grid-pattern opacity-[0.03] pointer-events-none" }),
+    /* @__PURE__ */ jsx("div", { className: "absolute -top-[40%] -left-[20%] w-[80%] h-[80%] rounded-full bg-primary/5 blur-[120px] pointer-events-none" }),
+    /* @__PURE__ */ jsx("div", { className: "absolute -bottom-[40%] -right-[20%] w-[80%] h-[80%] rounded-full bg-primary/5 blur-[120px] pointer-events-none" }),
+    /* @__PURE__ */ jsxs("div", { className: "w-full max-w-[420px] bg-card/40 backdrop-blur-xl border border-border/80 p-8 md:p-10 shadow-2xl relative z-10 flex flex-col items-center text-center animate-in fade-in slide-in-from-bottom-6 duration-500", children: [
+      /* @__PURE__ */ jsxs("div", { className: "relative mb-6", children: [
+        /* @__PURE__ */ jsx("div", { className: "w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center border border-primary/20 relative z-10", children: /* @__PURE__ */ jsx(ShieldCheck, { className: "w-8 h-8 text-primary animate-pulse" }) }),
+        /* @__PURE__ */ jsxs("span", { className: "absolute -bottom-1 -right-1 flex h-3 w-3", children: [
+          /* @__PURE__ */ jsx("span", { className: "animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" }),
+          /* @__PURE__ */ jsx("span", { className: "relative inline-flex rounded-full h-3 w-3 bg-primary" })
+        ] })
+      ] }),
+      /* @__PURE__ */ jsx("div", { className: "px-3 py-1 bg-secondary border border-border text-[9px] font-black tracking-[0.2em] uppercase text-muted-foreground mb-6", children: t("shield_badge", "Sesi\xF3n Revocada") }),
+      error === "tenant_not_found" && /* @__PURE__ */ jsxs("div", { className: "w-full bg-destructive/10 border border-destructive/30 p-4 mb-6 rounded text-left text-xs flex gap-3 items-start animate-in fade-in duration-300", children: [
+        /* @__PURE__ */ jsx(AlertTriangle, { className: "w-5 h-5 text-destructive shrink-0 mt-0.5" }),
+        /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-1", children: [
+          /* @__PURE__ */ jsx("span", { className: "font-bold uppercase tracking-wider text-[10px] text-destructive", children: t("tenantNotFoundTitle", "Organizaci\xF3n no encontrada") }),
+          /* @__PURE__ */ jsx("span", { className: "text-[11px] leading-relaxed text-muted-foreground", children: t("tenantNotFoundDesc", "La organizaci\xF3n especificada no existe o no est\xE1 registrada en el ecosistema.") })
+        ] })
+      ] }),
+      error && error !== "tenant_not_found" && /* @__PURE__ */ jsxs("div", { className: "w-full bg-destructive/10 border border-destructive/30 p-4 mb-6 rounded text-left text-xs flex gap-3 items-start animate-in fade-in duration-300", children: [
+        /* @__PURE__ */ jsx(AlertTriangle, { className: "w-5 h-5 text-destructive shrink-0 mt-0.5" }),
+        /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-1", children: [
+          /* @__PURE__ */ jsx("span", { className: "font-bold uppercase tracking-wider text-[10px] text-destructive", children: "Error" }),
+          /* @__PURE__ */ jsx("span", { className: "text-[11px] leading-relaxed text-muted-foreground", children: error })
+        ] })
+      ] }),
+      /* @__PURE__ */ jsx("h1", { className: "text-2xl font-black tracking-tighter uppercase mb-3 text-foreground", children: t("title", "Desconexi\xF3n Exitosa") }),
+      /* @__PURE__ */ jsx("p", { className: "text-xs text-muted-foreground font-medium leading-relaxed mb-8 max-w-[320px]", children: t("subtitle", "Has cerrado sesi\xF3n correctamente.") }),
+      /* @__PURE__ */ jsxs("div", { className: "w-full bg-secondary/20 border border-border/40 p-4 mb-8 text-[10px] font-mono leading-relaxed text-left text-muted-foreground/80 flex items-start gap-3", children: [
+        /* @__PURE__ */ jsx("span", { className: "text-primary font-bold", children: `>` }),
+        /* @__PURE__ */ jsx("span", { children: t("message", "Tu sesi\xF3n ha sido revocada de forma segura tanto en el sat\xE9lite como en la pasarela central.") })
+      ] }),
+      /* @__PURE__ */ jsxs(
+        LinkComp,
+        {
+          href: signInUrl,
+          "aria-label": t("button", "Volver a Iniciar Sesi\xF3n"),
+          className: "w-full h-11 bg-primary hover:bg-primary/95 text-primary-foreground text-[10px] font-black uppercase tracking-widest transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 border-b-2 border-primary-foreground/10 active:border-b-0 active:translate-y-[1px] outline-none text-center",
+          children: [
+            /* @__PURE__ */ jsx(LogIn, { className: "w-4 h-4" }),
+            t("button", "Volver a Iniciar Sesi\xF3n")
+          ]
+        }
+      ),
+      /* @__PURE__ */ jsxs(
+        LinkComp,
+        {
+          href: homeUrl,
+          "aria-label": t("home_button", "Volver a la Bienvenida"),
+          className: "mt-5 text-[9px] font-black text-muted-foreground hover:text-foreground tracking-widest uppercase transition-colors flex items-center gap-1.5 cursor-pointer outline-none justify-center",
+          children: [
+            /* @__PURE__ */ jsx(ArrowLeft, { className: "w-3.5 h-3.5" }),
+            t("home_button", "Volver a la Bienvenida")
+          ]
+        }
+      )
+    ] }),
+    /* @__PURE__ */ jsxs("footer", { className: "absolute bottom-6 opacity-25 text-[8px] font-mono tracking-widest uppercase text-muted-foreground", children: [
+      appTitle,
+      " | SEC_REVOKED_LOGOUT_OK"
     ] })
   ] });
 }
@@ -1256,7 +1357,7 @@ var defaultTranslations2 = {
   emailLabel: "EMAIL",
   languageLabel: "IDIOMA"
 };
-var SlotErrorBoundary = class extends React7.Component {
+var SlotErrorBoundary = class extends React8.Component {
   constructor(props) {
     super(props);
     this.state = { hasError: false };
@@ -2628,6 +2729,6 @@ function AuditHistoryModal({
   ] }) });
 }
 
-export { ANIM_DURATION, ActionBadge, AuditDeltaViewer, AuditHistoryModal, CommandPalette, ConfirmDialog, DialogDescription, DialogFooter, DialogHeader, DialogTitle, GlobalFooter, GlobalNavbar, IndustrialModalHeader, IndustrialSearchInput, IndustrialSelectSearch, IndustrialTopBar, LiveLogViewer, SmartNavbar, SystemSettings, TenantMegaMenuProvider, TenantSelector, TenantSelectorConnector, UserIdentity, buildSidebarLinks, cn, configureFeatureFlags, featureFlags, useConfirmDialog, useTenantMegaMenu };
+export { ANIM_DURATION, ActionBadge, AuditDeltaViewer, AuditHistoryModal, CommandPalette, ConfirmDialog, DialogDescription, DialogFooter, DialogHeader, DialogTitle, GlobalFooter, GlobalNavbar, IndustrialModalHeader, IndustrialSearchInput, IndustrialSelectSearch, IndustrialTopBar, LiveLogViewer, LogoutSuccessView, SmartNavbar, SystemSettings, TenantMegaMenuProvider, TenantSelector, TenantSelectorConnector, UserIdentity, buildSidebarLinks, cn, configureFeatureFlags, featureFlags, useConfirmDialog, useTenantMegaMenu };
 //# sourceMappingURL=index.js.map
 //# sourceMappingURL=index.js.map

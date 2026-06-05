@@ -2,6 +2,7 @@
 export * from './identity/TenantSelector.js';
 export * from './identity/TenantMegaMenuContext.js';
 export * from './identity/UserIdentity.js';
+export * from './identity/LogoutSuccessView.js';
 
 // Conectores
 export * from './connectors/TenantSelectorConnector.js';

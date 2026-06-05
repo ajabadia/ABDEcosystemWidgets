@@ -14,7 +14,7 @@ Para evitar la proliferación excesiva de paquetes `package.json`, agruparemos l
 
 ## 3. Estructura Interna Propuesta (Temática)
 Para mantener el orden interno, dividiremos el código en subdirectorios:
-- `/src/identity/`: Para componentes de gestión de usuario y organizaciones (Ej: `TenantSelector`, `UserIdentity`).
+- `/src/identity/`: Para componentes de gestión de usuario y organizaciones (Ej: `TenantSelector`, `UserIdentity`, y `LogoutSuccessView` con auditoría automatizada via `logger.audit` de `@ajabadia/satellite-sdk/client`).
 - `/src/audit/`: Para visualizadores de logs y seguridad (Ej: `LiveLogViewer`, `AuditDeltaViewer`, el nuevo `AuditHistoryModal`).
 - `/src/navigation/`: Para elementos de control global (Ej: `CommandPalette`).
 
