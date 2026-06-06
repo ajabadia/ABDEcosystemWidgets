@@ -1,87 +1,87 @@
 {
-    "name": "@ajabadia/ecosystem-widgets",
-    "version": "1.0.41",
-    "type": "module",
-    "description": "Smart components and widgets for ABD Suite Ecosystem.",
-    "main": "./dist/index.js",
-    "publishConfig": {
-        "registry": "https://npm.pkg.github.com"
+  "name": "@ajabadia/ecosystem-widgets",
+  "version": "1.0.41",
+  "type": "module",
+  "description": "Smart components and widgets for ABD Suite Ecosystem.",
+  "main": "./dist/index.js",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ajabadia/ABDEcosystemWidgets.git"
+  },
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
     },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/ajabadia/ABDEcosystemWidgets.git"
+    "./api/spaces": {
+      "types": "./dist/api/spaces.d.ts",
+      "import": "./dist/api/spaces.js"
     },
-    "module": "./dist/index.js",
-    "types": "./dist/index.d.ts",
-    "exports": {
-        ".": {
-            "types": "./dist/index.d.ts",
-            "import": "./dist/index.js"
-        },
-        "./api/spaces": {
-            "types": "./dist/api/spaces.d.ts",
-            "import": "./dist/api/spaces.js"
-        },
-        "./api/groups": {
-            "types": "./dist/api/groups.d.ts",
-            "import": "./dist/api/groups.js"
-        }
-    },
-    "files": [
-        "dist"
-    ],
-    "scripts": {
-        "build": "tsup",
-        "dev": "tsup --watch",
-        "clean": "rimraf dist",
-        "lint": "tsc --noEmit",
-        "test": "vitest run",
-        "test:watch": "vitest",
-        "test:coverage": "vitest run --coverage",
-        "audit": "powershell ./scripts/abd-audit.ps1"
-    },
-    "keywords": [
-        "abd",
-        "theme",
-        "multi-tenant",
-        "branding",
-        "tailwind",
-        "yiq"
-    ],
-    "author": "ABD Ecosystem Architecture Team",
-    "license": "UNLICENSED",
-    "dependencies": {
-        "@ajabadia/styles": "latest",
-        "clsx": "^2.1.1",
-        "tailwind-merge": "^3.6.0"
-    },
-    "peerDependencies": {
-        "@ajabadia/satellite-sdk": "^1.0.0",
-        "lucide-react": "^0.46.0 || ^1.0.0",
-        "next-intl": "^4.12.0",
-        "radix-ui": "^1.0.0",
-        "react": "^19.0.0"
-    },
-    "devDependencies": {
-        "@ajabadia/satellite-sdk": "file:../ABDSatelliteSDK",
-        "@testing-library/dom": "^10.4.1",
-        "@testing-library/jest-dom": "^6.9.1",
-        "@testing-library/react": "^16.3.2",
-        "@types/node": "^20.12.7",
-        "@types/react": "^19.0.0",
-        "@types/react-dom": "^19.2.3",
-        "@vitest/coverage-v8": "^4.1.7",
-        "jsdom": "^29.1.1",
-        "lucide-react": "^1.16.0",
-        "mongoose": "^9.6.2",
-        "next": "^16.2.6",
-        "next-intl": "^4.12.0",
-        "radix-ui": "^1.4.3",
-        "react": "^19.0.0",
-        "react-dom": "^19.2.6",
-        "rimraf": "^6.1.3",
-        "tsup": "^8.0.2",
-        "typescript": "^5.4.5",
-        "vitest": "^4.1.7"
+    "./api/groups": {
+      "types": "./dist/api/groups.d.ts",
+      "import": "./dist/api/groups.js"
     }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "clean": "rimraf dist",
+    "lint": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "audit": "powershell ./scripts/abd-audit.ps1"
+  },
+  "keywords": [
+    "abd",
+    "theme",
+    "multi-tenant",
+    "branding",
+    "tailwind",
+    "yiq"
+  ],
+  "author": "ABD Ecosystem Architecture Team",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@ajabadia/styles": "latest",
+    "clsx": "2.1.1",
+    "tailwind-merge": "3.6.0"
+  },
+  "peerDependencies": {
+    "@ajabadia/satellite-sdk": "^1.0.0",
+    "lucide-react": "^0.46.0 || ^1.0.0",
+    "next-intl": "^4.12.0",
+    "radix-ui": "^1.0.0",
+    "react": "^19.0.0"
+  },
+  "devDependencies": {
+    "@ajabadia/satellite-sdk": "file:../ABDSatelliteSDK",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@types/node": "25.8.0",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "@vitest/coverage-v8": "4.1.8",
+    "jsdom": "^29.1.1",
+    "lucide-react": "1.17.0",
+    "mongoose": "9.6.3",
+    "next": "16.2.6",
+    "next-intl": "4.13.0",
+    "radix-ui": "^1.4.3",
+    "react": "19.2.6",
+    "react-dom": "19.2.6",
+    "rimraf": "^6.1.3",
+    "tsup": "^8.0.2",
+    "typescript": "6.0.3",
+    "vitest": "4.1.8"
+  }
 }
