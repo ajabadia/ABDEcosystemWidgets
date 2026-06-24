@@ -170,6 +170,15 @@ interface GlobalNavbarProps {
  */
 declare function GlobalNavbar({ session, links, logoUrl, onLogout, brandName, homeHref, activeHref, translations, transformHref, }: GlobalNavbarProps): react_jsx_runtime.JSX.Element;
 
+/**
+ * @purpose Renderiza un componente pie de pie una vez que se ha enviado datos de telemetry, disposición en dos columnas y modo de etiquetas simples.
+ * @purpose_en Renders a unified footer component that supports telemetry data, two-column layout, and simple label modes.
+ * @refactorable true (contains too many state variables and UI parts)
+ * @classification UI Component
+ * @complexity Low
+ * @fingerprint exports:2,imports:1,sig:1j6cv6z
+ * @lastUpdated 2026-06-23T23:01:50.207Z
+ */
 interface GlobalFooterProps {
     /** Simple centered label (used as fallback when no telemetry and no two-column layout) */
     label?: string;
@@ -288,6 +297,16 @@ interface SmartNavbarProps {
  * requirements for `useSearchParams()` and prevents SSR bailouts.
  */
 declare function SmartNavbar(props: SmartNavbarProps): react_jsx_runtime.JSX.Element;
+
+/**
+ * @purpose Proporciona un arreglo de enlaces de sidebar filtrados basado en el estado de sesión del usuario, su rol y estatus de autenticación.
+ * @purpose_en Builds a filtered sidebar link array based on the user's session state, role, and authentication status.
+ * @refactorable false
+ * @classification Helper Utility
+ * @complexity Low
+ * @fingerprint exports:3,imports:1,sig:kq5xf1
+ * @lastUpdated 2026-06-23T23:01:39.722Z
+ */
 
 /**
  * A link definition with optional role/permission requirements.
@@ -422,6 +441,15 @@ declare function DialogFooter({ className, showCloseButton, closeLabel, children
 declare function DialogTitle({ className, ...props }: React.ComponentProps<typeof Dialog.Title>): react_jsx_runtime.JSX.Element;
 declare function DialogDescription({ className, ...props }: React.ComponentProps<typeof Dialog.Description>): react_jsx_runtime.JSX.Element;
 
+/**
+ * @purpose Gestiona una constante para definir el tiempo de las animaciones de entrada y salida de diálogo en milisegundos.
+ * @purpose_en Defines a constant for the duration of dialog entrance and exit animations in milliseconds.
+ * @refactorable false
+ * @classification Data/Constants
+ * @complexity Low
+ * @fingerprint exports:1,imports:0,sig:16swo3g
+ * @lastUpdated 2026-06-23T23:01:20.754Z
+ */
 /** Duration (ms) for dialog entrance and exit animations */
 declare const ANIM_DURATION = 200;
 
@@ -471,6 +499,15 @@ interface AuditHistoryModalProps {
 }
 declare function AuditHistoryModal({ isOpen, onClose, tenantId, entityType, entityId, entityName, translations }: AuditHistoryModalProps): react_jsx_runtime.JSX.Element | null;
 
+/**
+ * @purpose Gestiona la estructura para registros de auditoría.
+ * @purpose_en Defines the structure for audit log entries.
+ * @refactorable false
+ * @classification Type Definition
+ * @complexity Low
+ * @fingerprint exports:1,imports:0,sig:1u2z8wy
+ * @lastUpdated 2026-06-21T14:27:31.218Z
+ */
 interface AuditLog {
     _id?: string;
     appId?: string;
@@ -494,6 +531,15 @@ interface ActionBadgeProps {
 }
 declare function ActionBadge({ action }: ActionBadgeProps): react_jsx_runtime.JSX.Element;
 
+/**
+ * @purpose Gestiona banderas de características para ABDEcosystemWidgets, permitiendo la configuración en tiempo de ejecución de los ajustes globales.
+ * @purpose_en Manages feature flags for ABDEcosystemWidgets, allowing runtime configuration of global settings.
+ * @refactorable false
+ * @classification Type Definition
+ * @complexity Low
+ * @fingerprint exports:2,imports:0,sig:14bum57
+ * @lastUpdated 2026-06-23T23:02:41.210Z
+ */
 type FeatureFlags = {
     /** Enables live telemetry mode globally. Set to false to disable across all apps. */
     liveModeEnabled: boolean;
@@ -514,6 +560,16 @@ declare const featureFlags: Readonly<FeatureFlags>;
  * ```
  */
 declare function configureFeatureFlags(overrides: Partial<FeatureFlags>): void;
+
+/**
+ * @purpose Proporciona una forma de combinar nombres de clase utilizando `clsx` y `tailwind-merge`.
+ * @purpose_en Merges and combines class names using `clsx` and `tailwind-merge`.
+ * @refactorable false
+ * @classification Helper Utility
+ * @complexity Low
+ * @fingerprint exports:1,imports:2,sig:mt3gra
+ * @lastUpdated 2026-06-21T14:27:55.055Z
+ */
 
 declare function cn(...inputs: ClassValue[]): string;
 
