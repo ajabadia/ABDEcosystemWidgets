@@ -1,5 +1,15 @@
 "use client"
 
+/**
+ * @purpose Gestiona un campo de entrada industrial de búsqueda con una icono de búsqueda Lucide React y un placeholder personalizable y etiqueta aria.
+ * @purpose_en Manages an industrial search input field with a Lucide React Search icon and customizable placeholder and aria label.
+ * @refactorable false
+ * @classification UI Component
+ * @complexity Medium
+ * @fingerprint exports:2,imports:1,sig:1abrz7n
+ * @lastUpdated 2026-06-21T14:27:44.927Z
+ */
+
 import { Search } from "lucide-react"
 
 export interface IndustrialSearchInputProps {

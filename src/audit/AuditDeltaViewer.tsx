@@ -1,3 +1,13 @@
+/**
+ * @purpose Renderiza un componente para mostrar las diferencias entre los estados anteriores y actuales de una entrada de registro de auditoria.
+ * @purpose_en Renders a component to display the differences between previous and current states of an audit log entry.
+ * @refactorable true (contains too many state variables and UI parts)
+ * @classification UI Component
+ * @complexity Low
+ * @fingerprint exports:1,imports:3,sig:psesfc
+ * @lastUpdated 2026-06-21T14:26:00.793Z
+ */
+
 import React from 'react';
 import { FileCode, Tag } from 'lucide-react';
 import type { AuditLog } from '../types.js';

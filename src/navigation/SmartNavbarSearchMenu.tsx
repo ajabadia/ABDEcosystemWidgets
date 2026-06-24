@@ -1,5 +1,15 @@
 'use client';
 
+/**
+ * @purpose Renderiza una menú mega de búsqueda/comando con un botón de activación.
+ * @purpose_en Renders a search/command mega menu with a trigger button.
+ * @refactorable false
+ * @classification UI Component
+ * @complexity Low
+ * @fingerprint exports:1,imports:2,sig:1fz392e
+ * @lastUpdated 2026-06-23T23:02:23.375Z
+ */
+
 import { memo } from 'react';
 import { Search } from 'lucide-react';
 

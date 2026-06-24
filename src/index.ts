@@ -1,3 +1,13 @@
+/**
+ * @purpose Proporciona componentes, hooks y utilidades para el ABDEcosystemWidgets.
+ * @purpose_en Exports various components, hooks, and utilities for the ABDEcosystemWidgets application.
+ * @refactorable false
+ * @classification UI Component
+ * @complexity Medium
+ * @fingerprint exports:0,imports:0,sig:1ggwdhj
+ * @lastUpdated 2026-06-21T14:26:38.121Z
+ */
+
 // Identidad
 export * from './identity/TenantSelector.js';
 export * from './identity/TenantMegaMenuContext.js';

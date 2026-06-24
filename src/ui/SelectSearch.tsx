@@ -1,5 +1,15 @@
 "use client"
 
+/**
+ * @purpose Renderiza un componente select con dropdown buscable que admite filtrado de elementos según etiqueta y subetiqueta.
+ * @purpose_en Renders a searchable dropdown select component with support for filtering items based on label and subLabel.
+ * @refactorable true (contains too many state variables and UI parts)
+ * @classification UI Component
+ * @complexity Medium
+ * @fingerprint exports:2,imports:2,sig:2prmns
+ * @lastUpdated 2026-06-21T14:27:48.096Z
+ */
+
 import { useState, useMemo, useRef, useEffect } from "react"
 import { Search, Check, ChevronDown } from "lucide-react"
 

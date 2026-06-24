@@ -1,5 +1,15 @@
 'use client';
 
+/**
+ * @purpose Renderiza un perfil de usuario y controles de sesión, incluyendo opciones para configuraciones administrativas y salir.
+ * @purpose_en Renders a user profile status and session controls, including options for administrative settings and logout.
+ * @refactorable false
+ * @classification UI Component
+ * @complexity Low
+ * @fingerprint exports:2,imports:2,sig:1kcc1ny
+ * @lastUpdated 2026-06-23T23:01:34.536Z
+ */
+
 import React from 'react';
 import { ShieldCheck, Settings, LogOut } from 'lucide-react';
 

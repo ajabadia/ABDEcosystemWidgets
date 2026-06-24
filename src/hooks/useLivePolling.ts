@@ -1,5 +1,15 @@
 "use client";
 
+/**
+ * @purpose Gestiona el seguimiento de las registros de auditoría para un inquilino específico.
+ * @purpose_en Manages live polling of audit logs for a specific tenant.
+ * @refactorable false
+ * @classification Custom Hook
+ * @complexity Medium
+ * @fingerprint exports:1,imports:2,sig:1r2ihyv
+ * @lastUpdated 2026-06-21T14:26:25.835Z
+ */
+
 // Hook for live polling of audit logs
 import { useState, useEffect, useRef, useCallback } from 'react';
 import type { AuditLog } from '../types.js';

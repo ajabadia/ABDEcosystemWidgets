@@ -1,5 +1,15 @@
 'use client';
 
+/**
+ * @purpose Gestiona el estado y comportamiento para un diálogo de confirmación en aplicaciones React.
+ * @purpose_en Manages the state and behavior for a confirmation dialog in React applications.
+ * @refactorable false
+ * @classification Custom Hook
+ * @complexity Low
+ * @fingerprint exports:3,imports:1,sig:t4j2eb
+ * @lastUpdated 2026-06-23T23:01:24.776Z
+ */
+
 import { useState, useCallback } from 'react';
 
 export interface UseConfirmDialogOptions<TData = void> {

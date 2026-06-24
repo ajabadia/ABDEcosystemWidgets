@@ -1,5 +1,15 @@
 'use client';
 
+/**
+ * @purpose Renderiza un enlace localizado que maneja tanto rutas internas de Next.js como URLs externas, aplicando un transformador de href opcional para prefixar el prefijo de idioma o reescribir la ruta.
+ * @purpose_en Renders a localized link that handles both internal Next.js routes and external URLs, applying an optional href transformer for locale prefixing or path rewriting.
+ * @refactorable false
+ * @classification UI Component
+ * @complexity Low
+ * @fingerprint exports:1,imports:2,sig:1ozjqct
+ * @lastUpdated 2026-06-23T23:02:05.770Z
+ */
+
 import Link from 'next/link';
 import type { ReactNode, MouseEventHandler } from 'react';
 

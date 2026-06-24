@@ -1,5 +1,15 @@
 "use client"
 
+/**
+ * @purpose Renderiza un encabezado para modales industriales con título, subtítulo, icono y botón de cierre.
+ * @purpose_en Renders a header for industrial modals with a title, subtitle, icon, and close button.
+ * @refactorable false
+ * @classification UI Component
+ * @complexity Low
+ * @fingerprint exports:2,imports:2,sig:1itwjco
+ * @lastUpdated 2026-06-21T14:27:41.042Z
+ */
+
 import { X } from "lucide-react"
 import type { ComponentType } from "react"
 

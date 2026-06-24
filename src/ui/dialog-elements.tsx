@@ -1,5 +1,15 @@
 "use client"
 
+/**
+ * @purpose Gestiona y renderiza elementos de diálogo como encabezados, pies de página, títulos y descripciones utilizando componentes UI de Radix.
+ * @purpose_en Renders and manages dialog elements such as headers, footers, titles, and descriptions using Radix UI components.
+ * @refactorable false
+ * @classification UI Component
+ * @complexity Low
+ * @fingerprint exports:0,imports:3,sig:qtp4rt
+ * @lastUpdated 2026-06-21T14:27:37.740Z
+ */
+
 import * as React from "react"
 import { Dialog as DialogPrimitive } from "radix-ui"
 import { cn } from "../utils"

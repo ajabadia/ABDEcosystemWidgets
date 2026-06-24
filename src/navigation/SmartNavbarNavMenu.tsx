@@ -1,5 +1,15 @@
 'use client';
 
+/**
+ * @purpose Renderiza un menú mega de navegación con enlaces rápidos.
+ * @purpose_en Renders a navigation mega menu with quick-access links.
+ * @refactorable false
+ * @classification UI Component
+ * @complexity Low
+ * @fingerprint exports:1,imports:3,sig:wkso05
+ * @lastUpdated 2026-06-23T23:02:19.703Z
+ */
+
 import { memo } from 'react';
 import { LocalizedLink } from './LocalizedLink.js';
 import type { SidebarLink } from './GlobalNavbar.js';

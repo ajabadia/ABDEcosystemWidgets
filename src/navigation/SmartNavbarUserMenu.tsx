@@ -1,5 +1,15 @@
 'use client';
 
+/**
+ * @purpose Renderiza el menú mega del perfil del usuario con detalles y botones de acción.
+ * @purpose_en Renders the user profile mega menu with details and action buttons.
+ * @refactorable true (contains too many state variables and UI parts)
+ * @classification UI Component
+ * @complexity Low
+ * @fingerprint exports:1,imports:4,sig:1cfys6a
+ * @lastUpdated 2026-06-23T23:02:31.424Z
+ */
+
 import { memo } from 'react';
 import { LogOut, User as UserIcon } from 'lucide-react';
 import { LocalizedLink } from './LocalizedLink.js';

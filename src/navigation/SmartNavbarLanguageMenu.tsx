@@ -1,5 +1,15 @@
 'use client';
 
+/**
+ * @purpose Renderiza un menú de selección de idioma con opciones para español e inglés.
+ * @purpose_en Renders a language selection mega menu with options for Spanish and English.
+ * @refactorable false
+ * @classification UI Component
+ * @complexity Low
+ * @fingerprint exports:1,imports:2,sig:8pdqs6
+ * @lastUpdated 2026-06-23T23:02:16.280Z
+ */
+
 import { memo } from 'react';
 import { cn } from '../utils.js';
 

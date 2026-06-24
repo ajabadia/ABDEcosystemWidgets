@@ -1,5 +1,15 @@
 'use client';
 
+/**
+ * @purpose Renderiza un componente barra superior para aplicaciones industriales, incluyendo funcionalidad de búsqueda y configuración del sistema.
+ * @purpose_en Renders a top bar component for industrial applications, including search functionality and system settings.
+ * @refactorable false
+ * @classification UI Component
+ * @complexity Low
+ * @fingerprint exports:2,imports:2,sig:15pte1f
+ * @lastUpdated 2026-06-23T23:01:58.500Z
+ */
+
 import React from 'react';
 import { Search } from 'lucide-react';
 

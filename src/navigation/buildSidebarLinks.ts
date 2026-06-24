@@ -1,3 +1,13 @@
+/**
+ * @purpose Proporciona un arreglo de enlaces de sidebar filtrados basado en el estado de sesión del usuario, su rol y estatus de autenticación.
+ * @purpose_en Builds a filtered sidebar link array based on the user's session state, role, and authentication status.
+ * @refactorable false
+ * @classification Helper Utility
+ * @complexity Low
+ * @fingerprint exports:3,imports:1,sig:kq5xf1
+ * @lastUpdated 2026-06-23T23:01:39.722Z
+ */
+
 import type { ReactNode } from 'react';
 
 /**

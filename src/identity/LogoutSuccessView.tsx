@@ -1,5 +1,15 @@
 'use client';
 
+/**
+ * @purpose Gestiona el renderizado de una vista de éxito de salida con contenido dinámico y enlaces.
+ * @purpose_en Manages the rendering of a logout success view with dynamic content and links.
+ * @refactorable true (contains too many state variables and UI parts)
+ * @classification UI Component
+ * @complexity Medium
+ * @fingerprint exports:2,imports:5,sig:pwsyoe
+ * @lastUpdated 2026-06-21T14:52:03.848Z
+ */
+
 import * as React from 'react';
 import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';

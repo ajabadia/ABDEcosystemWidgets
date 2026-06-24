@@ -1,5 +1,15 @@
 'use client';
 
+/**
+ * @purpose Renderiza un panel lateral desplazable con información del usuario y función de logout.
+ * @purpose_en Renders a collapsible navigation sidebar with user information and logout functionality.
+ * @refactorable true (contains too many state variables and UI parts)
+ * @classification UI Component
+ * @complexity Medium
+ * @fingerprint exports:6,imports:5,sig:m2viqv
+ * @lastUpdated 2026-06-23T23:01:53.981Z
+ */
+
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';

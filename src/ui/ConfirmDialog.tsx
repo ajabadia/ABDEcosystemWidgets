@@ -1,5 +1,15 @@
 'use client';
 
+/**
+ * @purpose Renderiza una ventana de confirmación personalizable con título, mensaje y acciones.
+ * @purpose_en Renders a confirm dialog with customizable title, message, and actions.
+ * @refactorable true (contains too many state variables and UI parts)
+ * @classification UI Component
+ * @complexity Medium
+ * @fingerprint exports:3,imports:5,sig:l1xxox
+ * @lastUpdated 2026-06-21T14:27:33.499Z
+ */
+
 import * as React from 'react';
 import { useEffect, useRef, useCallback, useState } from 'react';
 import { AlertTriangle, Info, X, Loader2 } from 'lucide-react';

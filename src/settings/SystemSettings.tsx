@@ -1,5 +1,15 @@
 "use client";
 
+/**
+ * @purpose Renderiza un menú de configuración del sistema con opciones de ubicación y tema, controles de autenticación y información de versión.
+ * @purpose_en Renders a system settings dropdown menu with locale and theme options, authentication controls, and version information.
+ * @refactorable true (contains too many state variables and UI parts)
+ * @classification UI Component
+ * @complexity Medium
+ * @fingerprint exports:2,imports:5,sig:11slbq5
+ * @lastUpdated 2026-06-23T23:02:36.233Z
+ */
+
 import * as React from "react";
 import { useState, useRef, useEffect } from "react";
 import { Settings, X, LogIn, LogOut, Sun, Moon, Monitor, Languages, Check } from "lucide-react";

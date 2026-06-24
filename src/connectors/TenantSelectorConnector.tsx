@@ -1,5 +1,15 @@
 'use client';
 
+/**
+ * @purpose Gestiona la integración del componente UI de seleccionador de inquilino con preocupaciones aplicacionales como la extracción de API, el manejo de cookies y la ruta de parámetros de URL.
+ * @purpose_en Manages the integration of a tenant selector UI component with application-specific concerns such as API fetching, cookie management, and URL parameter routing.
+ * @refactorable true (contains too many state variables and UI parts)
+ * @classification UI Component
+ * @complexity Medium
+ * @fingerprint exports:2,imports:4,sig:1hzd9hm
+ * @lastUpdated 2026-06-23T23:01:16.012Z
+ */
+
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import { TenantSelector, type TenantOption, type ContextOption } from "../identity/TenantSelector.js";

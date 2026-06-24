@@ -1,5 +1,15 @@
 "use client";
 
+/**
+ * @purpose Renderiza una ventana modal que muestra el historial de auditoría para una entidad específica, incluyendo pestañas para visualizar registros y estadísticas.
+ * @purpose_en Renders a modal displaying audit history for a specific entity, including tabs for viewing logs and statistics.
+ * @refactorable true (contains too many state variables and UI parts)
+ * @classification UI Component
+ * @complexity Medium
+ * @fingerprint exports:1,imports:5,sig:hr24ax
+ * @lastUpdated 2026-06-21T14:26:05.097Z
+ */
+
 import React, { useState, useEffect } from 'react';
 import { X, Activity, FileText, BarChart3, Loader2 } from 'lucide-react';
 import { cn } from '../utils.js';

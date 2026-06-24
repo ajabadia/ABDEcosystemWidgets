@@ -1,3 +1,13 @@
+/**
+ * @purpose Rendra un componente de badge basado en el tipo de acción del registro de auditoría, mostrando iconos y texto localizados adecuados.
+ * @purpose_en Renders a badge component based on the action type from an audit log, displaying appropriate icons and localized text.
+ * @refactorable false
+ * @classification UI Component
+ * @complexity Low
+ * @fingerprint exports:1,imports:2,sig:p1fvfy
+ * @lastUpdated 2026-06-21T14:25:57.385Z
+ */
+
 import { 
   Activity, 
   Settings, 

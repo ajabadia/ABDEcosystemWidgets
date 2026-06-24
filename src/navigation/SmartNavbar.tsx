@@ -1,5 +1,15 @@
 'use client';
 
+/**
+ * @purpose Renderiza una barra de navegación superior unificada para todas las aplicaciones ABD Suite, incluyendo gestión de sesiones, cambio de tema, selección de idioma y funcionalidad de búsqueda.
+ * @purpose_en Renders a unified top navigation bar for all ABD Suite apps, including session management, theme switching, language selection, and search functionality.
+ * @refactorable true (contains too many state variables and UI parts)
+ * @classification UI Component
+ * @complexity Medium
+ * @fingerprint exports:3,imports:13,sig:g2bxn5
+ * @lastUpdated 2026-06-23T23:02:12.490Z
+ */
+
 import * as React from 'react';
 import { useState, useRef, useEffect, useCallback, memo, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';

@@ -1,5 +1,15 @@
 'use client';
 
+/**
+ * @purpose Renderiza el menú de selección de temas con opciones ligero, oscuro y sistema.
+ * @purpose_en Renders the theme selection mega menu with light, dark, and system options.
+ * @refactorable false
+ * @classification UI Component
+ * @complexity Low
+ * @fingerprint exports:1,imports:4,sig:10iozxh
+ * @lastUpdated 2026-06-23T23:02:27.502Z
+ */
+
 import { memo } from 'react';
 import { Sun, Moon, Monitor } from 'lucide-react';
 import { cn } from '../utils.js';

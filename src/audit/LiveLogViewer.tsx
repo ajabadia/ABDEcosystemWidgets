@@ -1,5 +1,15 @@
 "use client";
 
+/**
+ * @purpose Renderiza un componente de visualizador de registro vivo que recupera y muestra registros de auditoria en tiempo real.
+ * @purpose_en Renders a live log viewer UI component that fetches and displays audit logs in real-time.
+ * @refactorable true (contains too many state variables and UI parts)
+ * @classification UI Component
+ * @complexity Medium
+ * @fingerprint exports:1,imports:7,sig:683zzw
+ * @lastUpdated 2026-06-23T23:01:09.852Z
+ */
+
 // LiveLogViewer component – shared live telemetry UI
 
 import React from 'react';

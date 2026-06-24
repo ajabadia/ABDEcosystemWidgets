@@ -1,3 +1,13 @@
+/**
+ * @purpose Renderiza un componente pie de pie una vez que se ha enviado datos de telemetry, disposición en dos columnas y modo de etiquetas simples.
+ * @purpose_en Renders a unified footer component that supports telemetry data, two-column layout, and simple label modes.
+ * @refactorable true (contains too many state variables and UI parts)
+ * @classification UI Component
+ * @complexity Low
+ * @fingerprint exports:2,imports:1,sig:1j6cv6z
+ * @lastUpdated 2026-06-23T23:01:50.207Z
+ */
+
 import React from 'react';
 
 export interface GlobalFooterProps {

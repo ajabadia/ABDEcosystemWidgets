@@ -1,5 +1,15 @@
 'use client';
 
+/**
+ * @purpose Renderiza un componente de selección de inquilinos o contexto.
+ * @purpose_en Renders a dropdown or trigger component for selecting tenants and contexts.
+ * @refactorable true (contains too many state variables and UI parts)
+ * @classification UI Component
+ * @complexity Medium
+ * @fingerprint exports:4,imports:5,sig:uzpqtp
+ * @lastUpdated 2026-06-21T14:26:32.199Z
+ */
+
 import * as React from "react";
 import { useState, useRef, useEffect } from "react";
 import { Building2, ChevronDown, Search, X, Check, Loader2 } from "lucide-react";

@@ -1,5 +1,15 @@
 'use client';
 
+/**
+ * @purpose Gestiona un componente de paleta de comandos que permite a los usuarios buscar y ejecutar comandos mediante atajos de teclado.
+ * @purpose_en Renders a Command Palette component that allows users to search and execute commands through keyboard shortcuts.
+ * @refactorable true (contains too many state variables and UI parts)
+ * @classification UI Component
+ * @complexity Medium
+ * @fingerprint exports:3,imports:2,sig:9ffffb
+ * @lastUpdated 2026-06-23T23:01:44.971Z
+ */
+
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Search, Terminal, CornerDownLeft } from 'lucide-react';
 export interface Command {
