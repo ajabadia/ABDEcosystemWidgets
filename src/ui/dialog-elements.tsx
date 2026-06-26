@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 /**
  * @purpose Gestiona y renderiza elementos de diálogo como encabezados, pies de página, títulos y descripciones utilizando componentes UI de Radix.

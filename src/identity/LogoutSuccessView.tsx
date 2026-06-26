@@ -76,7 +76,7 @@ function LogoutSuccessContent({
         userEmail: 'anonymous@system.local',
         changedFields: { error, context: 'logout_success_screen' }
       }).catch((err: unknown) => {
-        console.warn('[Widgets Audit] Failed to replicate audit log to ABDLogs:', err);
+        if (process.env.NODE_ENV === 'development') { console.warn('[Widgets Audit] Failed to replicate audit log to ABDLogs:', err); }
       });
     }
   }, [error, hasLogged]);

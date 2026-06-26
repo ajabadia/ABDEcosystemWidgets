@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 /**
  * @purpose Renderiza una ventana modal que muestra el historial de auditoría para una entidad específica, incluyendo pestañas para visualizar registros y estadísticas.
@@ -66,7 +66,7 @@ export function AuditHistoryModal({
           setLogs(data);
         }
       } catch (err) {
-        console.error("Failed to fetch audit history", err);
+        if (process.env.NODE_ENV === 'development') { console.error("Failed to fetch audit history", err); }
       } finally {
         setLoading(false);
       }

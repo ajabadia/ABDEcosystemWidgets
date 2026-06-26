@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 /**
  * @purpose Renderiza un menú de configuración del sistema con opciones de ubicación y tema, controles de autenticación y información de versión.
@@ -12,7 +12,7 @@
 
 import * as React from "react";
 import { useState, useRef, useEffect } from "react";
-import { Settings, X, LogIn, LogOut, Sun, Moon, Monitor, Languages, Check } from "lucide-react";
+import { Settings, X, LogIn, LogOut } from "lucide-react";
 import { cn } from "../utils.js";
 import { useClickOutside } from "../hooks/useClickOutside.js";
 

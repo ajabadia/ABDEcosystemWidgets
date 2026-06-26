@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 /**
  * @purpose Renderiza un encabezado para modales industriales con título, subtítulo, icono y botón de cierre.

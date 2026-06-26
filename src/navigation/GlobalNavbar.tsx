@@ -13,7 +13,7 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Menu, X, Shield, LogOut } from 'lucide-react';
+import { Menu, Shield, LogOut } from 'lucide-react';
 
 import { cn } from '../utils.js';
 

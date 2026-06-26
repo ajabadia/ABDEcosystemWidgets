@@ -124,7 +124,7 @@ export function TenantSelectorConnector({
           setSuperAdminTenants(options);
         }
       } catch (error) {
-        console.error("[TENANT_SELECTOR_FETCH_ERROR]", error);
+        if (process.env.NODE_ENV === 'development') { console.error("[TENANT_SELECTOR_FETCH_ERROR]", error); }
       } finally {
         setIsLoading(false);
       }
@@ -173,7 +173,7 @@ export function TenantSelectorConnector({
           );
         }
       } catch (error) {
-        console.error("[TENANT_SELECTOR_CONTEXT_FETCH_ERROR]", error);
+        if (process.env.NODE_ENV === 'development') { console.error("[TENANT_SELECTOR_CONTEXT_FETCH_ERROR]", error); }
       }
     };
 
@@ -203,7 +203,7 @@ export function TenantSelectorConnector({
         try {
           await onTenantSwitch(newTenantId);
         } catch (err) {
-          console.error("[TENANT_SELECTOR_SWITCH_ERROR]", err);
+          if (process.env.NODE_ENV === 'development') { console.error("[TENANT_SELECTOR_SWITCH_ERROR]", err); }
           onError?.(err, { action: "tenantSwitch", tenantId: newTenantId });
         }
       }

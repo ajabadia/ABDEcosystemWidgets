@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 /**
  * @purpose Renderiza un componente de visualizador de registro vivo que recupera y muestra registros de auditoria en tiempo real.
@@ -18,7 +18,7 @@ import { useLivePolling } from '../hooks/useLivePolling.js';
 import { ActionBadge } from './ActionBadge.js';
 import type { AuditLog } from '../types.js';
 import { AuditDeltaViewer } from './AuditDeltaViewer.js';
-import { Activity, Calendar, User, Wifi, WifiOff, ShieldCheck, BookOpen, Building2 } from 'lucide-react';
+import { Activity, Wifi, WifiOff } from 'lucide-react';
 
 interface LiveLogViewerProps {
   tenantId: string;

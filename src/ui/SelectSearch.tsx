@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 /**
  * @purpose Renderiza un componente select con dropdown buscable que admite filtrado de elementos según etiqueta y subetiqueta.

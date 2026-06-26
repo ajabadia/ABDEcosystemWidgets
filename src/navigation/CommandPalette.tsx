@@ -128,7 +128,7 @@ export function CommandPalette({
     try {
       await cmd.action();
     } catch (err) {
-      console.error('Error executing command:', err);
+      if (process.env.NODE_ENV === 'development') { console.error('Error executing command:', err); }
     }
   };
 

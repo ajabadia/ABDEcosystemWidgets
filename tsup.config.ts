@@ -3,6 +3,8 @@ import { defineConfig } from 'tsup';
 export default defineConfig({
   entry: {
     index: 'src/index.ts',
+    'api/spaces': 'src/api/spaces.ts',
+    'api/groups': 'src/api/groups.ts',
   },
   format: ['esm'],
   dts: true,

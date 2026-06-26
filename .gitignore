@@ -15,5 +15,19 @@ abd-audit-results.log
 .idea/
 .DS_Store
 
+# Build artifacts
+dist/api/
+
+# Leftover files
+ABDtenantGobernance
+auditoria.md
+auditoria_v01.md
+
+# Bundled config artifacts
+*.bundled*
+
+# Turbo cache
+.turbo/
+
 # Temporary files
 scripts/cleanup.js

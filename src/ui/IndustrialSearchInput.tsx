@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 /**
  * @purpose Gestiona un campo de entrada industrial de búsqueda con una icono de búsqueda Lucide React y un placeholder personalizable y etiqueta aria.

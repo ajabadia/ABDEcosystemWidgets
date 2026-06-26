@@ -62,7 +62,7 @@ export function useLivePolling({ tenantId, pollInterval = 5000 }: UseLivePolling
       setLogs(data);
       setLastFetched(new Date());
     } catch (err) {
-      console.error(err);
+      if (process.env.NODE_ENV === 'development') { console.error(err); }
     } finally {
       if (isInitial) setLoading(false);
     }

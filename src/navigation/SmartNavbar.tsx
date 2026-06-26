@@ -11,7 +11,7 @@
  */
 
 import * as React from 'react';
-import { useState, useRef, useEffect, useCallback, memo, Suspense } from 'react';
+import { useState, useRef, useEffect, useCallback, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import {
   Shield, Sun, Search, Languages, Building2, Menu, X,
