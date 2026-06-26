@@ -475,7 +475,9 @@ function LogoutSuccessContent({
         userEmail: "anonymous@system.local",
         changedFields: { error, context: "logout_success_screen" }
       }).catch((err) => {
-        console.warn("[Widgets Audit] Failed to replicate audit log to ABDLogs:", err);
+        if (process.env.NODE_ENV === "development") {
+          console.warn("[Widgets Audit] Failed to replicate audit log to ABDLogs:", err);
+        }
       });
     }
   }, [error, hasLogged]);
@@ -598,7 +600,9 @@ function TenantSelectorConnector({
           setSuperAdminTenants(options);
         }
       } catch (error) {
-        console.error("[TENANT_SELECTOR_FETCH_ERROR]", error);
+        if (process.env.NODE_ENV === "development") {
+          console.error("[TENANT_SELECTOR_FETCH_ERROR]", error);
+        }
       } finally {
         setIsLoading(false);
       }
@@ -638,7 +642,9 @@ function TenantSelectorConnector({
           );
         }
       } catch (error) {
-        console.error("[TENANT_SELECTOR_CONTEXT_FETCH_ERROR]", error);
+        if (process.env.NODE_ENV === "development") {
+          console.error("[TENANT_SELECTOR_CONTEXT_FETCH_ERROR]", error);
+        }
       }
     };
     fetchContexts();
@@ -660,7 +666,9 @@ function TenantSelectorConnector({
         try {
           await onTenantSwitch(newTenantId);
         } catch (err) {
-          console.error("[TENANT_SELECTOR_SWITCH_ERROR]", err);
+          if (process.env.NODE_ENV === "development") {
+            console.error("[TENANT_SELECTOR_SWITCH_ERROR]", err);
+          }
           onError?.(err, { action: "tenantSwitch", tenantId: newTenantId });
         }
       }
@@ -781,7 +789,9 @@ function CommandPalette({
     try {
       await cmd.action();
     } catch (err) {
-      console.error("Error executing command:", err);
+      if (process.env.NODE_ENV === "development") {
+        console.error("Error executing command:", err);
+      }
     }
   };
   useEffect(() => {
@@ -2476,7 +2486,9 @@ function useLivePolling({ tenantId, pollInterval = 5e3 }) {
       setLogs(data);
       setLastFetched(/* @__PURE__ */ new Date());
     } catch (err) {
-      console.error(err);
+      if (process.env.NODE_ENV === "development") {
+        console.error(err);
+      }
     } finally {
       if (isInitial) setLoading(false);
     }
@@ -2650,7 +2662,9 @@ function AuditHistoryModal({
           setLogs(data);
         }
       } catch (err) {
-        console.error("Failed to fetch audit history", err);
+        if (process.env.NODE_ENV === "development") {
+          console.error("Failed to fetch audit history", err);
+        }
       } finally {
         setLoading(false);
       }
