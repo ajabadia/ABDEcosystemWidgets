@@ -6,8 +6,8 @@
  * @refactorable true (contains too many state variables and UI parts)
  * @classification UI Component
  * @complexity Medium
- * @fingerprint exports:1,imports:7,sig:683zzw
- * @lastUpdated 2026-06-23T23:01:09.852Z
+ * @fingerprint exports:1,imports:7,sig:11fb18z
+ * @lastUpdated 2026-06-26T09:59:32.519Z
  */
 
 // LiveLogViewer component – shared live telemetry UI

@@ -6,8 +6,8 @@
  * @refactorable false
  * @classification Custom Hook
  * @complexity Medium
- * @fingerprint exports:1,imports:2,sig:1r2ihyv
- * @lastUpdated 2026-06-21T14:26:25.835Z
+ * @fingerprint exports:1,imports:2,sig:1eu6rjj
+ * @lastUpdated 2026-06-26T09:59:41.553Z
  */
 
 // Hook for live polling of audit logs
