@@ -13,7 +13,6 @@ export default defineConfig({
   clean: true,
   treeshake: true,
   platform: 'browser',
-  noExternal: ['nextjs-toploader'],
   external: [
     'react', 
     'react-dom', 
