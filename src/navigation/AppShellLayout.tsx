@@ -1,10 +1,8 @@
 import React from 'react';
 import { NextIntlClientProvider } from 'next-intl';
 import type { AbstractIntlMessages } from 'next-intl';
-import * as NextTopLoaderModule from 'nextjs-toploader';
+import NextTopLoader from 'nextjs-toploader';
 import { Toaster } from 'sonner';
-
-const NextTopLoader = NextTopLoaderModule.default;
 
 interface AppShellLayoutProps {
   children: React.ReactNode;

@@ -9,13 +9,1055 @@ import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import { logger } from '@ajabadia/satellite-sdk/client';
 import Link from 'next/link';
 import { useTranslations, useLocale, NextIntlClientProvider } from 'next-intl';
-import * as NextTopLoaderModule from 'nextjs-toploader';
 import { Toaster } from 'sonner';
 import { Dialog as Dialog$1, Slot, Progress as Progress$1, Separator as Separator$1 } from 'radix-ui';
 import { cva } from 'class-variance-authority';
 import { ThemeProvider as ThemeProvider$1 } from 'next-themes';
 
-// src/identity/TenantSelector.tsx
+var __create = Object.create;
+var __defProp = Object.defineProperty;
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getProtoOf = Object.getPrototypeOf;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __require = /* @__PURE__ */ ((x) => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x, {
+  get: (a, b) => (typeof require !== "undefined" ? require : a)[b]
+}) : x)(function(x) {
+  if (typeof require !== "undefined") return require.apply(this, arguments);
+  throw Error('Dynamic require of "' + x + '" is not supported');
+});
+var __commonJS = (cb, mod) => function __require2() {
+  return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
+};
+var __copyProps = (to, from, except, desc) => {
+  if (from && typeof from === "object" || typeof from === "function") {
+    for (let key of __getOwnPropNames(from))
+      if (!__hasOwnProp.call(to, key) && key !== except)
+        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+  }
+  return to;
+};
+var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
+  // If the importer is in node compatibility mode or this is not an ESM
+  // file that has been converted to a CommonJS file using a Babel-
+  // compatible transform (i.e. "__esModule" has not been set), then set
+  // "default" to the CommonJS "module.exports" for node compatibility.
+  __defProp(target, "default", { value: mod, enumerable: true }) ,
+  mod
+));
+
+// ../node_modules/.pnpm/object-assign@4.1.1/node_modules/object-assign/index.js
+var require_object_assign = __commonJS({
+  "../node_modules/.pnpm/object-assign@4.1.1/node_modules/object-assign/index.js"(exports, module) {
+    var getOwnPropertySymbols = Object.getOwnPropertySymbols;
+    var hasOwnProperty = Object.prototype.hasOwnProperty;
+    var propIsEnumerable = Object.prototype.propertyIsEnumerable;
+    function toObject(val) {
+      if (val === null || val === void 0) {
+        throw new TypeError("Object.assign cannot be called with null or undefined");
+      }
+      return Object(val);
+    }
+    function shouldUseNative() {
+      try {
+        if (!Object.assign) {
+          return false;
+        }
+        var test1 = new String("abc");
+        test1[5] = "de";
+        if (Object.getOwnPropertyNames(test1)[0] === "5") {
+          return false;
+        }
+        var test2 = {};
+        for (var i = 0; i < 10; i++) {
+          test2["_" + String.fromCharCode(i)] = i;
+        }
+        var order2 = Object.getOwnPropertyNames(test2).map(function(n) {
+          return test2[n];
+        });
+        if (order2.join("") !== "0123456789") {
+          return false;
+        }
+        var test3 = {};
+        "abcdefghijklmnopqrst".split("").forEach(function(letter) {
+          test3[letter] = letter;
+        });
+        if (Object.keys(Object.assign({}, test3)).join("") !== "abcdefghijklmnopqrst") {
+          return false;
+        }
+        return true;
+      } catch (err) {
+        return false;
+      }
+    }
+    module.exports = shouldUseNative() ? Object.assign : function(target, source) {
+      var from;
+      var to = toObject(target);
+      var symbols;
+      for (var s = 1; s < arguments.length; s++) {
+        from = Object(arguments[s]);
+        for (var key in from) {
+          if (hasOwnProperty.call(from, key)) {
+            to[key] = from[key];
+          }
+        }
+        if (getOwnPropertySymbols) {
+          symbols = getOwnPropertySymbols(from);
+          for (var i = 0; i < symbols.length; i++) {
+            if (propIsEnumerable.call(from, symbols[i])) {
+              to[symbols[i]] = from[symbols[i]];
+            }
+          }
+        }
+      }
+      return to;
+    };
+  }
+});
+
+// ../node_modules/.pnpm/prop-types@15.8.1/node_modules/prop-types/lib/ReactPropTypesSecret.js
+var require_ReactPropTypesSecret = __commonJS({
+  "../node_modules/.pnpm/prop-types@15.8.1/node_modules/prop-types/lib/ReactPropTypesSecret.js"(exports, module) {
+    var ReactPropTypesSecret = "SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED";
+    module.exports = ReactPropTypesSecret;
+  }
+});
+
+// ../node_modules/.pnpm/prop-types@15.8.1/node_modules/prop-types/lib/has.js
+var require_has = __commonJS({
+  "../node_modules/.pnpm/prop-types@15.8.1/node_modules/prop-types/lib/has.js"(exports, module) {
+    module.exports = Function.call.bind(Object.prototype.hasOwnProperty);
+  }
+});
+
+// ../node_modules/.pnpm/prop-types@15.8.1/node_modules/prop-types/checkPropTypes.js
+var require_checkPropTypes = __commonJS({
+  "../node_modules/.pnpm/prop-types@15.8.1/node_modules/prop-types/checkPropTypes.js"(exports, module) {
+    var printWarning = function() {
+    };
+    if (process.env.NODE_ENV !== "production") {
+      ReactPropTypesSecret = require_ReactPropTypesSecret();
+      loggedTypeFailures = {};
+      has = require_has();
+      printWarning = function(text) {
+        var message = "Warning: " + text;
+        if (typeof console !== "undefined") {
+          console.error(message);
+        }
+        try {
+          throw new Error(message);
+        } catch (x) {
+        }
+      };
+    }
+    var ReactPropTypesSecret;
+    var loggedTypeFailures;
+    var has;
+    function checkPropTypes(typeSpecs, values, location, componentName, getStack) {
+      if (process.env.NODE_ENV !== "production") {
+        for (var typeSpecName in typeSpecs) {
+          if (has(typeSpecs, typeSpecName)) {
+            var error;
+            try {
+              if (typeof typeSpecs[typeSpecName] !== "function") {
+                var err = Error(
+                  (componentName || "React class") + ": " + location + " type `" + typeSpecName + "` is invalid; it must be a function, usually from the `prop-types` package, but received `" + typeof typeSpecs[typeSpecName] + "`.This often happens because of typos such as `PropTypes.function` instead of `PropTypes.func`."
+                );
+                err.name = "Invariant Violation";
+                throw err;
+              }
+              error = typeSpecs[typeSpecName](values, typeSpecName, componentName, location, null, ReactPropTypesSecret);
+            } catch (ex) {
+              error = ex;
+            }
+            if (error && !(error instanceof Error)) {
+              printWarning(
+                (componentName || "React class") + ": type specification of " + location + " `" + typeSpecName + "` is invalid; the type checker function must return `null` or an `Error` but returned a " + typeof error + ". You may have forgotten to pass an argument to the type checker creator (arrayOf, instanceOf, objectOf, oneOf, oneOfType, and shape all require an argument)."
+              );
+            }
+            if (error instanceof Error && !(error.message in loggedTypeFailures)) {
+              loggedTypeFailures[error.message] = true;
+              var stack = getStack ? getStack() : "";
+              printWarning(
+                "Failed " + location + " type: " + error.message + (stack != null ? stack : "")
+              );
+            }
+          }
+        }
+      }
+    }
+    checkPropTypes.resetWarningCache = function() {
+      if (process.env.NODE_ENV !== "production") {
+        loggedTypeFailures = {};
+      }
+    };
+    module.exports = checkPropTypes;
+  }
+});
+
+// ../node_modules/.pnpm/prop-types@15.8.1/node_modules/prop-types/factoryWithTypeCheckers.js
+var require_factoryWithTypeCheckers = __commonJS({
+  "../node_modules/.pnpm/prop-types@15.8.1/node_modules/prop-types/factoryWithTypeCheckers.js"(exports, module) {
+    var ReactIs = __require("react-is");
+    var assign = require_object_assign();
+    var ReactPropTypesSecret = require_ReactPropTypesSecret();
+    var has = require_has();
+    var checkPropTypes = require_checkPropTypes();
+    var printWarning = function() {
+    };
+    if (process.env.NODE_ENV !== "production") {
+      printWarning = function(text) {
+        var message = "Warning: " + text;
+        if (typeof console !== "undefined") {
+          console.error(message);
+        }
+        try {
+          throw new Error(message);
+        } catch (x) {
+        }
+      };
+    }
+    function emptyFunctionThatReturnsNull() {
+      return null;
+    }
+    module.exports = function(isValidElement, throwOnDirectAccess) {
+      var ITERATOR_SYMBOL = typeof Symbol === "function" && Symbol.iterator;
+      var FAUX_ITERATOR_SYMBOL = "@@iterator";
+      function getIteratorFn(maybeIterable) {
+        var iteratorFn = maybeIterable && (ITERATOR_SYMBOL && maybeIterable[ITERATOR_SYMBOL] || maybeIterable[FAUX_ITERATOR_SYMBOL]);
+        if (typeof iteratorFn === "function") {
+          return iteratorFn;
+        }
+      }
+      var ANONYMOUS = "<<anonymous>>";
+      var ReactPropTypes = {
+        array: createPrimitiveTypeChecker("array"),
+        bigint: createPrimitiveTypeChecker("bigint"),
+        bool: createPrimitiveTypeChecker("boolean"),
+        func: createPrimitiveTypeChecker("function"),
+        number: createPrimitiveTypeChecker("number"),
+        object: createPrimitiveTypeChecker("object"),
+        string: createPrimitiveTypeChecker("string"),
+        symbol: createPrimitiveTypeChecker("symbol"),
+        any: createAnyTypeChecker(),
+        arrayOf: createArrayOfTypeChecker,
+        element: createElementTypeChecker(),
+        elementType: createElementTypeTypeChecker(),
+        instanceOf: createInstanceTypeChecker,
+        node: createNodeChecker(),
+        objectOf: createObjectOfTypeChecker,
+        oneOf: createEnumTypeChecker,
+        oneOfType: createUnionTypeChecker,
+        shape: createShapeTypeChecker,
+        exact: createStrictShapeTypeChecker
+      };
+      function is(x, y) {
+        if (x === y) {
+          return x !== 0 || 1 / x === 1 / y;
+        } else {
+          return x !== x && y !== y;
+        }
+      }
+      function PropTypeError(message, data) {
+        this.message = message;
+        this.data = data && typeof data === "object" ? data : {};
+        this.stack = "";
+      }
+      PropTypeError.prototype = Error.prototype;
+      function createChainableTypeChecker(validate) {
+        if (process.env.NODE_ENV !== "production") {
+          var manualPropTypeCallCache = {};
+          var manualPropTypeWarningCount = 0;
+        }
+        function checkType(isRequired, props, propName, componentName, location, propFullName, secret) {
+          componentName = componentName || ANONYMOUS;
+          propFullName = propFullName || propName;
+          if (secret !== ReactPropTypesSecret) {
+            if (throwOnDirectAccess) {
+              var err = new Error(
+                "Calling PropTypes validators directly is not supported by the `prop-types` package. Use `PropTypes.checkPropTypes()` to call them. Read more at http://fb.me/use-check-prop-types"
+              );
+              err.name = "Invariant Violation";
+              throw err;
+            } else if (process.env.NODE_ENV !== "production" && typeof console !== "undefined") {
+              var cacheKey = componentName + ":" + propName;
+              if (!manualPropTypeCallCache[cacheKey] && // Avoid spamming the console because they are often not actionable except for lib authors
+              manualPropTypeWarningCount < 3) {
+                printWarning(
+                  "You are manually calling a React.PropTypes validation function for the `" + propFullName + "` prop on `" + componentName + "`. This is deprecated and will throw in the standalone `prop-types` package. You may be seeing this warning due to a third-party PropTypes library. See https://fb.me/react-warning-dont-call-proptypes for details."
+                );
+                manualPropTypeCallCache[cacheKey] = true;
+                manualPropTypeWarningCount++;
+              }
+            }
+          }
+          if (props[propName] == null) {
+            if (isRequired) {
+              if (props[propName] === null) {
+                return new PropTypeError("The " + location + " `" + propFullName + "` is marked as required " + ("in `" + componentName + "`, but its value is `null`."));
+              }
+              return new PropTypeError("The " + location + " `" + propFullName + "` is marked as required in " + ("`" + componentName + "`, but its value is `undefined`."));
+            }
+            return null;
+          } else {
+            return validate(props, propName, componentName, location, propFullName);
+          }
+        }
+        var chainedCheckType = checkType.bind(null, false);
+        chainedCheckType.isRequired = checkType.bind(null, true);
+        return chainedCheckType;
+      }
+      function createPrimitiveTypeChecker(expectedType) {
+        function validate(props, propName, componentName, location, propFullName, secret) {
+          var propValue = props[propName];
+          var propType = getPropType(propValue);
+          if (propType !== expectedType) {
+            var preciseType = getPreciseType(propValue);
+            return new PropTypeError(
+              "Invalid " + location + " `" + propFullName + "` of type " + ("`" + preciseType + "` supplied to `" + componentName + "`, expected ") + ("`" + expectedType + "`."),
+              { expectedType }
+            );
+          }
+          return null;
+        }
+        return createChainableTypeChecker(validate);
+      }
+      function createAnyTypeChecker() {
+        return createChainableTypeChecker(emptyFunctionThatReturnsNull);
+      }
+      function createArrayOfTypeChecker(typeChecker) {
+        function validate(props, propName, componentName, location, propFullName) {
+          if (typeof typeChecker !== "function") {
+            return new PropTypeError("Property `" + propFullName + "` of component `" + componentName + "` has invalid PropType notation inside arrayOf.");
+          }
+          var propValue = props[propName];
+          if (!Array.isArray(propValue)) {
+            var propType = getPropType(propValue);
+            return new PropTypeError("Invalid " + location + " `" + propFullName + "` of type " + ("`" + propType + "` supplied to `" + componentName + "`, expected an array."));
+          }
+          for (var i = 0; i < propValue.length; i++) {
+            var error = typeChecker(propValue, i, componentName, location, propFullName + "[" + i + "]", ReactPropTypesSecret);
+            if (error instanceof Error) {
+              return error;
+            }
+          }
+          return null;
+        }
+        return createChainableTypeChecker(validate);
+      }
+      function createElementTypeChecker() {
+        function validate(props, propName, componentName, location, propFullName) {
+          var propValue = props[propName];
+          if (!isValidElement(propValue)) {
+            var propType = getPropType(propValue);
+            return new PropTypeError("Invalid " + location + " `" + propFullName + "` of type " + ("`" + propType + "` supplied to `" + componentName + "`, expected a single ReactElement."));
+          }
+          return null;
+        }
+        return createChainableTypeChecker(validate);
+      }
+      function createElementTypeTypeChecker() {
+        function validate(props, propName, componentName, location, propFullName) {
+          var propValue = props[propName];
+          if (!ReactIs.isValidElementType(propValue)) {
+            var propType = getPropType(propValue);
+            return new PropTypeError("Invalid " + location + " `" + propFullName + "` of type " + ("`" + propType + "` supplied to `" + componentName + "`, expected a single ReactElement type."));
+          }
+          return null;
+        }
+        return createChainableTypeChecker(validate);
+      }
+      function createInstanceTypeChecker(expectedClass) {
+        function validate(props, propName, componentName, location, propFullName) {
+          if (!(props[propName] instanceof expectedClass)) {
+            var expectedClassName = expectedClass.name || ANONYMOUS;
+            var actualClassName = getClassName(props[propName]);
+            return new PropTypeError("Invalid " + location + " `" + propFullName + "` of type " + ("`" + actualClassName + "` supplied to `" + componentName + "`, expected ") + ("instance of `" + expectedClassName + "`."));
+          }
+          return null;
+        }
+        return createChainableTypeChecker(validate);
+      }
+      function createEnumTypeChecker(expectedValues) {
+        if (!Array.isArray(expectedValues)) {
+          if (process.env.NODE_ENV !== "production") {
+            if (arguments.length > 1) {
+              printWarning(
+                "Invalid arguments supplied to oneOf, expected an array, got " + arguments.length + " arguments. A common mistake is to write oneOf(x, y, z) instead of oneOf([x, y, z])."
+              );
+            } else {
+              printWarning("Invalid argument supplied to oneOf, expected an array.");
+            }
+          }
+          return emptyFunctionThatReturnsNull;
+        }
+        function validate(props, propName, componentName, location, propFullName) {
+          var propValue = props[propName];
+          for (var i = 0; i < expectedValues.length; i++) {
+            if (is(propValue, expectedValues[i])) {
+              return null;
+            }
+          }
+          var valuesString = JSON.stringify(expectedValues, function replacer(key, value) {
+            var type = getPreciseType(value);
+            if (type === "symbol") {
+              return String(value);
+            }
+            return value;
+          });
+          return new PropTypeError("Invalid " + location + " `" + propFullName + "` of value `" + String(propValue) + "` " + ("supplied to `" + componentName + "`, expected one of " + valuesString + "."));
+        }
+        return createChainableTypeChecker(validate);
+      }
+      function createObjectOfTypeChecker(typeChecker) {
+        function validate(props, propName, componentName, location, propFullName) {
+          if (typeof typeChecker !== "function") {
+            return new PropTypeError("Property `" + propFullName + "` of component `" + componentName + "` has invalid PropType notation inside objectOf.");
+          }
+          var propValue = props[propName];
+          var propType = getPropType(propValue);
+          if (propType !== "object") {
+            return new PropTypeError("Invalid " + location + " `" + propFullName + "` of type " + ("`" + propType + "` supplied to `" + componentName + "`, expected an object."));
+          }
+          for (var key in propValue) {
+            if (has(propValue, key)) {
+              var error = typeChecker(propValue, key, componentName, location, propFullName + "." + key, ReactPropTypesSecret);
+              if (error instanceof Error) {
+                return error;
+              }
+            }
+          }
+          return null;
+        }
+        return createChainableTypeChecker(validate);
+      }
+      function createUnionTypeChecker(arrayOfTypeCheckers) {
+        if (!Array.isArray(arrayOfTypeCheckers)) {
+          process.env.NODE_ENV !== "production" ? printWarning("Invalid argument supplied to oneOfType, expected an instance of array.") : void 0;
+          return emptyFunctionThatReturnsNull;
+        }
+        for (var i = 0; i < arrayOfTypeCheckers.length; i++) {
+          var checker = arrayOfTypeCheckers[i];
+          if (typeof checker !== "function") {
+            printWarning(
+              "Invalid argument supplied to oneOfType. Expected an array of check functions, but received " + getPostfixForTypeWarning(checker) + " at index " + i + "."
+            );
+            return emptyFunctionThatReturnsNull;
+          }
+        }
+        function validate(props, propName, componentName, location, propFullName) {
+          var expectedTypes = [];
+          for (var i2 = 0; i2 < arrayOfTypeCheckers.length; i2++) {
+            var checker2 = arrayOfTypeCheckers[i2];
+            var checkerResult = checker2(props, propName, componentName, location, propFullName, ReactPropTypesSecret);
+            if (checkerResult == null) {
+              return null;
+            }
+            if (checkerResult.data && has(checkerResult.data, "expectedType")) {
+              expectedTypes.push(checkerResult.data.expectedType);
+            }
+          }
+          var expectedTypesMessage = expectedTypes.length > 0 ? ", expected one of type [" + expectedTypes.join(", ") + "]" : "";
+          return new PropTypeError("Invalid " + location + " `" + propFullName + "` supplied to " + ("`" + componentName + "`" + expectedTypesMessage + "."));
+        }
+        return createChainableTypeChecker(validate);
+      }
+      function createNodeChecker() {
+        function validate(props, propName, componentName, location, propFullName) {
+          if (!isNode(props[propName])) {
+            return new PropTypeError("Invalid " + location + " `" + propFullName + "` supplied to " + ("`" + componentName + "`, expected a ReactNode."));
+          }
+          return null;
+        }
+        return createChainableTypeChecker(validate);
+      }
+      function invalidValidatorError(componentName, location, propFullName, key, type) {
+        return new PropTypeError(
+          (componentName || "React class") + ": " + location + " type `" + propFullName + "." + key + "` is invalid; it must be a function, usually from the `prop-types` package, but received `" + type + "`."
+        );
+      }
+      function createShapeTypeChecker(shapeTypes) {
+        function validate(props, propName, componentName, location, propFullName) {
+          var propValue = props[propName];
+          var propType = getPropType(propValue);
+          if (propType !== "object") {
+            return new PropTypeError("Invalid " + location + " `" + propFullName + "` of type `" + propType + "` " + ("supplied to `" + componentName + "`, expected `object`."));
+          }
+          for (var key in shapeTypes) {
+            var checker = shapeTypes[key];
+            if (typeof checker !== "function") {
+              return invalidValidatorError(componentName, location, propFullName, key, getPreciseType(checker));
+            }
+            var error = checker(propValue, key, componentName, location, propFullName + "." + key, ReactPropTypesSecret);
+            if (error) {
+              return error;
+            }
+          }
+          return null;
+        }
+        return createChainableTypeChecker(validate);
+      }
+      function createStrictShapeTypeChecker(shapeTypes) {
+        function validate(props, propName, componentName, location, propFullName) {
+          var propValue = props[propName];
+          var propType = getPropType(propValue);
+          if (propType !== "object") {
+            return new PropTypeError("Invalid " + location + " `" + propFullName + "` of type `" + propType + "` " + ("supplied to `" + componentName + "`, expected `object`."));
+          }
+          var allKeys = assign({}, props[propName], shapeTypes);
+          for (var key in allKeys) {
+            var checker = shapeTypes[key];
+            if (has(shapeTypes, key) && typeof checker !== "function") {
+              return invalidValidatorError(componentName, location, propFullName, key, getPreciseType(checker));
+            }
+            if (!checker) {
+              return new PropTypeError(
+                "Invalid " + location + " `" + propFullName + "` key `" + key + "` supplied to `" + componentName + "`.\nBad object: " + JSON.stringify(props[propName], null, "  ") + "\nValid keys: " + JSON.stringify(Object.keys(shapeTypes), null, "  ")
+              );
+            }
+            var error = checker(propValue, key, componentName, location, propFullName + "." + key, ReactPropTypesSecret);
+            if (error) {
+              return error;
+            }
+          }
+          return null;
+        }
+        return createChainableTypeChecker(validate);
+      }
+      function isNode(propValue) {
+        switch (typeof propValue) {
+          case "number":
+          case "string":
+          case "undefined":
+            return true;
+          case "boolean":
+            return !propValue;
+          case "object":
+            if (Array.isArray(propValue)) {
+              return propValue.every(isNode);
+            }
+            if (propValue === null || isValidElement(propValue)) {
+              return true;
+            }
+            var iteratorFn = getIteratorFn(propValue);
+            if (iteratorFn) {
+              var iterator = iteratorFn.call(propValue);
+              var step;
+              if (iteratorFn !== propValue.entries) {
+                while (!(step = iterator.next()).done) {
+                  if (!isNode(step.value)) {
+                    return false;
+                  }
+                }
+              } else {
+                while (!(step = iterator.next()).done) {
+                  var entry = step.value;
+                  if (entry) {
+                    if (!isNode(entry[1])) {
+                      return false;
+                    }
+                  }
+                }
+              }
+            } else {
+              return false;
+            }
+            return true;
+          default:
+            return false;
+        }
+      }
+      function isSymbol(propType, propValue) {
+        if (propType === "symbol") {
+          return true;
+        }
+        if (!propValue) {
+          return false;
+        }
+        if (propValue["@@toStringTag"] === "Symbol") {
+          return true;
+        }
+        if (typeof Symbol === "function" && propValue instanceof Symbol) {
+          return true;
+        }
+        return false;
+      }
+      function getPropType(propValue) {
+        var propType = typeof propValue;
+        if (Array.isArray(propValue)) {
+          return "array";
+        }
+        if (propValue instanceof RegExp) {
+          return "object";
+        }
+        if (isSymbol(propType, propValue)) {
+          return "symbol";
+        }
+        return propType;
+      }
+      function getPreciseType(propValue) {
+        if (typeof propValue === "undefined" || propValue === null) {
+          return "" + propValue;
+        }
+        var propType = getPropType(propValue);
+        if (propType === "object") {
+          if (propValue instanceof Date) {
+            return "date";
+          } else if (propValue instanceof RegExp) {
+            return "regexp";
+          }
+        }
+        return propType;
+      }
+      function getPostfixForTypeWarning(value) {
+        var type = getPreciseType(value);
+        switch (type) {
+          case "array":
+          case "object":
+            return "an " + type;
+          case "boolean":
+          case "date":
+          case "regexp":
+            return "a " + type;
+          default:
+            return type;
+        }
+      }
+      function getClassName(propValue) {
+        if (!propValue.constructor || !propValue.constructor.name) {
+          return ANONYMOUS;
+        }
+        return propValue.constructor.name;
+      }
+      ReactPropTypes.checkPropTypes = checkPropTypes;
+      ReactPropTypes.resetWarningCache = checkPropTypes.resetWarningCache;
+      ReactPropTypes.PropTypes = ReactPropTypes;
+      return ReactPropTypes;
+    };
+  }
+});
+
+// ../node_modules/.pnpm/prop-types@15.8.1/node_modules/prop-types/factoryWithThrowingShims.js
+var require_factoryWithThrowingShims = __commonJS({
+  "../node_modules/.pnpm/prop-types@15.8.1/node_modules/prop-types/factoryWithThrowingShims.js"(exports, module) {
+    var ReactPropTypesSecret = require_ReactPropTypesSecret();
+    function emptyFunction() {
+    }
+    function emptyFunctionWithReset() {
+    }
+    emptyFunctionWithReset.resetWarningCache = emptyFunction;
+    module.exports = function() {
+      function shim(props, propName, componentName, location, propFullName, secret) {
+        if (secret === ReactPropTypesSecret) {
+          return;
+        }
+        var err = new Error(
+          "Calling PropTypes validators directly is not supported by the `prop-types` package. Use PropTypes.checkPropTypes() to call them. Read more at http://fb.me/use-check-prop-types"
+        );
+        err.name = "Invariant Violation";
+        throw err;
+      }
+      shim.isRequired = shim;
+      function getShim() {
+        return shim;
+      }
+      var ReactPropTypes = {
+        array: shim,
+        bigint: shim,
+        bool: shim,
+        func: shim,
+        number: shim,
+        object: shim,
+        string: shim,
+        symbol: shim,
+        any: shim,
+        arrayOf: getShim,
+        element: shim,
+        elementType: shim,
+        instanceOf: getShim,
+        node: shim,
+        objectOf: getShim,
+        oneOf: getShim,
+        oneOfType: getShim,
+        shape: getShim,
+        exact: getShim,
+        checkPropTypes: emptyFunctionWithReset,
+        resetWarningCache: emptyFunction
+      };
+      ReactPropTypes.PropTypes = ReactPropTypes;
+      return ReactPropTypes;
+    };
+  }
+});
+
+// ../node_modules/.pnpm/prop-types@15.8.1/node_modules/prop-types/index.js
+var require_prop_types = __commonJS({
+  "../node_modules/.pnpm/prop-types@15.8.1/node_modules/prop-types/index.js"(exports, module) {
+    if (process.env.NODE_ENV !== "production") {
+      ReactIs = __require("react-is");
+      throwOnDirectAccess = true;
+      module.exports = require_factoryWithTypeCheckers()(ReactIs.isElement, throwOnDirectAccess);
+    } else {
+      module.exports = require_factoryWithThrowingShims()();
+    }
+    var ReactIs;
+    var throwOnDirectAccess;
+  }
+});
+
+// ../node_modules/.pnpm/nprogress@0.2.0/node_modules/nprogress/nprogress.js
+var require_nprogress = __commonJS({
+  "../node_modules/.pnpm/nprogress@0.2.0/node_modules/nprogress/nprogress.js"(exports, module) {
+    (function(root, factory) {
+      if (typeof define === "function" && define.amd) {
+        define(factory);
+      } else if (typeof exports === "object") {
+        module.exports = factory();
+      } else {
+        root.NProgress = factory();
+      }
+    })(exports, function() {
+      var NProgress = {};
+      NProgress.version = "0.2.0";
+      var Settings5 = NProgress.settings = {
+        minimum: 0.08,
+        easing: "ease",
+        positionUsing: "",
+        speed: 200,
+        trickle: true,
+        trickleRate: 0.02,
+        trickleSpeed: 800,
+        showSpinner: true,
+        barSelector: '[role="bar"]',
+        spinnerSelector: '[role="spinner"]',
+        parent: "body",
+        template: '<div class="bar" role="bar"><div class="peg"></div></div><div class="spinner" role="spinner"><div class="spinner-icon"></div></div>'
+      };
+      NProgress.configure = function(options) {
+        var key, value;
+        for (key in options) {
+          value = options[key];
+          if (value !== void 0 && options.hasOwnProperty(key)) Settings5[key] = value;
+        }
+        return this;
+      };
+      NProgress.status = null;
+      NProgress.set = function(n) {
+        var started = NProgress.isStarted();
+        n = clamp(n, Settings5.minimum, 1);
+        NProgress.status = n === 1 ? null : n;
+        var progress = NProgress.render(!started), bar = progress.querySelector(Settings5.barSelector), speed = Settings5.speed, ease = Settings5.easing;
+        progress.offsetWidth;
+        queue(function(next) {
+          if (Settings5.positionUsing === "") Settings5.positionUsing = NProgress.getPositioningCSS();
+          css(bar, barPositionCSS(n, speed, ease));
+          if (n === 1) {
+            css(progress, {
+              transition: "none",
+              opacity: 1
+            });
+            progress.offsetWidth;
+            setTimeout(function() {
+              css(progress, {
+                transition: "all " + speed + "ms linear",
+                opacity: 0
+              });
+              setTimeout(function() {
+                NProgress.remove();
+                next();
+              }, speed);
+            }, speed);
+          } else {
+            setTimeout(next, speed);
+          }
+        });
+        return this;
+      };
+      NProgress.isStarted = function() {
+        return typeof NProgress.status === "number";
+      };
+      NProgress.start = function() {
+        if (!NProgress.status) NProgress.set(0);
+        var work = function() {
+          setTimeout(function() {
+            if (!NProgress.status) return;
+            NProgress.trickle();
+            work();
+          }, Settings5.trickleSpeed);
+        };
+        if (Settings5.trickle) work();
+        return this;
+      };
+      NProgress.done = function(force) {
+        if (!force && !NProgress.status) return this;
+        return NProgress.inc(0.3 + 0.5 * Math.random()).set(1);
+      };
+      NProgress.inc = function(amount) {
+        var n = NProgress.status;
+        if (!n) {
+          return NProgress.start();
+        } else {
+          if (typeof amount !== "number") {
+            amount = (1 - n) * clamp(Math.random() * n, 0.1, 0.95);
+          }
+          n = clamp(n + amount, 0, 0.994);
+          return NProgress.set(n);
+        }
+      };
+      NProgress.trickle = function() {
+        return NProgress.inc(Math.random() * Settings5.trickleRate);
+      };
+      (function() {
+        var initial = 0, current = 0;
+        NProgress.promise = function($promise) {
+          if (!$promise || $promise.state() === "resolved") {
+            return this;
+          }
+          if (current === 0) {
+            NProgress.start();
+          }
+          initial++;
+          current++;
+          $promise.always(function() {
+            current--;
+            if (current === 0) {
+              initial = 0;
+              NProgress.done();
+            } else {
+              NProgress.set((initial - current) / initial);
+            }
+          });
+          return this;
+        };
+      })();
+      NProgress.render = function(fromStart) {
+        if (NProgress.isRendered()) return document.getElementById("nprogress");
+        addClass(document.documentElement, "nprogress-busy");
+        var progress = document.createElement("div");
+        progress.id = "nprogress";
+        progress.innerHTML = Settings5.template;
+        var bar = progress.querySelector(Settings5.barSelector), perc = fromStart ? "-100" : toBarPerc(NProgress.status || 0), parent = document.querySelector(Settings5.parent), spinner;
+        css(bar, {
+          transition: "all 0 linear",
+          transform: "translate3d(" + perc + "%,0,0)"
+        });
+        if (!Settings5.showSpinner) {
+          spinner = progress.querySelector(Settings5.spinnerSelector);
+          spinner && removeElement(spinner);
+        }
+        if (parent != document.body) {
+          addClass(parent, "nprogress-custom-parent");
+        }
+        parent.appendChild(progress);
+        return progress;
+      };
+      NProgress.remove = function() {
+        removeClass(document.documentElement, "nprogress-busy");
+        removeClass(document.querySelector(Settings5.parent), "nprogress-custom-parent");
+        var progress = document.getElementById("nprogress");
+        progress && removeElement(progress);
+      };
+      NProgress.isRendered = function() {
+        return !!document.getElementById("nprogress");
+      };
+      NProgress.getPositioningCSS = function() {
+        var bodyStyle = document.body.style;
+        var vendorPrefix = "WebkitTransform" in bodyStyle ? "Webkit" : "MozTransform" in bodyStyle ? "Moz" : "msTransform" in bodyStyle ? "ms" : "OTransform" in bodyStyle ? "O" : "";
+        if (vendorPrefix + "Perspective" in bodyStyle) {
+          return "translate3d";
+        } else if (vendorPrefix + "Transform" in bodyStyle) {
+          return "translate";
+        } else {
+          return "margin";
+        }
+      };
+      function clamp(n, min, max) {
+        if (n < min) return min;
+        if (n > max) return max;
+        return n;
+      }
+      function toBarPerc(n) {
+        return (-1 + n) * 100;
+      }
+      function barPositionCSS(n, speed, ease) {
+        var barCSS;
+        if (Settings5.positionUsing === "translate3d") {
+          barCSS = { transform: "translate3d(" + toBarPerc(n) + "%,0,0)" };
+        } else if (Settings5.positionUsing === "translate") {
+          barCSS = { transform: "translate(" + toBarPerc(n) + "%,0)" };
+        } else {
+          barCSS = { "margin-left": toBarPerc(n) + "%" };
+        }
+        barCSS.transition = "all " + speed + "ms " + ease;
+        return barCSS;
+      }
+      var queue = /* @__PURE__ */ (function() {
+        var pending = [];
+        function next() {
+          var fn = pending.shift();
+          if (fn) {
+            fn(next);
+          }
+        }
+        return function(fn) {
+          pending.push(fn);
+          if (pending.length == 1) next();
+        };
+      })();
+      var css = /* @__PURE__ */ (function() {
+        var cssPrefixes = ["Webkit", "O", "Moz", "ms"], cssProps = {};
+        function camelCase(string) {
+          return string.replace(/^-ms-/, "ms-").replace(/-([\da-z])/gi, function(match, letter) {
+            return letter.toUpperCase();
+          });
+        }
+        function getVendorProp(name) {
+          var style = document.body.style;
+          if (name in style) return name;
+          var i = cssPrefixes.length, capName = name.charAt(0).toUpperCase() + name.slice(1), vendorName;
+          while (i--) {
+            vendorName = cssPrefixes[i] + capName;
+            if (vendorName in style) return vendorName;
+          }
+          return name;
+        }
+        function getStyleProp(name) {
+          name = camelCase(name);
+          return cssProps[name] || (cssProps[name] = getVendorProp(name));
+        }
+        function applyCss(element, prop, value) {
+          prop = getStyleProp(prop);
+          element.style[prop] = value;
+        }
+        return function(element, properties) {
+          var args = arguments, prop, value;
+          if (args.length == 2) {
+            for (prop in properties) {
+              value = properties[prop];
+              if (value !== void 0 && properties.hasOwnProperty(prop)) applyCss(element, prop, value);
+            }
+          } else {
+            applyCss(element, args[1], args[2]);
+          }
+        };
+      })();
+      function hasClass(element, name) {
+        var list = typeof element == "string" ? element : classList(element);
+        return list.indexOf(" " + name + " ") >= 0;
+      }
+      function addClass(element, name) {
+        var oldList = classList(element), newList = oldList + name;
+        if (hasClass(oldList, name)) return;
+        element.className = newList.substring(1);
+      }
+      function removeClass(element, name) {
+        var oldList = classList(element), newList;
+        if (!hasClass(element, name)) return;
+        newList = oldList.replace(" " + name + " ", " ");
+        element.className = newList.substring(1, newList.length - 1);
+      }
+      function classList(element) {
+        return (" " + (element.className || "") + " ").replace(/\s+/gi, " ");
+      }
+      function removeElement(element) {
+        element && element.parentNode && element.parentNode.removeChild(element);
+      }
+      return NProgress;
+    });
+  }
+});
+
+// ../node_modules/.pnpm/nextjs-toploader@3.9.17_nex_2226b0977a0b05959c337eff3a5e72f5/node_modules/nextjs-toploader/dist/index.js
+var require_dist = __commonJS({
+  "../node_modules/.pnpm/nextjs-toploader@3.9.17_nex_2226b0977a0b05959c337eff3a5e72f5/node_modules/nextjs-toploader/dist/index.js"(exports, module) {
+    "use client";
+    var G = Object.create;
+    var y = Object.defineProperty;
+    var Q = Object.getOwnPropertyDescriptor;
+    var V = Object.getOwnPropertyNames;
+    var Y = Object.getPrototypeOf;
+    var Z = Object.prototype.hasOwnProperty;
+    var i = (o, e) => y(o, "name", { value: e, configurable: true });
+    var _ = (o, e) => {
+      for (var c in e) y(o, c, { get: e[c], enumerable: true });
+    };
+    var C = (o, e, c, h) => {
+      if (e && typeof e == "object" || typeof e == "function") for (let l of V(e)) !Z.call(o, l) && l !== c && y(o, l, { get: () => e[l], enumerable: !(h = Q(e, l)) || h.enumerable });
+      return o;
+    };
+    var T = (o, e, c) => (c = o != null ? G(Y(o)) : {}, C(!o || !o.__esModule ? y(c, "default", { value: o, enumerable: true }) : c, o));
+    var ee = (o) => C(y({}, "__esModule", { value: true }), o);
+    var oe = {};
+    _(oe, { default: () => re, useTopLoader: () => O });
+    module.exports = ee(oe);
+    var t = T(require_prop_types());
+    var L = T(__require("react"));
+    var a = T(require_nprogress());
+    var s = T(require_nprogress());
+    var O = i(() => ({ start: () => s.start(), done: (e) => s.done(e), remove: () => s.remove(), setProgress: (e) => s.set(e), inc: (e) => s.inc(e), trickle: () => s.trickle(), isStarted: () => s.isStarted(), isRendered: () => s.isRendered(), getPositioningCSS: () => s.getPositioningCSS() }), "useTopLoader");
+    var z = i(({ color: o, height: e, showSpinner: c, crawl: h, crawlSpeed: l, initialPosition: v, easing: S, speed: k, shadow: N, template: E, zIndex: A = 1600, showAtBottom: H = false, showForHashAnchor: K = true, nonce: W }) => {
+      let j = "#29d", u = o != null ? o : j, B = e != null ? e : 3, F = !N && N !== void 0 ? "" : N ? `box-shadow:${N}` : `box-shadow:0 0 10px ${u},0 0 5px ${u}`, q = L.createElement("style", { nonce: W }, `#nprogress{pointer-events:none}#nprogress .bar{background:${u};position:fixed;z-index:${A};${H ? "bottom: 0;" : "top: 0;"}left:0;width:100%;height:${B}px}#nprogress .peg{display:block;position:absolute;right:0;width:100px;height:100%;${F};opacity:1;-webkit-transform:rotate(3deg) translate(0px,-4px);-ms-transform:rotate(3deg) translate(0px,-4px);transform:rotate(3deg) translate(0px,-4px)}#nprogress .spinner{display:block;position:fixed;z-index:${A};${H ? "bottom: 15px;" : "top: 15px;"}right:15px}#nprogress .spinner-icon{width:18px;height:18px;box-sizing:border-box;border:2px solid transparent;border-top-color:${u};border-left-color:${u};border-radius:50%;-webkit-animation:nprogress-spinner 400ms linear infinite;animation:nprogress-spinner 400ms linear infinite}.nprogress-custom-parent{overflow:hidden;position:relative}.nprogress-custom-parent #nprogress .bar,.nprogress-custom-parent #nprogress .spinner{position:absolute}@-webkit-keyframes nprogress-spinner{0%{-webkit-transform:rotate(0deg)}100%{-webkit-transform:rotate(360deg)}}@keyframes nprogress-spinner{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}`), f = i((m) => new URL(m, window.location.href).href, "toAbsoluteURL"), I = i((m, b) => {
+        let d = new URL(f(m)), P = new URL(f(b));
+        return d.href.split("#")[0] === P.href.split("#")[0];
+      }, "isHashAnchor"), J = i((m, b) => {
+        let d = new URL(f(m)), P = new URL(f(b));
+        return d.hostname.replace(/^www\./, "") === P.hostname.replace(/^www\./, "");
+      }, "isSameHostName");
+      return L.useEffect(() => {
+        a.configure({ showSpinner: c != null ? c : true, trickle: h != null ? h : true, trickleSpeed: l != null ? l : 200, minimum: v != null ? v : 0.08, easing: S != null ? S : "ease", speed: k != null ? k : 200, template: E != null ? E : '<div class="bar" role="bar"><div class="peg"></div></div><div class="spinner" role="spinner"><div class="spinner-icon"></div></div>' });
+        function m(r, g) {
+          let n = new URL(r), p = new URL(g);
+          if (n.hostname === p.hostname && n.pathname === p.pathname && n.search === p.search) {
+            let w = n.hash, x = p.hash;
+            return w !== x && n.href.replace(w, "") === p.href.replace(x, "");
+          }
+          return false;
+        }
+        i(m, "isAnchorOfCurrentUrl");
+        var b = document.querySelectorAll("html");
+        let d = i(() => b.forEach((r) => r.classList.remove("nprogress-busy")), "removeNProgressClass");
+        function P(r) {
+          for (; r && r.tagName.toLowerCase() !== "a"; ) r = r.parentElement;
+          return r;
+        }
+        i(P, "findClosestAnchor");
+        function R(r) {
+          try {
+            let g = r.target, n = P(g), p = n == null ? void 0 : n.href;
+            if (p) {
+              let w = window.location.href, x = n.target !== "", X8 = ["tel:", "mailto:", "sms:", "blob:", "download:"].some((D) => p.startsWith(D));
+              if (!J(window.location.href, n.href)) return;
+              let M = m(w, p) || I(window.location.href, n.href);
+              if (!K && M) return;
+              p === w || x || X8 || M || r.ctrlKey || r.metaKey || r.shiftKey || r.altKey || !f(n.href).startsWith("http") ? (a.start(), a.done(), d()) : a.start();
+            }
+          } catch (g) {
+            a.start(), a.done();
+          }
+        }
+        i(R, "handleClick"), ((r) => {
+          let g = r.pushState;
+          r.pushState = (...n) => (a.done(), d(), g.apply(r, n));
+        })(window.history), ((r) => {
+          let g = r.replaceState;
+          r.replaceState = (...n) => (a.done(), d(), g.apply(r, n));
+        })(window.history);
+        function U() {
+          a.done(), d();
+        }
+        i(U, "handlePageHide");
+        function $() {
+          a.done();
+        }
+        return i($, "handleBackAndForth"), window.addEventListener("popstate", $), document.addEventListener("click", R), window.addEventListener("pagehide", U), () => {
+          document.removeEventListener("click", R), window.removeEventListener("pagehide", U), window.removeEventListener("popstate", $);
+        };
+      }, []), q;
+    }, "NextTopLoader");
+    var re = z;
+    z.propTypes = { color: t.string, height: t.number, showSpinner: t.bool, crawl: t.bool, crawlSpeed: t.number, initialPosition: t.number, easing: t.string, speed: t.number, template: t.string, shadow: t.oneOfType([t.string, t.bool]), zIndex: t.number, showAtBottom: t.bool };
+  }
+});
 function cn(...inputs) {
   return twMerge(clsx(inputs));
 }
@@ -2047,7 +3089,9 @@ function AppSidebarNavigation({
   }
   return /* @__PURE__ */ jsx(SmartNavbar, { ...smartNavbarProps });
 }
-var NextTopLoader = NextTopLoaderModule.default;
+
+// src/navigation/AppShellLayout.tsx
+var import_nextjs_toploader = __toESM(require_dist());
 function AppShellLayout({
   children,
   messages,
@@ -2060,7 +3104,7 @@ function AppShellLayout({
   return /* @__PURE__ */ jsxs(NextIntlClientProvider, { messages, locale, children: [
     brandingStyles,
     /* @__PURE__ */ jsx(
-      NextTopLoader,
+      import_nextjs_toploader.default,
       {
         color: "hsl(var(--primary))",
         height: 2,
@@ -3202,6 +4246,29 @@ function AuditHistoryModal({
     ] }) })
   ] }) });
 }
+/*! Bundled license information:
+
+object-assign/index.js:
+  (*
+  object-assign
+  (c) Sindre Sorhus
+  @license MIT
+  *)
+
+nprogress/nprogress.js:
+  (* NProgress, (c) 2013, 2014 Rico Sta. Cruz - http://ricostacruz.com/nprogress
+   * @license MIT *)
+
+nextjs-toploader/dist/index.js:
+  (**
+   *
+   * NextTopLoader
+   * @license MIT
+   * @param {NextTopLoaderProps} props The properties to configure NextTopLoader
+   * @returns {React.JSX.Element}
+   *
+   *)
+*/
 
 export { ANIM_DURATION, ActionBadge, AppShellLayout, AppSidebarNavigation, AuditDeltaViewer, AuditHistoryModal, Badge, Button, Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, CommandPalette, ConfirmDialog, DefaultTenantSelector, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, GlobalFooter, GlobalNavbar, IndustrialModalHeader, IndustrialSearchInput, IndustrialSelectSearch, IndustrialTopBar, Input, Label, LiveLogViewer, LogoutSuccessView, Progress, Separator, SmartNavbar, SystemSettings, TenantMegaMenuProvider, TenantSelector, TenantSelectorConnector, ThemeProvider, UserIdentity, badgeVariants, buildCommonCommands, buildSidebarLinks, buttonVariants, cn, configureFeatureFlags, featureFlags, useConfirmDialog, useTenantMegaMenu };
 //# sourceMappingURL=index.js.map

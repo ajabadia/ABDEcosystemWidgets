@@ -12,6 +12,8 @@ export default defineConfig({
   sourcemap: true,
   clean: true,
   treeshake: true,
+  platform: 'browser',
+  noExternal: ['nextjs-toploader'],
   external: [
     'react', 
     'react-dom', 
@@ -26,7 +28,6 @@ export default defineConfig({
     'next/navigation',
     'next/server',
     'next-intl',
-    'nextjs-toploader',
     'sonner',
     'next-themes',
   ],
