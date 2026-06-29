@@ -2,7 +2,9 @@ import * as react_jsx_runtime from 'react/jsx-runtime';
 import * as React from 'react';
 import React__default, { ReactNode, ComponentType } from 'react';
 import { AbstractIntlMessages } from 'next-intl';
-import { Dialog } from 'radix-ui';
+import { Dialog as Dialog$1, Progress as Progress$1, Separator as Separator$1 } from 'radix-ui';
+import * as class_variance_authority_types from 'class-variance-authority/types';
+import { VariantProps } from 'class-variance-authority';
 import { ThemeProvider as ThemeProvider$1 } from 'next-themes';
 import { ClassValue } from 'clsx';
 
@@ -111,6 +113,9 @@ interface TenantSelectorConnectorProps {
 }
 declare function TenantSelectorConnector({ sessionUser, enableContexts, onTenantSwitch, useRouterPush, systemTenantLabel, onError, variant, isOpen, }: TenantSelectorConnectorProps): react_jsx_runtime.JSX.Element | null;
 
+type DefaultTenantSelectorProps = Omit<TenantSelectorConnectorProps, 'enableContexts'>;
+declare function DefaultTenantSelector(props: DefaultTenantSelectorProps): react_jsx_runtime.JSX.Element;
+
 interface Command {
     id: string;
     title: string;
@@ -128,6 +133,17 @@ interface CommandPaletteProps {
     onOpenChange?: (open: boolean) => void;
 }
 declare function CommandPalette({ commands, placeholder, isOpen: controlledIsOpen, onOpenChange }: CommandPaletteProps): react_jsx_runtime.JSX.Element | null;
+
+interface CommonCommandContext {
+    locale: string;
+    pathname: string;
+    router: {
+        replace: (href: string, opts?: Record<string, unknown>) => void;
+    };
+    onLogout?: () => void | Promise<void>;
+    onOpenSettings?: () => void;
+}
+declare function buildCommonCommands(ctx: CommonCommandContext): Command[];
 
 interface NavUser {
     name: string;
@@ -475,8 +491,53 @@ declare function DialogFooter({ className, showCloseButton, closeLabel, children
     showCloseButton?: boolean;
     closeLabel?: string;
 }): react_jsx_runtime.JSX.Element;
-declare function DialogTitle({ className, ...props }: React.ComponentProps<typeof Dialog.Title>): react_jsx_runtime.JSX.Element;
-declare function DialogDescription({ className, ...props }: React.ComponentProps<typeof Dialog.Description>): react_jsx_runtime.JSX.Element;
+declare function DialogTitle({ className, ...props }: React.ComponentProps<typeof Dialog$1.Title>): react_jsx_runtime.JSX.Element;
+declare function DialogDescription({ className, ...props }: React.ComponentProps<typeof Dialog$1.Description>): react_jsx_runtime.JSX.Element;
+
+declare const badgeVariants: (props?: ({
+    variant?: "link" | "default" | "secondary" | "destructive" | "outline" | "ghost" | null | undefined;
+} & class_variance_authority_types.ClassProp) | undefined) => string;
+declare function Badge({ className, variant, asChild, ...props }: React.ComponentProps<"span"> & VariantProps<typeof badgeVariants> & {
+    asChild?: boolean;
+}): react_jsx_runtime.JSX.Element;
+
+declare const buttonVariants: (props?: ({
+    variant?: "link" | "default" | "secondary" | "destructive" | "outline" | "ghost" | null | undefined;
+    size?: "icon" | "default" | "xs" | "sm" | "lg" | "icon-xs" | "icon-sm" | "icon-lg" | null | undefined;
+} & class_variance_authority_types.ClassProp) | undefined) => string;
+declare function Button({ className, variant, size, asChild, ...props }: React.ComponentProps<"button"> & VariantProps<typeof buttonVariants> & {
+    asChild?: boolean;
+}): react_jsx_runtime.JSX.Element;
+
+declare function Card({ className, size, ...props }: React.ComponentProps<"div"> & {
+    size?: "default" | "sm";
+}): react_jsx_runtime.JSX.Element;
+declare function CardHeader({ className, ...props }: React.ComponentProps<"div">): react_jsx_runtime.JSX.Element;
+declare function CardTitle({ className, ...props }: React.ComponentProps<"div">): react_jsx_runtime.JSX.Element;
+declare function CardDescription({ className, ...props }: React.ComponentProps<"div">): react_jsx_runtime.JSX.Element;
+declare function CardAction({ className, ...props }: React.ComponentProps<"div">): react_jsx_runtime.JSX.Element;
+declare function CardContent({ className, ...props }: React.ComponentProps<"div">): react_jsx_runtime.JSX.Element;
+declare function CardFooter({ className, ...props }: React.ComponentProps<"div">): react_jsx_runtime.JSX.Element;
+
+declare const DialogPortal: React.FC<Dialog$1.DialogPortalProps>;
+declare const DialogOverlay: React.ForwardRefExoticComponent<Dialog$1.DialogOverlayProps & React.RefAttributes<HTMLDivElement>>;
+
+declare const DialogContent: React.ForwardRefExoticComponent<Omit<Dialog$1.DialogContentProps & React.RefAttributes<HTMLDivElement>, "ref"> & {
+    showCloseButton?: boolean;
+} & React.RefAttributes<HTMLDivElement>>;
+
+declare function Dialog({ ...props }: React.ComponentProps<typeof Dialog$1.Root>): react_jsx_runtime.JSX.Element;
+declare function DialogTrigger({ ...props }: React.ComponentProps<typeof Dialog$1.Trigger>): react_jsx_runtime.JSX.Element;
+declare function DialogClose({ ...props }: React.ComponentProps<typeof Dialog$1.Close>): react_jsx_runtime.JSX.Element;
+
+declare function Input({ className, type, ...props }: React.ComponentProps<"input">): react_jsx_runtime.JSX.Element;
+
+type LabelProps = React.LabelHTMLAttributes<HTMLLabelElement>;
+declare const Label: React.ForwardRefExoticComponent<LabelProps & React.RefAttributes<HTMLLabelElement>>;
+
+declare function Progress({ className, value, ...props }: React.ComponentProps<typeof Progress$1.Root>): react_jsx_runtime.JSX.Element;
+
+declare function Separator({ className, orientation, decorative, ...props }: React.ComponentProps<typeof Separator$1.Root>): react_jsx_runtime.JSX.Element;
 
 /**
  * @purpose Gestiona una constante para definir el tiempo de las animaciones de entrada y salida de diálogo en milisegundos.
@@ -612,4 +673,4 @@ declare function configureFeatureFlags(overrides: Partial<FeatureFlags>): void;
 
 declare function cn(...inputs: ClassValue[]): string;
 
-export { ANIM_DURATION, ActionBadge, AppShellLayout, type AppSidebarLink, AppSidebarNavigation, type AppSidebarNavigationProps, AuditDeltaViewer, AuditHistoryModal, type Command, CommandPalette, type CommandPaletteProps, ConfirmDialog, type ConfirmDialogProps, type ConfirmVariant, type ContextOption, DialogDescription, DialogFooter, DialogHeader, DialogTitle, GlobalFooter, type GlobalFooterProps, GlobalNavbar, type GlobalNavbarProps, type GlobalNavbarSession, IndustrialModalHeader, type IndustrialModalHeaderProps, IndustrialSearchInput, type IndustrialSearchInputProps, IndustrialSelectSearch, type IndustrialSelectSearchItem, IndustrialTopBar, type IndustrialTopBarProps, LiveLogViewer, LogoutSuccessView, type LogoutSuccessViewProps, type NavLinkConfig, type NavUser, type NavbarTranslations, type SidebarBuildResult, type SidebarLink, SmartNavbar, type SmartNavbarProps, type SmartNavbarTranslations, SystemSettings, type SystemSettingsProps, TenantMegaMenuProvider, type TenantMegaMenuValue, type TenantOption, TenantSelector, TenantSelectorConnector, type TenantSelectorConnectorProps, type TenantSelectorProps, ThemeProvider, type UseConfirmDialogOptions, type UseConfirmDialogReturn, UserIdentity, type UserIdentityProps, buildSidebarLinks, cn, configureFeatureFlags, featureFlags, useConfirmDialog, useTenantMegaMenu };
+export { ANIM_DURATION, ActionBadge, AppShellLayout, type AppSidebarLink, AppSidebarNavigation, type AppSidebarNavigationProps, AuditDeltaViewer, AuditHistoryModal, Badge, Button, Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, type Command, CommandPalette, type CommandPaletteProps, type CommonCommandContext, ConfirmDialog, type ConfirmDialogProps, type ConfirmVariant, type ContextOption, DefaultTenantSelector, type DefaultTenantSelectorProps, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, GlobalFooter, type GlobalFooterProps, GlobalNavbar, type GlobalNavbarProps, type GlobalNavbarSession, IndustrialModalHeader, type IndustrialModalHeaderProps, IndustrialSearchInput, type IndustrialSearchInputProps, IndustrialSelectSearch, type IndustrialSelectSearchItem, IndustrialTopBar, type IndustrialTopBarProps, Input, Label, type LabelProps, LiveLogViewer, LogoutSuccessView, type LogoutSuccessViewProps, type NavLinkConfig, type NavUser, type NavbarTranslations, Progress, Separator, type SidebarBuildResult, type SidebarLink, SmartNavbar, type SmartNavbarProps, type SmartNavbarTranslations, SystemSettings, type SystemSettingsProps, TenantMegaMenuProvider, type TenantMegaMenuValue, type TenantOption, TenantSelector, TenantSelectorConnector, type TenantSelectorConnectorProps, type TenantSelectorProps, ThemeProvider, type UseConfirmDialogOptions, type UseConfirmDialogReturn, UserIdentity, type UserIdentityProps, badgeVariants, buildCommonCommands, buildSidebarLinks, buttonVariants, cn, configureFeatureFlags, featureFlags, useConfirmDialog, useTenantMegaMenu };

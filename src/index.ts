@@ -16,6 +16,10 @@ export * from './identity/LogoutSuccessView.js';
 
 // Conectores
 export * from './connectors/TenantSelectorConnector.js';
+export * from './connectors/DefaultTenantSelector.js';
+
+// Comandos
+export * from './commands/commonCommands.js';
 
 // Navegación
 export * from './navigation/CommandPalette.js';
@@ -36,6 +40,16 @@ export * from './ui/SelectSearch.js';
 export * from './ui/IndustrialModalHeader.js';
 export * from './ui/IndustrialSearchInput.js';
 export * from './ui/dialog-elements.js';
+
+// Shadcn-style primitives
+export * from './ui/badge.js';
+export * from './ui/button.js';
+export * from './ui/card.js';
+export * from './ui/dialog.js';
+export * from './ui/input.js';
+export * from './ui/label.js';
+export * from './ui/progress.js';
+export * from './ui/separator.js';
 
 // Constantes compartidas
 export * from './constants.js';

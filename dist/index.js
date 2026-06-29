@@ -1,7 +1,7 @@
 "use client";
 import * as React8 from 'react';
 import { createContext, memo, useState, useRef, useEffect, useContext, Suspense, useMemo, useCallback } from 'react';
-import { Sun, Moon, Monitor, User, LogOut, Search, Building2, Loader2, ChevronDown, Check, X, ShieldCheck, Settings, AlertTriangle, LogIn, ArrowLeft, Terminal, CornerDownLeft, Shield, Menu, Info, Activity, Layers, FileCode, Tag, Wifi, WifiOff, FileText, BarChart3, Languages } from 'lucide-react';
+import { Sun, Moon, Monitor, User, LogOut, Search, X, Building2, Loader2, ChevronDown, Check, ShieldCheck, Settings, AlertTriangle, LogIn, ArrowLeft, Globe, Terminal, CornerDownLeft, Shield, Menu, Info, Activity, Layers, FileCode, Tag, Wifi, WifiOff, FileText, BarChart3, Languages } from 'lucide-react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { jsx, jsxs, Fragment } from 'react/jsx-runtime';
@@ -11,7 +11,8 @@ import Link from 'next/link';
 import { useTranslations, useLocale, NextIntlClientProvider } from 'next-intl';
 import NextTopLoader from 'nextjs-toploader';
 import { Toaster } from 'sonner';
-import { Dialog } from 'radix-ui';
+import { Dialog as Dialog$1, Slot, Progress as Progress$1, Separator as Separator$1 } from 'radix-ui';
+import { cva } from 'class-variance-authority';
 import { ThemeProvider as ThemeProvider$1 } from 'next-themes';
 
 // src/identity/TenantSelector.tsx
@@ -716,6 +717,48 @@ function TenantSelectorConnector({
       } : {}
     }
   );
+}
+function DefaultTenantSelector(props) {
+  return /* @__PURE__ */ jsx(TenantSelectorConnector, { ...props, enableContexts: true });
+}
+function buildCommonCommands(ctx) {
+  const { locale, pathname, router } = ctx;
+  return [
+    {
+      id: "action-language",
+      title: locale === "es" ? "Switch to English" : "Cambiar a Espa\xF1ol",
+      description: locale === "es" ? "Change layout language to English" : "Cambiar el idioma a Espa\xF1ol",
+      category: locale === "es" ? "Configuraci\xF3n" : "Settings",
+      shortcut: ["c", "l"],
+      icon: /* @__PURE__ */ jsx(Globe, { className: "w-4 h-4" }),
+      action: () => {
+        const nextLocale = locale === "es" ? "en" : "es";
+        router.replace(pathname, { locale: nextLocale });
+      }
+    },
+    {
+      id: "action-settings",
+      title: locale === "es" ? "Abrir Panel de Configuraci\xF3n" : "Open System Settings",
+      description: locale === "es" ? "Ajustar temas visuales e idioma" : "Adjust theme modes and language",
+      category: locale === "es" ? "Configuraci\xF3n" : "Settings",
+      shortcut: ["c", "s"],
+      icon: /* @__PURE__ */ jsx(Settings, { className: "w-4 h-4" }),
+      action: () => {
+        ctx.onOpenSettings?.();
+      }
+    },
+    {
+      id: "action-logout",
+      title: locale === "es" ? "Cerrar Sesi\xF3n" : "Sign Out",
+      description: locale === "es" ? "Finalizar sesi\xF3n de forma segura" : "Securely end your session",
+      category: locale === "es" ? "Configuraci\xF3n" : "Settings",
+      shortcut: ["q", "q"],
+      icon: /* @__PURE__ */ jsx(LogOut, { className: "w-4 h-4" }),
+      action: () => {
+        ctx.onLogout?.();
+      }
+    }
+  ];
 }
 function CommandPalette({
   commands,
@@ -2383,7 +2426,7 @@ function DialogFooter({
       ...props,
       children: [
         children,
-        showCloseButton && /* @__PURE__ */ jsx(Dialog.Close, { asChild: true, children: /* @__PURE__ */ jsx(
+        showCloseButton && /* @__PURE__ */ jsx(Dialog$1.Close, { asChild: true, children: /* @__PURE__ */ jsx(
           "button",
           {
             type: "button",
@@ -2401,7 +2444,7 @@ function DialogTitle({
   ...props
 }) {
   return /* @__PURE__ */ jsx(
-    Dialog.Title,
+    Dialog$1.Title,
     {
       "data-slot": "dialog-title",
       className: cn(
@@ -2417,11 +2460,289 @@ function DialogDescription({
   ...props
 }) {
   return /* @__PURE__ */ jsx(
-    Dialog.Description,
+    Dialog$1.Description,
     {
       "data-slot": "dialog-description",
       className: cn(
         "text-sm text-muted-foreground *:[a]:underline *:[a]:underline-offset-3 *:[a]:hover:text-foreground",
+        className
+      ),
+      ...props
+    }
+  );
+}
+var badgeVariants = cva(
+  "group/badge inline-flex h-5 w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-4xl border border-transparent px-2 py-0.5 text-xs font-medium whitespace-nowrap transition-all focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&>svg]:pointer-events-none [&>svg]:size-3!",
+  {
+    variants: {
+      variant: {
+        default: "bg-primary text-primary-foreground [a]:hover:bg-primary/80",
+        secondary: "bg-secondary text-secondary-foreground [a]:hover:bg-secondary/80",
+        destructive: "bg-destructive/10 text-destructive focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:focus-visible:ring-destructive/40 [a]:hover:bg-destructive/20",
+        outline: "border-border text-foreground [a]:hover:bg-muted [a]:hover:text-muted-foreground",
+        ghost: "hover:bg-muted hover:text-muted-foreground dark:hover:bg-muted/50",
+        link: "text-primary underline-offset-4 hover:underline"
+      }
+    },
+    defaultVariants: {
+      variant: "default"
+    }
+  }
+);
+function Badge({
+  className,
+  variant = "default",
+  asChild = false,
+  ...props
+}) {
+  const Comp = asChild ? Slot.Root : "span";
+  return /* @__PURE__ */ jsx(
+    Comp,
+    {
+      "data-slot": "badge",
+      "data-variant": variant,
+      className: cn(badgeVariants({ variant }), className),
+      ...props
+    }
+  );
+}
+var buttonVariants = cva(
+  "group/button inline-flex shrink-0 items-center justify-center rounded-none border border-transparent bg-clip-padding text-[10px] font-mono uppercase tracking-wider font-bold whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  {
+    variants: {
+      variant: {
+        default: "bg-primary text-primary-foreground [a]:hover:bg-primary/80",
+        outline: "border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50",
+        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80 aria-expanded:bg-secondary aria-expanded:text-secondary-foreground",
+        ghost: "hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50",
+        destructive: "bg-destructive/10 text-destructive hover:bg-destructive/20 focus-visible:border-destructive/40 focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40",
+        link: "text-primary underline-offset-4 hover:underline"
+      },
+      size: {
+        default: "h-8 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2",
+        xs: "h-6 gap-1 rounded-none px-2 text-[9px] in-data-[slot=button-group]:rounded-none has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3",
+        sm: "h-7 gap-1 rounded-none px-2.5 text-[10px] in-data-[slot=button-group]:rounded-none has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3.5",
+        lg: "h-9 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2",
+        icon: "size-8",
+        "icon-xs": "size-6 rounded-none in-data-[slot=button-group]:rounded-none [&_svg:not([class*='size-'])]:size-3",
+        "icon-sm": "size-7 rounded-none in-data-[slot=button-group]:rounded-none",
+        "icon-lg": "size-9"
+      }
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "default"
+    }
+  }
+);
+function Button({
+  className,
+  variant = "default",
+  size = "default",
+  asChild = false,
+  ...props
+}) {
+  const Comp = asChild ? Slot.Root : "button";
+  return /* @__PURE__ */ jsx(
+    Comp,
+    {
+      "data-slot": "button",
+      "data-variant": variant,
+      "data-size": size,
+      className: cn(buttonVariants({ variant, size, className })),
+      ...props
+    }
+  );
+}
+function Card({
+  className,
+  size = "default",
+  ...props
+}) {
+  return /* @__PURE__ */ jsx(
+    "div",
+    {
+      "data-slot": "card",
+      "data-size": size,
+      className: cn(
+        "group/card flex flex-col gap-4 overflow-hidden rounded-none bg-card py-4 text-sm text-card-foreground ring-1 ring-foreground/10 has-data-[slot=card-footer]:pb-0 has-[>img:first-child]:pt-0 data-[size=sm]:gap-3 data-[size=sm]:py-3 data-[size=sm]:has-data-[slot=card-footer]:pb-0 *:[img:first-child]:rounded-t-none *:[img:last-child]:rounded-b-none",
+        className
+      ),
+      ...props
+    }
+  );
+}
+function CardHeader({ className, ...props }) {
+  return /* @__PURE__ */ jsx(
+    "div",
+    {
+      "data-slot": "card-header",
+      className: cn(
+        "group/card-header @container/card-header grid auto-rows-min items-start gap-1 rounded-t-none px-4 group-data-[size=sm]/card:px-3 has-data-[slot=card-action]:grid-cols-[1fr_auto] has-data-[slot=card-description]:grid-rows-[auto_auto] [.border-b]:pb-4 group-data-[size=sm]/card:[.border-b]:pb-3",
+        className
+      ),
+      ...props
+    }
+  );
+}
+function CardTitle({ className, ...props }) {
+  return /* @__PURE__ */ jsx(
+    "div",
+    {
+      "data-slot": "card-title",
+      className: cn(
+        "font-heading text-base leading-snug font-medium group-data-[size=sm]/card:text-sm",
+        className
+      ),
+      ...props
+    }
+  );
+}
+function CardDescription({ className, ...props }) {
+  return /* @__PURE__ */ jsx(
+    "div",
+    {
+      "data-slot": "card-description",
+      className: cn("text-sm text-muted-foreground", className),
+      ...props
+    }
+  );
+}
+function CardAction({ className, ...props }) {
+  return /* @__PURE__ */ jsx(
+    "div",
+    {
+      "data-slot": "card-action",
+      className: cn(
+        "col-start-2 row-span-2 row-start-1 self-start justify-self-end",
+        className
+      ),
+      ...props
+    }
+  );
+}
+function CardContent({ className, ...props }) {
+  return /* @__PURE__ */ jsx(
+    "div",
+    {
+      "data-slot": "card-content",
+      className: cn("px-4 group-data-[size=sm]/card:px-3", className),
+      ...props
+    }
+  );
+}
+function CardFooter({ className, ...props }) {
+  return /* @__PURE__ */ jsx(
+    "div",
+    {
+      "data-slot": "card-footer",
+      className: cn(
+        "flex items-center rounded-b-none border-t bg-muted/50 p-4 group-data-[size=sm]/card:p-3",
+        className
+      ),
+      ...props
+    }
+  );
+}
+var DialogPortal = Dialog$1.Portal;
+var DialogOverlay = Dialog$1.Overlay;
+var DialogContent = React8.forwardRef(({ className, children, showCloseButton = true, ...props }, ref) => /* @__PURE__ */ jsxs(
+  Dialog$1.Content,
+  {
+    ref,
+    className: cn(
+      "fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%]",
+      className
+    ),
+    ...props,
+    children: [
+      children,
+      showCloseButton && /* @__PURE__ */ jsx(Dialog$1.Close, { className: "absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground", "aria-label": "Close dialog", children: /* @__PURE__ */ jsx(X, { className: "h-4 w-4" }) })
+    ]
+  }
+));
+DialogContent.displayName = "DialogContent";
+function Dialog({
+  ...props
+}) {
+  return /* @__PURE__ */ jsx(Dialog$1.Root, { "data-slot": "dialog", ...props });
+}
+function DialogTrigger({
+  ...props
+}) {
+  return /* @__PURE__ */ jsx(Dialog$1.Trigger, { "data-slot": "dialog-trigger", ...props });
+}
+function DialogClose({
+  ...props
+}) {
+  return /* @__PURE__ */ jsx(Dialog$1.Close, { "data-slot": "dialog-close", ...props });
+}
+function Input({ className, type, ...props }) {
+  return /* @__PURE__ */ jsx(
+    "input",
+    {
+      type,
+      "data-slot": "input",
+      className: cn(
+        "h-8 w-full min-w-0 rounded-lg border border-input bg-transparent px-2.5 py-1 text-base transition-colors outline-none file:inline-flex file:h-6 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:bg-input/50 disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 md:text-sm dark:bg-input/30 dark:disabled:bg-input/80 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40",
+        className
+      ),
+      ...props
+    }
+  );
+}
+var Label = React8.forwardRef(
+  ({ className, ...props }, ref) => /* @__PURE__ */ jsx(
+    "label",
+    {
+      ref,
+      className: cn(
+        "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
+        className
+      ),
+      ...props
+    }
+  )
+);
+Label.displayName = "Label";
+function Progress({
+  className,
+  value,
+  ...props
+}) {
+  return /* @__PURE__ */ jsx(
+    Progress$1.Root,
+    {
+      "data-slot": "progress",
+      className: cn(
+        "relative h-2 w-full overflow-hidden rounded-full bg-primary/20",
+        className
+      ),
+      ...props,
+      children: /* @__PURE__ */ jsx(
+        Progress$1.Indicator,
+        {
+          className: "h-full w-full flex-1 bg-primary transition-all",
+          "data-progress-value": value || 0
+        }
+      )
+    }
+  );
+}
+function Separator({
+  className,
+  orientation = "horizontal",
+  decorative = true,
+  ...props
+}) {
+  return /* @__PURE__ */ jsx(
+    Separator$1.Root,
+    {
+      "data-slot": "separator",
+      decorative,
+      orientation,
+      className: cn(
+        "shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch",
         className
       ),
       ...props
@@ -2881,6 +3202,6 @@ function AuditHistoryModal({
   ] }) });
 }
 
-export { ANIM_DURATION, ActionBadge, AppShellLayout, AppSidebarNavigation, AuditDeltaViewer, AuditHistoryModal, CommandPalette, ConfirmDialog, DialogDescription, DialogFooter, DialogHeader, DialogTitle, GlobalFooter, GlobalNavbar, IndustrialModalHeader, IndustrialSearchInput, IndustrialSelectSearch, IndustrialTopBar, LiveLogViewer, LogoutSuccessView, SmartNavbar, SystemSettings, TenantMegaMenuProvider, TenantSelector, TenantSelectorConnector, ThemeProvider, UserIdentity, buildSidebarLinks, cn, configureFeatureFlags, featureFlags, useConfirmDialog, useTenantMegaMenu };
+export { ANIM_DURATION, ActionBadge, AppShellLayout, AppSidebarNavigation, AuditDeltaViewer, AuditHistoryModal, Badge, Button, Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, CommandPalette, ConfirmDialog, DefaultTenantSelector, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, GlobalFooter, GlobalNavbar, IndustrialModalHeader, IndustrialSearchInput, IndustrialSelectSearch, IndustrialTopBar, Input, Label, LiveLogViewer, LogoutSuccessView, Progress, Separator, SmartNavbar, SystemSettings, TenantMegaMenuProvider, TenantSelector, TenantSelectorConnector, ThemeProvider, UserIdentity, badgeVariants, buildCommonCommands, buildSidebarLinks, buttonVariants, cn, configureFeatureFlags, featureFlags, useConfirmDialog, useTenantMegaMenu };
 //# sourceMappingURL=index.js.map
 //# sourceMappingURL=index.js.map
