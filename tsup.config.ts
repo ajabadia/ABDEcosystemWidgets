@@ -25,6 +25,10 @@ export default defineConfig({
     'next/image',
     'next/navigation',
     'next/server',
+    'next-intl',
+    'nextjs-toploader',
+    'sonner',
+    'next-themes',
   ],
   onSuccess: async () => {
     const fs = await import('fs');

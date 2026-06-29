@@ -1,7 +1,9 @@
 import * as react_jsx_runtime from 'react/jsx-runtime';
 import * as React from 'react';
 import React__default, { ReactNode, ComponentType } from 'react';
+import { AbstractIntlMessages } from 'next-intl';
 import { Dialog } from 'radix-ui';
+import { ThemeProvider as ThemeProvider$1 } from 'next-themes';
 import { ClassValue } from 'clsx';
 
 interface ContextOption {
@@ -298,6 +300,41 @@ interface SmartNavbarProps {
  */
 declare function SmartNavbar(props: SmartNavbarProps): react_jsx_runtime.JSX.Element;
 
+interface AppSidebarLink {
+    href: string;
+    label: string;
+    icon: React__default.ReactNode;
+    requiresAuth?: boolean;
+    requiresAdmin?: boolean;
+    requiresSuperAdmin?: boolean;
+}
+interface AppSidebarNavigationProps {
+    session: GlobalNavbarSession | null;
+    logoUrl?: string | null;
+    links: AppSidebarLink[];
+    appBadge?: string;
+    brandName?: string;
+    onLogin?: () => void;
+    onLogout?: () => void;
+    transformHref?: (href: string) => string;
+    translations?: Partial<SmartNavbarTranslations>;
+    tenantSelectorSlot?: React__default.ReactNode;
+    settingsSlot?: React__default.ReactNode;
+    notificationsSlot?: React__default.ReactNode;
+}
+declare function AppSidebarNavigation({ session, logoUrl, links, appBadge, brandName, onLogin, onLogout, transformHref, translations: translationsOverride, tenantSelectorSlot, settingsSlot, notificationsSlot, }: AppSidebarNavigationProps): react_jsx_runtime.JSX.Element;
+
+interface AppShellLayoutProps {
+    children: React__default.ReactNode;
+    messages: AbstractIntlMessages;
+    locale: string;
+    brandingStyles?: React__default.ReactNode;
+    sidebarNavigation?: React__default.ReactNode;
+    commandPalette?: React__default.ReactNode;
+    eventBusBridge?: React__default.ReactNode;
+}
+declare function AppShellLayout({ children, messages, locale, brandingStyles, sidebarNavigation, commandPalette, eventBusBridge, }: AppShellLayoutProps): react_jsx_runtime.JSX.Element;
+
 /**
  * @purpose Proporciona un arreglo de enlaces de sidebar filtrados basado en el estado de sesión del usuario, su rol y estatus de autenticación.
  * @purpose_en Builds a filtered sidebar link array based on the user's session state, role, and authentication status.
@@ -453,6 +490,8 @@ declare function DialogDescription({ className, ...props }: React.ComponentProps
 /** Duration (ms) for dialog entrance and exit animations */
 declare const ANIM_DURATION = 200;
 
+declare function ThemeProvider({ children, ...props }: React.ComponentProps<typeof ThemeProvider$1>): react_jsx_runtime.JSX.Element;
+
 interface SystemSettingsProps {
     locale: string;
     onLocaleChange: (locale: string) => void;
@@ -573,4 +612,4 @@ declare function configureFeatureFlags(overrides: Partial<FeatureFlags>): void;
 
 declare function cn(...inputs: ClassValue[]): string;
 
-export { ANIM_DURATION, ActionBadge, AuditDeltaViewer, AuditHistoryModal, type Command, CommandPalette, type CommandPaletteProps, ConfirmDialog, type ConfirmDialogProps, type ConfirmVariant, type ContextOption, DialogDescription, DialogFooter, DialogHeader, DialogTitle, GlobalFooter, type GlobalFooterProps, GlobalNavbar, type GlobalNavbarProps, type GlobalNavbarSession, IndustrialModalHeader, type IndustrialModalHeaderProps, IndustrialSearchInput, type IndustrialSearchInputProps, IndustrialSelectSearch, type IndustrialSelectSearchItem, IndustrialTopBar, type IndustrialTopBarProps, LiveLogViewer, LogoutSuccessView, type LogoutSuccessViewProps, type NavLinkConfig, type NavUser, type NavbarTranslations, type SidebarBuildResult, type SidebarLink, SmartNavbar, type SmartNavbarProps, type SmartNavbarTranslations, SystemSettings, type SystemSettingsProps, TenantMegaMenuProvider, type TenantMegaMenuValue, type TenantOption, TenantSelector, TenantSelectorConnector, type TenantSelectorConnectorProps, type TenantSelectorProps, type UseConfirmDialogOptions, type UseConfirmDialogReturn, UserIdentity, type UserIdentityProps, buildSidebarLinks, cn, configureFeatureFlags, featureFlags, useConfirmDialog, useTenantMegaMenu };
+export { ANIM_DURATION, ActionBadge, AppShellLayout, type AppSidebarLink, AppSidebarNavigation, type AppSidebarNavigationProps, AuditDeltaViewer, AuditHistoryModal, type Command, CommandPalette, type CommandPaletteProps, ConfirmDialog, type ConfirmDialogProps, type ConfirmVariant, type ContextOption, DialogDescription, DialogFooter, DialogHeader, DialogTitle, GlobalFooter, type GlobalFooterProps, GlobalNavbar, type GlobalNavbarProps, type GlobalNavbarSession, IndustrialModalHeader, type IndustrialModalHeaderProps, IndustrialSearchInput, type IndustrialSearchInputProps, IndustrialSelectSearch, type IndustrialSelectSearchItem, IndustrialTopBar, type IndustrialTopBarProps, LiveLogViewer, LogoutSuccessView, type LogoutSuccessViewProps, type NavLinkConfig, type NavUser, type NavbarTranslations, type SidebarBuildResult, type SidebarLink, SmartNavbar, type SmartNavbarProps, type SmartNavbarTranslations, SystemSettings, type SystemSettingsProps, TenantMegaMenuProvider, type TenantMegaMenuValue, type TenantOption, TenantSelector, TenantSelectorConnector, type TenantSelectorConnectorProps, type TenantSelectorProps, ThemeProvider, type UseConfirmDialogOptions, type UseConfirmDialogReturn, UserIdentity, type UserIdentityProps, buildSidebarLinks, cn, configureFeatureFlags, featureFlags, useConfirmDialog, useTenantMegaMenu };

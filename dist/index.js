@@ -8,7 +8,11 @@ import { jsx, jsxs, Fragment } from 'react/jsx-runtime';
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import { logger } from '@ajabadia/satellite-sdk/client';
 import Link from 'next/link';
+import { useTranslations, useLocale, NextIntlClientProvider } from 'next-intl';
+import NextTopLoader from 'nextjs-toploader';
+import { Toaster } from 'sonner';
 import { Dialog } from 'radix-ui';
+import { ThemeProvider as ThemeProvider$1 } from 'next-themes';
 
 // src/identity/TenantSelector.tsx
 function cn(...inputs) {
@@ -1916,6 +1920,127 @@ function buildSidebarLinks(configs, role, isLoggedIn = false) {
     return true;
   });
 }
+function AppSidebarNavigation({
+  session,
+  logoUrl,
+  links,
+  appBadge,
+  brandName,
+  onLogin,
+  onLogout,
+  transformHref,
+  translations: translationsOverride,
+  tenantSelectorSlot,
+  settingsSlot,
+  notificationsSlot
+}) {
+  const t = useTranslations("common");
+  const locale = useLocale();
+  useRouter();
+  const rawPathname = usePathname();
+  const segments = rawPathname.split("/").filter(Boolean);
+  const pathname = segments.length > 1 ? "/" + segments.slice(1).join("/") : "/";
+  const isLoggedIn = session?.authenticated === true && !!session?.user;
+  const user = session?.user ?? null;
+  const builtLinks = buildSidebarLinks(links, user?.role, isLoggedIn);
+  const finalLogoUrl = logoUrl || null;
+  const handleLocaleChange = (newLocale) => {
+    let domainSuffix = "";
+    const hostname = window.location.hostname;
+    if (hostname !== "localhost" && hostname !== "127.0.0.1") {
+      const parts = hostname.split(".");
+      if (parts.length >= 2) {
+        domainSuffix = `; domain=.${parts.slice(-2).join(".")}`;
+      }
+    }
+    document.cookie = `NEXT_LOCALE=${newLocale}; path=/; max-age=31536000; SameSite=Lax${domainSuffix}`;
+    const path = window.location.pathname;
+    const search = window.location.search;
+    const segments2 = path.split("/").filter(Boolean);
+    if (segments2.length > 0) {
+      segments2[0] = newLocale;
+      window.location.href = "/" + segments2.join("/") + search;
+    } else {
+      window.location.href = "/" + newLocale + search;
+    }
+  };
+  const appTitle = brandName || t("appTitle") || "ABD SYSTEM";
+  const smartNavbarProps = {
+    session,
+    links: builtLinks,
+    logoUrl: finalLogoUrl,
+    onLogout: onLogout ?? (() => {
+      window.location.href = "/api/abd-auth/logout";
+    }),
+    brandName: appTitle,
+    activeHref: pathname,
+    locale,
+    tenantSelectorSlot,
+    settingsSlot,
+    onLocaleChange: handleLocaleChange,
+    onSearchTrigger: () => {
+      window.dispatchEvent(new CustomEvent("abd-command-palette-open"));
+    },
+    translations: {
+      brandFallback: appTitle,
+      logoutBtn: locale === "es" ? "TERMINAR SESI\xD3N" : "SIGN OUT",
+      identityProvider: locale === "es" ? "PROVEEDOR DE IDENTIDAD" : "IDENTITY PROVIDER",
+      statusOnline: locale === "es" ? "EN L\xCDNEA" : "ONLINE",
+      emailLabel: locale === "es" ? "CORREO" : "EMAIL",
+      ...translationsOverride
+    }
+  };
+  if (appBadge !== void 0) {
+    smartNavbarProps.appBadge = appBadge;
+  }
+  if (onLogin !== void 0) {
+    smartNavbarProps.onLogin = onLogin;
+  }
+  if (transformHref !== void 0) {
+    smartNavbarProps.transformHref = transformHref;
+  }
+  if (notificationsSlot !== void 0) {
+    smartNavbarProps.notificationsSlot = notificationsSlot;
+  }
+  return /* @__PURE__ */ jsx(SmartNavbar, { ...smartNavbarProps });
+}
+function AppShellLayout({
+  children,
+  messages,
+  locale,
+  brandingStyles,
+  sidebarNavigation,
+  commandPalette,
+  eventBusBridge
+}) {
+  return /* @__PURE__ */ jsxs(NextIntlClientProvider, { messages, locale, children: [
+    brandingStyles,
+    /* @__PURE__ */ jsx(
+      NextTopLoader,
+      {
+        color: "hsl(var(--primary))",
+        height: 2,
+        showSpinner: false,
+        zIndex: 45,
+        speed: 200
+      }
+    ),
+    /* @__PURE__ */ jsxs("div", { className: "min-h-screen bg-background text-foreground selection:bg-primary/30 transition-colors duration-300", children: [
+      sidebarNavigation,
+      commandPalette,
+      eventBusBridge,
+      children,
+      /* @__PURE__ */ jsx(
+        Toaster,
+        {
+          position: "top-right",
+          richColors: true,
+          closeButton: true
+        }
+      )
+    ] })
+  ] });
+}
 function useConfirmDialog(options) {
   const { onConfirm } = options;
   const [open, setOpen] = useState(false);
@@ -2302,6 +2427,19 @@ function DialogDescription({
       ...props
     }
   );
+}
+if (typeof window !== "undefined" && process.env.NODE_ENV === "development") {
+  const orig = console.error;
+  console.error = (...args) => {
+    if (typeof args[0] === "string" && args[0].includes("Encountered a script tag")) return;
+    orig.apply(console, args);
+  };
+}
+function ThemeProvider({
+  children,
+  ...props
+}) {
+  return /* @__PURE__ */ jsx(ThemeProvider$1, { ...props, children });
 }
 function SystemSettings({
   locale,
@@ -2743,6 +2881,6 @@ function AuditHistoryModal({
   ] }) });
 }
 
-export { ANIM_DURATION, ActionBadge, AuditDeltaViewer, AuditHistoryModal, CommandPalette, ConfirmDialog, DialogDescription, DialogFooter, DialogHeader, DialogTitle, GlobalFooter, GlobalNavbar, IndustrialModalHeader, IndustrialSearchInput, IndustrialSelectSearch, IndustrialTopBar, LiveLogViewer, LogoutSuccessView, SmartNavbar, SystemSettings, TenantMegaMenuProvider, TenantSelector, TenantSelectorConnector, UserIdentity, buildSidebarLinks, cn, configureFeatureFlags, featureFlags, useConfirmDialog, useTenantMegaMenu };
+export { ANIM_DURATION, ActionBadge, AppShellLayout, AppSidebarNavigation, AuditDeltaViewer, AuditHistoryModal, CommandPalette, ConfirmDialog, DialogDescription, DialogFooter, DialogHeader, DialogTitle, GlobalFooter, GlobalNavbar, IndustrialModalHeader, IndustrialSearchInput, IndustrialSelectSearch, IndustrialTopBar, LiveLogViewer, LogoutSuccessView, SmartNavbar, SystemSettings, TenantMegaMenuProvider, TenantSelector, TenantSelectorConnector, ThemeProvider, UserIdentity, buildSidebarLinks, cn, configureFeatureFlags, featureFlags, useConfirmDialog, useTenantMegaMenu };
 //# sourceMappingURL=index.js.map
 //# sourceMappingURL=index.js.map
