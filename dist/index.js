@@ -9,7 +9,7 @@ import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import { logger } from '@ajabadia/satellite-sdk/client';
 import Link from 'next/link';
 import { useTranslations, useLocale, NextIntlClientProvider } from 'next-intl';
-import NextTopLoader from 'nextjs-toploader';
+import * as NextTopLoaderModule from 'nextjs-toploader';
 import { Toaster } from 'sonner';
 import { Dialog as Dialog$1, Slot, Progress as Progress$1, Separator as Separator$1 } from 'radix-ui';
 import { cva } from 'class-variance-authority';
@@ -2047,6 +2047,7 @@ function AppSidebarNavigation({
   }
   return /* @__PURE__ */ jsx(SmartNavbar, { ...smartNavbarProps });
 }
+var NextTopLoader = NextTopLoaderModule.default;
 function AppShellLayout({
   children,
   messages,
