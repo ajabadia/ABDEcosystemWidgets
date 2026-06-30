@@ -1,5 +1,15 @@
 "use client"
 
+/**
+ * @purpose Renderiza un componente de barra de progreso utilizando Radix UI.
+ * @purpose_en Renders a progress bar component using Radix UI.
+ * @refactorable false
+ * @classification UI Component
+ * @complexity Low
+ * @fingerprint exports:0,imports:3,sig:yj2i37
+ * @lastUpdated 2026-06-29T22:23:33.539Z
+ */
+
 import * as React from "react"
 import { Progress as ProgressPrimitive } from "radix-ui"
 

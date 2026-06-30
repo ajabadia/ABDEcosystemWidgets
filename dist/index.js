@@ -1,6 +1,6 @@
 "use client";
-import * as React8 from 'react';
-import { createContext, memo, useState, useRef, useEffect, useContext, Suspense, useMemo, useCallback } from 'react';
+import * as React10 from 'react';
+import React10__default, { createContext, memo, useState, useRef, useEffect, useContext, Suspense, useMemo, useCallback } from 'react';
 import { Sun, Moon, Monitor, User, LogOut, Search, X, Building2, Loader2, ChevronDown, Check, ShieldCheck, Settings, AlertTriangle, LogIn, ArrowLeft, Globe, Terminal, CornerDownLeft, Shield, Menu, Info, Activity, Layers, FileCode, Tag, Wifi, WifiOff, FileText, BarChart3, Languages } from 'lucide-react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -1413,7 +1413,7 @@ var defaultTranslations2 = {
   emailLabel: "EMAIL",
   languageLabel: "IDIOMA"
 };
-var SlotErrorBoundary = class extends React8.Component {
+var SlotErrorBoundary = class extends React10.Component {
   constructor(props) {
     super(props);
     this.state = { hasError: false };
@@ -2079,24 +2079,15 @@ function AppShellLayout({
   commandPalette,
   eventBusBridge
 }) {
-  return /* @__PURE__ */ jsxs(NextIntlClientProvider, { messages, locale, children: [
-    brandingStyles,
-    /* @__PURE__ */ jsx(TopLoader, {}),
-    /* @__PURE__ */ jsxs("div", { className: "min-h-screen bg-background text-foreground selection:bg-primary/30 transition-colors duration-300", children: [
-      sidebarNavigation,
-      commandPalette,
-      eventBusBridge,
-      children,
-      /* @__PURE__ */ jsx(
-        Toaster,
-        {
-          position: "top-right",
-          richColors: true,
-          closeButton: true
-        }
-      )
-    ] })
-  ] });
+  return /* @__PURE__ */ jsx(NextIntlClientProvider, { messages, locale, children: /* @__PURE__ */ jsxs("div", { className: "min-h-screen bg-background text-foreground selection:bg-primary/30 transition-colors duration-300", children: [
+    /* @__PURE__ */ jsx(React10__default.Fragment, { children: brandingStyles }, "branding"),
+    /* @__PURE__ */ jsx(React10__default.Fragment, { children: /* @__PURE__ */ jsx(TopLoader, {}) }, "top-loader"),
+    /* @__PURE__ */ jsx(React10__default.Fragment, { children: sidebarNavigation }, "sidebar"),
+    /* @__PURE__ */ jsx(React10__default.Fragment, { children: commandPalette }, "command"),
+    /* @__PURE__ */ jsx(React10__default.Fragment, { children: eventBusBridge }, "eventbus"),
+    /* @__PURE__ */ jsx(React10__default.Fragment, { children }, "content"),
+    /* @__PURE__ */ jsx(React10__default.Fragment, { children: /* @__PURE__ */ jsx(Toaster, { position: "top-right", richColors: true, closeButton: true }) }, "toaster")
+  ] }) });
 }
 function useConfirmDialog(options) {
   const { onConfirm } = options;
@@ -2660,7 +2651,7 @@ function CardFooter({ className, ...props }) {
 }
 var DialogPortal = Dialog$1.Portal;
 var DialogOverlay = Dialog$1.Overlay;
-var DialogContent = React8.forwardRef(({ className, children, showCloseButton = true, ...props }, ref) => /* @__PURE__ */ jsxs(
+var DialogContent = React10.forwardRef(({ className, children, showCloseButton = true, ...props }, ref) => /* @__PURE__ */ jsxs(
   Dialog$1.Content,
   {
     ref,
@@ -2705,7 +2696,7 @@ function Input({ className, type, ...props }) {
     }
   );
 }
-var Label = React8.forwardRef(
+var Label = React10.forwardRef(
   ({ className, ...props }, ref) => /* @__PURE__ */ jsx(
     "label",
     {

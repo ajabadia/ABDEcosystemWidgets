@@ -1,5 +1,15 @@
 "use client"
 
+/**
+ * @purpose Gestiona el renderizado del componente de contenido de diálogo con botón de cierre personalizable.
+ * @purpose_en Manages the rendering of a dialog content component with customizable close button.
+ * @refactorable false
+ * @classification UI Component
+ * @complexity Medium
+ * @fingerprint exports:0,imports:4,sig:1l3qixa
+ * @lastUpdated 2026-06-29T22:23:19.934Z
+ */
+
 import * as React from "react"
 import { Dialog as DialogPrimitive } from "radix-ui"
 import { X } from "lucide-react"

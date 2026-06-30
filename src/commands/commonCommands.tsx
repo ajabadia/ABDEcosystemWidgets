@@ -1,3 +1,13 @@
+/**
+ * @purpose Gestiona y devuelve un arreglo de comandos comunes para la aplicación, incluyendo el cambio de idioma, la apertura de configuraciones y acciones de logout.
+ * @purpose_en Builds and returns an array of common commands for the application, including language switching, settings opening, and logout actions.
+ * @refactorable false
+ * @classification Helper Utility
+ * @complexity Low
+ * @fingerprint exports:2,imports:2,sig:0xnv0o
+ * @lastUpdated 2026-06-29T22:22:57.068Z
+ */
+
 import { Globe, Settings, LogOut } from 'lucide-react';
 import type { Command } from '../navigation/CommandPalette.js';
 

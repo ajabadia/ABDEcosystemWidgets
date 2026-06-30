@@ -1,5 +1,15 @@
 "use client";
 
+/**
+ * @purpose Gestiona los ajustes del tema y los proporciona a la aplicación mediante NextThemesProvider.
+ * @purpose_en Manages theme settings and provides them to the application using NextThemesProvider.
+ * @refactorable false
+ * @classification Context/Provider
+ * @complexity Low
+ * @fingerprint exports:1,imports:2,sig:ogjt6n
+ * @lastUpdated 2026-06-29T22:23:07.664Z
+ */
+
 import * as React from "react";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 

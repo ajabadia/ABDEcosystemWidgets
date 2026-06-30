@@ -1,5 +1,15 @@
 'use client';
 
+/**
+ * @purpose Renderiza un componente de navegación lateral con manejo de idioma y autenticación del usuario.
+ * @purpose_en Renders a sidebar navigation component with locale handling and user authentication.
+ * @refactorable true (contains too many state variables and UI parts)
+ * @classification UI Component
+ * @complexity Medium
+ * @fingerprint exports:3,imports:7,sig:1xsmg9x
+ * @lastUpdated 2026-06-29T22:23:04.920Z
+ */
+
 import React from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { usePathname, useRouter } from 'next/navigation';

@@ -1,3 +1,13 @@
+/**
+ * @purpose Renderiza un campo de entrada estilizado con varias propiedades y atributos de accesibilidad.
+ * @purpose_en Renders a styled input field with various props and accessibility attributes.
+ * @refactorable false
+ * @classification UI Component
+ * @complexity Low
+ * @fingerprint exports:0,imports:2,sig:1hxpi9w
+ * @lastUpdated 2026-06-29T22:23:26.392Z
+ */
+
 import * as React from "react"
 
 import { cn } from "../utils.js"

@@ -134,6 +134,16 @@ interface CommandPaletteProps {
 }
 declare function CommandPalette({ commands, placeholder, isOpen: controlledIsOpen, onOpenChange }: CommandPaletteProps): react_jsx_runtime.JSX.Element | null;
 
+/**
+ * @purpose Gestiona y devuelve un arreglo de comandos comunes para la aplicación, incluyendo el cambio de idioma, la apertura de configuraciones y acciones de logout.
+ * @purpose_en Builds and returns an array of common commands for the application, including language switching, settings opening, and logout actions.
+ * @refactorable false
+ * @classification Helper Utility
+ * @complexity Low
+ * @fingerprint exports:2,imports:2,sig:0xnv0o
+ * @lastUpdated 2026-06-29T22:22:57.068Z
+ */
+
 interface CommonCommandContext {
     locale: string;
     pathname: string;
@@ -522,6 +532,16 @@ declare function CardFooter({ className, ...props }: React.ComponentProps<"div">
 declare const DialogPortal: React.FC<Dialog$1.DialogPortalProps>;
 declare const DialogOverlay: React.ForwardRefExoticComponent<Dialog$1.DialogOverlayProps & React.RefAttributes<HTMLDivElement>>;
 
+/**
+ * @purpose Gestiona el renderizado del componente de contenido de diálogo con botón de cierre personalizable.
+ * @purpose_en Manages the rendering of a dialog content component with customizable close button.
+ * @refactorable false
+ * @classification UI Component
+ * @complexity Medium
+ * @fingerprint exports:0,imports:4,sig:1l3qixa
+ * @lastUpdated 2026-06-29T22:23:19.934Z
+ */
+
 declare const DialogContent: React.ForwardRefExoticComponent<Omit<Dialog$1.DialogContentProps & React.RefAttributes<HTMLDivElement>, "ref"> & {
     showCloseButton?: boolean;
 } & React.RefAttributes<HTMLDivElement>>;
@@ -531,6 +551,16 @@ declare function DialogTrigger({ ...props }: React.ComponentProps<typeof Dialog$
 declare function DialogClose({ ...props }: React.ComponentProps<typeof Dialog$1.Close>): react_jsx_runtime.JSX.Element;
 
 declare function Input({ className, type, ...props }: React.ComponentProps<"input">): react_jsx_runtime.JSX.Element;
+
+/**
+ * @purpose Renderiza un componente etiqueta estilizado con nombres de clase opcionales y propiedades.
+ * @purpose_en Renders a styled label component with optional class names and props.
+ * @refactorable false
+ * @classification UI Component
+ * @complexity Low
+ * @fingerprint exports:1,imports:2,sig:m48edq
+ * @lastUpdated 2026-06-29T22:23:30.690Z
+ */
 
 type LabelProps = React.LabelHTMLAttributes<HTMLLabelElement>;
 declare const Label: React.ForwardRefExoticComponent<LabelProps & React.RefAttributes<HTMLLabelElement>>;

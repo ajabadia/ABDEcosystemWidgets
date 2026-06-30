@@ -1,3 +1,13 @@
+/**
+ * @purpose Renderiza el layout principal de una aplicación con branding, carga superior, navegación lateral, paleta de comandos, puente de autobús y componentes hijos.
+ * @purpose_en Renders the main layout of an application with branding, top loader, sidebar navigation, command palette, event bus bridge, and children components.
+ * @refactorable false
+ * @classification UI Component
+ * @complexity Low
+ * @fingerprint exports:1,imports:4,sig:1umbil6
+ * @lastUpdated 2026-06-29T22:23:02.732Z
+ */
+
 import React from 'react';
 import { NextIntlClientProvider } from 'next-intl';
 import type { AbstractIntlMessages } from 'next-intl';
@@ -44,18 +54,14 @@ export function AppShellLayout({
 }: AppShellLayoutProps) {
   return (
     <NextIntlClientProvider messages={messages} locale={locale}>
-      {brandingStyles}
-      <TopLoader />
       <div className="min-h-screen bg-background text-foreground selection:bg-primary/30 transition-colors duration-300">
-        {sidebarNavigation}
-        {commandPalette}
-        {eventBusBridge}
-        {children}
-        <Toaster
-          position="top-right"
-          richColors
-          closeButton
-        />
+        <React.Fragment key="branding">{brandingStyles}</React.Fragment>
+        <React.Fragment key="top-loader"><TopLoader /></React.Fragment>
+        <React.Fragment key="sidebar">{sidebarNavigation}</React.Fragment>
+        <React.Fragment key="command">{commandPalette}</React.Fragment>
+        <React.Fragment key="eventbus">{eventBusBridge}</React.Fragment>
+        <React.Fragment key="content">{children}</React.Fragment>
+        <React.Fragment key="toaster"><Toaster position="top-right" richColors closeButton /></React.Fragment>
       </div>
     </NextIntlClientProvider>
   );
