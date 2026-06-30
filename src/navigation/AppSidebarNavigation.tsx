@@ -111,6 +111,7 @@ export function AppSidebarNavigation({
     },
     translations: {
       brandFallback: appTitle,
+      loginBtn: locale === 'es' ? 'INICIAR SESIÓN' : 'SIGN IN',
       logoutBtn: locale === 'es' ? 'TERMINAR SESIÓN' : 'SIGN OUT',
       identityProvider: locale === 'es' ? 'PROVEEDOR DE IDENTIDAD' : 'IDENTITY PROVIDER',
       statusOnline: locale === 'es' ? 'EN LÍNEA' : 'ONLINE',

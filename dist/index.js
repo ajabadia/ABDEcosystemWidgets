@@ -1810,8 +1810,8 @@ function SmartNavbarContent({
               },
               onMouseLeave: handleMouseLeave,
               children: /* @__PURE__ */ jsxs("div", { className: cn(
-                "max-w-[1600px] mx-auto p-6 flex",
-                activeMenu === "theme" || activeMenu === "language" || activeMenu === "user" ? "justify-end" : "justify-start"
+                "smart-navbar-dropdown-inner",
+                activeMenu === "theme" || activeMenu === "language" || activeMenu === "user" ? "smart-navbar-end" : "smart-navbar-start"
               ), children: [
                 activeMenu === "navigation" && links && /* @__PURE__ */ jsx(
                   SmartNavbarNavMenu,
@@ -2025,6 +2025,7 @@ function AppSidebarNavigation({
     },
     translations: {
       brandFallback: appTitle,
+      loginBtn: locale === "es" ? "INICIAR SESI\xD3N" : "SIGN IN",
       logoutBtn: locale === "es" ? "TERMINAR SESI\xD3N" : "SIGN OUT",
       identityProvider: locale === "es" ? "PROVEEDOR DE IDENTIDAD" : "IDENTITY PROVIDER",
       statusOnline: locale === "es" ? "EN L\xCDNEA" : "ONLINE",

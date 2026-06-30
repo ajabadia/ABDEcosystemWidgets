@@ -604,8 +604,8 @@ function SmartNavbarContent({
             onMouseLeave={handleMouseLeave}
           >
             <div className={cn(
-              "max-w-[1600px] mx-auto p-6 flex",
-              (activeMenu === 'theme' || activeMenu === 'language' || activeMenu === 'user') ? 'justify-end' : 'justify-start'
+              "smart-navbar-dropdown-inner",
+              (activeMenu === 'theme' || activeMenu === 'language' || activeMenu === 'user') ? 'smart-navbar-end' : 'smart-navbar-start'
             )}>
               {/* Navigation Mega Menu */}
               {activeMenu === 'navigation' && links && (
