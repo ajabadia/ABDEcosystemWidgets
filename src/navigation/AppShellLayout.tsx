@@ -4,8 +4,8 @@
  * @refactorable false
  * @classification UI Component
  * @complexity Low
- * @fingerprint exports:1,imports:4,sig:1umbil6
- * @lastUpdated 2026-06-29T22:23:02.732Z
+ * @fingerprint exports:1,imports:4,sig:1qsoaef
+ * @lastUpdated 2026-06-30T05:49:07.191Z
  */
 
 import React from 'react';
@@ -53,7 +53,7 @@ export function AppShellLayout({
   eventBusBridge,
 }: AppShellLayoutProps) {
   return (
-    <NextIntlClientProvider messages={messages} locale={locale}>
+    <NextIntlClientProvider messages={messages} locale={locale} timeZone="Europe/Madrid">
       <div className="min-h-screen bg-background text-foreground selection:bg-primary/30 transition-colors duration-300">
         <React.Fragment key="branding">{brandingStyles}</React.Fragment>
         <React.Fragment key="top-loader"><TopLoader /></React.Fragment>

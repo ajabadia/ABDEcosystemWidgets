@@ -2079,7 +2079,7 @@ function AppShellLayout({
   commandPalette,
   eventBusBridge
 }) {
-  return /* @__PURE__ */ jsx(NextIntlClientProvider, { messages, locale, children: /* @__PURE__ */ jsxs("div", { className: "min-h-screen bg-background text-foreground selection:bg-primary/30 transition-colors duration-300", children: [
+  return /* @__PURE__ */ jsx(NextIntlClientProvider, { messages, locale, timeZone: "Europe/Madrid", children: /* @__PURE__ */ jsxs("div", { className: "min-h-screen bg-background text-foreground selection:bg-primary/30 transition-colors duration-300", children: [
     /* @__PURE__ */ jsx(React10__default.Fragment, { children: brandingStyles }, "branding"),
     /* @__PURE__ */ jsx(React10__default.Fragment, { children: /* @__PURE__ */ jsx(TopLoader, {}) }, "top-loader"),
     /* @__PURE__ */ jsx(React10__default.Fragment, { children: sidebarNavigation }, "sidebar"),

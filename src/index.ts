@@ -1,11 +1,11 @@
 /**
- * @purpose Proporciona componentes, hooks y utilidades para el ABDEcosystemWidgets.
+ * @purpose Proporciona componentes, anclajes y utilidades para el ABDEcosystemWidgets.
  * @purpose_en Exports various components, hooks, and utilities for the ABDEcosystemWidgets application.
  * @refactorable false
  * @classification UI Component
  * @complexity Medium
- * @fingerprint exports:0,imports:0,sig:1ggwdhj
- * @lastUpdated 2026-06-21T14:26:38.121Z
+ * @fingerprint exports:0,imports:0,sig:188vycx
+ * @lastUpdated 2026-06-30T05:49:05.513Z
  */
 
 // Identidad
