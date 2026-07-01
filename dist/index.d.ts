@@ -1,4 +1,3 @@
-import * as react_jsx_runtime from 'react/jsx-runtime';
 import * as React from 'react';
 import React__default, { ReactNode, ComponentType } from 'react';
 import { AbstractIntlMessages } from 'next-intl';
@@ -7,6 +6,16 @@ import * as class_variance_authority_types from 'class-variance-authority/types'
 import { VariantProps } from 'class-variance-authority';
 import { ThemeProvider as ThemeProvider$1 } from 'next-themes';
 import { ClassValue } from 'clsx';
+
+/**
+ * @purpose Renderiza un componente de selección de inquilinos o contexto.
+ * @purpose_en Renders a dropdown or trigger component for selecting tenants and contexts.
+ * @refactorable true (contains too many state variables and UI parts)
+ * @classification UI Component
+ * @complexity Medium
+ * @fingerprint exports:4,imports:5,sig:uzpqtp
+ * @lastUpdated 2026-06-21T14:26:32.199Z
+ */
 
 interface ContextOption {
     id: string;
@@ -30,7 +39,7 @@ interface TenantSelectorProps {
     variant?: 'dropdown' | 'trigger' | 'content';
     isOpen?: boolean;
 }
-declare function TenantSelector({ activeTenantId, tenants, onTenantChange, spaces, groups, activeContextId, onContextChange, userRole, isLoading, variant, isOpen: externalIsOpen, }: TenantSelectorProps): react_jsx_runtime.JSX.Element;
+declare function TenantSelector({ activeTenantId, tenants, onTenantChange, spaces, groups, activeContextId, onContextChange, userRole, isLoading, variant, isOpen: externalIsOpen, }: TenantSelectorProps): React.JSX.Element;
 
 interface TenantMegaMenuValue {
     variant: 'dropdown' | 'trigger' | 'content';
@@ -38,6 +47,16 @@ interface TenantMegaMenuValue {
 }
 declare const TenantMegaMenuProvider: React.Provider<TenantMegaMenuValue | null>;
 declare function useTenantMegaMenu(): TenantMegaMenuValue | null;
+
+/**
+ * @purpose Renderiza un perfil de usuario y controles de sesión, incluyendo opciones para configuraciones administrativas y salir.
+ * @purpose_en Renders a user profile status and session controls, including options for administrative settings and logout.
+ * @refactorable false
+ * @classification UI Component
+ * @complexity Low
+ * @fingerprint exports:2,imports:2,sig:1kcc1ny
+ * @lastUpdated 2026-06-23T23:01:34.536Z
+ */
 
 interface UserIdentityProps {
     name: string;
@@ -61,7 +80,17 @@ interface UserIdentityProps {
  * Presentation component for rendering user profile status and session controls.
  * Keep it pure, stateless, and style-compliant.
  */
-declare function UserIdentity({ name, email, isAdmin, adminHref, logoutHref, translations, LinkComponent }: UserIdentityProps): react_jsx_runtime.JSX.Element;
+declare function UserIdentity({ name, email, isAdmin, adminHref, logoutHref, translations, LinkComponent }: UserIdentityProps): React__default.JSX.Element;
+
+/**
+ * @purpose Gestiona el renderizado de una vista de éxito de salida con contenido dinámico y enlaces.
+ * @purpose_en Manages the rendering of a logout success view with dynamic content and links.
+ * @refactorable true (contains too many state variables and UI parts)
+ * @classification UI Component
+ * @complexity Medium
+ * @fingerprint exports:2,imports:5,sig:tltvly
+ * @lastUpdated 2026-06-26T09:59:45.126Z
+ */
 
 interface LogoutSuccessViewProps {
     signInUrl?: string;
@@ -84,7 +113,7 @@ interface LogoutSuccessViewProps {
         'aria-label'?: string;
     }>;
 }
-declare function LogoutSuccessView(props: LogoutSuccessViewProps): react_jsx_runtime.JSX.Element;
+declare function LogoutSuccessView(props: LogoutSuccessViewProps): React.JSX.Element;
 
 interface TenantSelectorConnectorProps {
     sessionUser?: {
@@ -111,10 +140,20 @@ interface TenantSelectorConnectorProps {
     /** External open state control (used by SmartNavbar via cloneElement) */
     isOpen?: boolean;
 }
-declare function TenantSelectorConnector({ sessionUser, enableContexts, onTenantSwitch, useRouterPush, systemTenantLabel, onError, variant, isOpen, }: TenantSelectorConnectorProps): react_jsx_runtime.JSX.Element | null;
+declare function TenantSelectorConnector({ sessionUser, enableContexts, onTenantSwitch, useRouterPush, systemTenantLabel, onError, variant, isOpen, }: TenantSelectorConnectorProps): React.JSX.Element | null;
 
 type DefaultTenantSelectorProps = Omit<TenantSelectorConnectorProps, 'enableContexts'>;
-declare function DefaultTenantSelector(props: DefaultTenantSelectorProps): react_jsx_runtime.JSX.Element;
+declare function DefaultTenantSelector(props: DefaultTenantSelectorProps): React.JSX.Element;
+
+/**
+ * @purpose Gestiona un componente de paleta de comandos que permite a los usuarios buscar y ejecutar comandos mediante atajos de teclado.
+ * @purpose_en Renders a Command Palette component that allows users to search and execute commands through keyboard shortcuts.
+ * @refactorable true (contains too many state variables and UI parts)
+ * @classification UI Component
+ * @complexity Medium
+ * @fingerprint exports:3,imports:2,sig:1lcweun
+ * @lastUpdated 2026-06-26T09:59:49.650Z
+ */
 
 interface Command {
     id: string;
@@ -132,7 +171,7 @@ interface CommandPaletteProps {
     isOpen?: boolean;
     onOpenChange?: (open: boolean) => void;
 }
-declare function CommandPalette({ commands, placeholder, isOpen: controlledIsOpen, onOpenChange }: CommandPaletteProps): react_jsx_runtime.JSX.Element | null;
+declare function CommandPalette({ commands, placeholder, isOpen: controlledIsOpen, onOpenChange }: CommandPaletteProps): React__default.JSX.Element | null;
 
 /**
  * @purpose Gestiona y devuelve un arreglo de comandos comunes para la aplicación, incluyendo el cambio de idioma, la apertura de configuraciones y acciones de logout.
@@ -154,6 +193,16 @@ interface CommonCommandContext {
     onOpenSettings?: () => void;
 }
 declare function buildCommonCommands(ctx: CommonCommandContext): Command[];
+
+/**
+ * @purpose Renderiza un panel lateral desplazable con información del usuario y función de logout.
+ * @purpose_en Renders a collapsible navigation sidebar with user information and logout functionality.
+ * @refactorable true (contains too many state variables and UI parts)
+ * @classification UI Component
+ * @complexity Medium
+ * @fingerprint exports:6,imports:5,sig:l7858j
+ * @lastUpdated 2026-06-26T09:59:52.767Z
+ */
 
 interface NavUser {
     name: string;
@@ -196,7 +245,7 @@ interface GlobalNavbarProps {
 /**
  * 🌐 GlobalNavbar — Collapsible Navigation Sidebar
  */
-declare function GlobalNavbar({ session, links, logoUrl, onLogout, brandName, homeHref, activeHref, translations, transformHref, }: GlobalNavbarProps): react_jsx_runtime.JSX.Element;
+declare function GlobalNavbar({ session, links, logoUrl, onLogout, brandName, homeHref, activeHref, translations, transformHref, }: GlobalNavbarProps): React.JSX.Element;
 
 /**
  * @purpose Renderiza un componente pie de pie una vez que se ha enviado datos de telemetry, disposición en dos columnas y modo de etiquetas simples.
@@ -207,6 +256,7 @@ declare function GlobalNavbar({ session, links, logoUrl, onLogout, brandName, ho
  * @fingerprint exports:2,imports:1,sig:1j6cv6z
  * @lastUpdated 2026-06-23T23:01:50.207Z
  */
+
 interface GlobalFooterProps {
     /** Simple centered label (used as fallback when no telemetry and no two-column layout) */
     label?: string;
@@ -240,7 +290,17 @@ interface GlobalFooterProps {
  *
  * Usage in apps follows the same thin-wrapper pattern as SystemSettings.
  */
-declare function GlobalFooter({ label, leftLabel, rightLabel, telemetryItems, showSeparator, separatorWidth, className, opacity, }: GlobalFooterProps): react_jsx_runtime.JSX.Element;
+declare function GlobalFooter({ label, leftLabel, rightLabel, telemetryItems, showSeparator, separatorWidth, className, opacity, }: GlobalFooterProps): React__default.JSX.Element;
+
+/**
+ * @purpose Renderiza un componente barra superior para aplicaciones industriales, incluyendo funcionalidad de búsqueda y configuración del sistema.
+ * @purpose_en Renders a top bar component for industrial applications, including search functionality and system settings.
+ * @refactorable false
+ * @classification UI Component
+ * @complexity Low
+ * @fingerprint exports:2,imports:2,sig:15pte1f
+ * @lastUpdated 2026-06-23T23:01:58.500Z
+ */
 
 interface IndustrialTopBarProps {
     /**
@@ -282,7 +342,17 @@ interface IndustrialTopBarProps {
  * each app passes its own SystemSettings wrapper via `settings`,
  * keeping locale/theme/auth bindings local while the UI/UX stays unified.
  */
-declare function IndustrialTopBar({ locale, children, settings, className, }: IndustrialTopBarProps): react_jsx_runtime.JSX.Element;
+declare function IndustrialTopBar({ locale, children, settings, className, }: IndustrialTopBarProps): React__default.JSX.Element;
+
+/**
+ * @purpose Renderiza una barra de navegación superior unificada para todas las aplicaciones ABD Suite, incluyendo gestión de sesiones, cambio de tema, selección de idioma y funcionalidad de búsqueda.
+ * @purpose_en Renders a unified top navigation bar for all ABD Suite apps, including session management, theme switching, language selection, and search functionality.
+ * @refactorable true (contains too many state variables and UI parts)
+ * @classification UI Component
+ * @complexity Medium
+ * @fingerprint exports:3,imports:13,sig:13geetg
+ * @lastUpdated 2026-06-26T09:59:58.660Z
+ */
 
 interface SmartNavbarTranslations {
     brandFallback?: string;
@@ -324,7 +394,17 @@ interface SmartNavbarProps {
  * Wraps the inner content in a Suspense boundary to satisfy Next.js 15+
  * requirements for `useSearchParams()` and prevents SSR bailouts.
  */
-declare function SmartNavbar(props: SmartNavbarProps): react_jsx_runtime.JSX.Element;
+declare function SmartNavbar(props: SmartNavbarProps): React.JSX.Element;
+
+/**
+ * @purpose Renderiza un componente de navegación lateral con manejo de idioma y autenticación del usuario.
+ * @purpose_en Renders a sidebar navigation component with locale handling and user authentication.
+ * @refactorable true (contains too many state variables and UI parts)
+ * @classification UI Component
+ * @complexity Medium
+ * @fingerprint exports:3,imports:7,sig:o3r4ul
+ * @lastUpdated 2026-06-30T11:18:12.916Z
+ */
 
 interface AppSidebarLink {
     href: string;
@@ -348,7 +428,17 @@ interface AppSidebarNavigationProps {
     settingsSlot?: React__default.ReactNode;
     notificationsSlot?: React__default.ReactNode;
 }
-declare function AppSidebarNavigation({ session, logoUrl, links, appBadge, brandName, onLogin, onLogout, transformHref, translations: translationsOverride, tenantSelectorSlot, settingsSlot, notificationsSlot, }: AppSidebarNavigationProps): react_jsx_runtime.JSX.Element;
+declare function AppSidebarNavigation({ session, logoUrl, links, appBadge, brandName, onLogin, onLogout, transformHref, translations: translationsOverride, tenantSelectorSlot, settingsSlot, notificationsSlot, }: AppSidebarNavigationProps): React__default.JSX.Element;
+
+/**
+ * @purpose Renderiza el layout principal de una aplicación con branding, carga superior, navegación lateral, paleta de comandos, puente de autobús y componentes hijos.
+ * @purpose_en Renders the main layout of an application with branding, top loader, sidebar navigation, command palette, event bus bridge, and children components.
+ * @refactorable false
+ * @classification UI Component
+ * @complexity Low
+ * @fingerprint exports:1,imports:4,sig:1qsoaef
+ * @lastUpdated 2026-06-30T05:49:07.191Z
+ */
 
 interface AppShellLayoutProps {
     children: React__default.ReactNode;
@@ -359,7 +449,7 @@ interface AppShellLayoutProps {
     commandPalette?: React__default.ReactNode;
     eventBusBridge?: React__default.ReactNode;
 }
-declare function AppShellLayout({ children, messages, locale, brandingStyles, sidebarNavigation, commandPalette, eventBusBridge, }: AppShellLayoutProps): react_jsx_runtime.JSX.Element;
+declare function AppShellLayout({ children, messages, locale, brandingStyles, sidebarNavigation, commandPalette, eventBusBridge, }: AppShellLayoutProps): React__default.JSX.Element;
 
 /**
  * @purpose Proporciona un arreglo de enlaces de sidebar filtrados basado en el estado de sesión del usuario, su rol y estatus de autenticación.
@@ -449,6 +539,16 @@ interface UseConfirmDialogReturn<TData> {
  */
 declare function useConfirmDialog<TData = void>(options: UseConfirmDialogOptions<TData>): UseConfirmDialogReturn<TData>;
 
+/**
+ * @purpose Renderiza una ventana de confirmación personalizable con título, mensaje y acciones.
+ * @purpose_en Renders a confirm dialog with customizable title, message, and actions.
+ * @refactorable true (contains too many state variables and UI parts)
+ * @classification UI Component
+ * @complexity Medium
+ * @fingerprint exports:3,imports:5,sig:l1xxox
+ * @lastUpdated 2026-06-21T14:27:33.499Z
+ */
+
 type ConfirmVariant = 'danger' | 'warning' | 'info';
 interface ConfirmDialogProps {
     open: boolean;
@@ -461,7 +561,7 @@ interface ConfirmDialogProps {
     onConfirm: () => void;
     onCancel: () => void;
 }
-declare function ConfirmDialog({ open, title, message, confirmLabel, cancelLabel, variant, isLoading, onConfirm, onCancel, }: ConfirmDialogProps): react_jsx_runtime.JSX.Element | null;
+declare function ConfirmDialog({ open, title, message, confirmLabel, cancelLabel, variant, isLoading, onConfirm, onCancel, }: ConfirmDialogProps): React.JSX.Element | null;
 
 interface IndustrialSelectSearchItem {
     id: string;
@@ -476,7 +576,7 @@ interface IndustrialSelectSearchProps {
     noResultsLabel?: string;
     ariaLabel?: string;
 }
-declare function IndustrialSelectSearch({ items, value, onChange, placeholder, noResultsLabel, ariaLabel, }: IndustrialSelectSearchProps): react_jsx_runtime.JSX.Element;
+declare function IndustrialSelectSearch({ items, value, onChange, placeholder, noResultsLabel, ariaLabel, }: IndustrialSelectSearchProps): React.JSX.Element;
 
 interface IndustrialModalHeaderProps {
     title: string;
@@ -486,7 +586,7 @@ interface IndustrialModalHeaderProps {
     }>;
     onClose: () => void;
 }
-declare function IndustrialModalHeader({ title, subtitle, icon: Icon, onClose }: IndustrialModalHeaderProps): react_jsx_runtime.JSX.Element;
+declare function IndustrialModalHeader({ title, subtitle, icon: Icon, onClose }: IndustrialModalHeaderProps): React.JSX.Element;
 
 interface IndustrialSearchInputProps {
     value: string;
@@ -494,22 +594,32 @@ interface IndustrialSearchInputProps {
     placeholder?: string;
     ariaLabel?: string;
 }
-declare function IndustrialSearchInput({ value, onChange, placeholder, ariaLabel }: IndustrialSearchInputProps): react_jsx_runtime.JSX.Element;
+declare function IndustrialSearchInput({ value, onChange, placeholder, ariaLabel }: IndustrialSearchInputProps): React.JSX.Element;
 
-declare function DialogHeader({ className, ...props }: Omit<React.HTMLAttributes<HTMLDivElement>, 'ref'>): react_jsx_runtime.JSX.Element;
+/**
+ * @purpose Gestiona y renderiza elementos de diálogo como encabezados, pies de página, títulos y descripciones utilizando componentes UI de Radix.
+ * @purpose_en Renders and manages dialog elements such as headers, footers, titles, and descriptions using Radix UI components.
+ * @refactorable false
+ * @classification UI Component
+ * @complexity Low
+ * @fingerprint exports:0,imports:3,sig:qtp4rt
+ * @lastUpdated 2026-06-21T14:27:37.740Z
+ */
+
+declare function DialogHeader({ className, ...props }: Omit<React.HTMLAttributes<HTMLDivElement>, 'ref'>): React.JSX.Element;
 declare function DialogFooter({ className, showCloseButton, closeLabel, children, ...props }: Omit<React.HTMLAttributes<HTMLDivElement>, 'ref'> & {
     showCloseButton?: boolean;
     closeLabel?: string;
-}): react_jsx_runtime.JSX.Element;
-declare function DialogTitle({ className, ...props }: React.ComponentProps<typeof Dialog$1.Title>): react_jsx_runtime.JSX.Element;
-declare function DialogDescription({ className, ...props }: React.ComponentProps<typeof Dialog$1.Description>): react_jsx_runtime.JSX.Element;
+}): React.JSX.Element;
+declare function DialogTitle({ className, ...props }: React.ComponentProps<typeof Dialog$1.Title>): React.JSX.Element;
+declare function DialogDescription({ className, ...props }: React.ComponentProps<typeof Dialog$1.Description>): React.JSX.Element;
 
 declare const badgeVariants: (props?: ({
     variant?: "link" | "default" | "secondary" | "destructive" | "outline" | "ghost" | null | undefined;
 } & class_variance_authority_types.ClassProp) | undefined) => string;
 declare function Badge({ className, variant, asChild, ...props }: React.ComponentProps<"span"> & VariantProps<typeof badgeVariants> & {
     asChild?: boolean;
-}): react_jsx_runtime.JSX.Element;
+}): React.JSX.Element;
 
 declare const buttonVariants: (props?: ({
     variant?: "link" | "default" | "secondary" | "destructive" | "outline" | "ghost" | null | undefined;
@@ -517,17 +627,27 @@ declare const buttonVariants: (props?: ({
 } & class_variance_authority_types.ClassProp) | undefined) => string;
 declare function Button({ className, variant, size, asChild, ...props }: React.ComponentProps<"button"> & VariantProps<typeof buttonVariants> & {
     asChild?: boolean;
-}): react_jsx_runtime.JSX.Element;
+}): React.JSX.Element;
+
+/**
+ * @purpose Renderiza un componente de tarjeta personalizable con secciones como encabezado, título, descripción, acción, contenido y pie de página.
+ * @purpose_en Renders a customizable card component with various sections like header, title, description, action, content, and footer.
+ * @refactorable false
+ * @classification UI Component
+ * @complexity Low
+ * @fingerprint exports:0,imports:2,sig:icprk1
+ * @lastUpdated 2026-06-29T22:23:16.977Z
+ */
 
 declare function Card({ className, size, ...props }: React.ComponentProps<"div"> & {
     size?: "default" | "sm";
-}): react_jsx_runtime.JSX.Element;
-declare function CardHeader({ className, ...props }: React.ComponentProps<"div">): react_jsx_runtime.JSX.Element;
-declare function CardTitle({ className, ...props }: React.ComponentProps<"div">): react_jsx_runtime.JSX.Element;
-declare function CardDescription({ className, ...props }: React.ComponentProps<"div">): react_jsx_runtime.JSX.Element;
-declare function CardAction({ className, ...props }: React.ComponentProps<"div">): react_jsx_runtime.JSX.Element;
-declare function CardContent({ className, ...props }: React.ComponentProps<"div">): react_jsx_runtime.JSX.Element;
-declare function CardFooter({ className, ...props }: React.ComponentProps<"div">): react_jsx_runtime.JSX.Element;
+}): React.JSX.Element;
+declare function CardHeader({ className, ...props }: React.ComponentProps<"div">): React.JSX.Element;
+declare function CardTitle({ className, ...props }: React.ComponentProps<"div">): React.JSX.Element;
+declare function CardDescription({ className, ...props }: React.ComponentProps<"div">): React.JSX.Element;
+declare function CardAction({ className, ...props }: React.ComponentProps<"div">): React.JSX.Element;
+declare function CardContent({ className, ...props }: React.ComponentProps<"div">): React.JSX.Element;
+declare function CardFooter({ className, ...props }: React.ComponentProps<"div">): React.JSX.Element;
 
 declare const DialogPortal: React.FC<Dialog$1.DialogPortalProps>;
 declare const DialogOverlay: React.ForwardRefExoticComponent<Dialog$1.DialogOverlayProps & React.RefAttributes<HTMLDivElement>>;
@@ -546,11 +666,31 @@ declare const DialogContent: React.ForwardRefExoticComponent<Omit<Dialog$1.Dialo
     showCloseButton?: boolean;
 } & React.RefAttributes<HTMLDivElement>>;
 
-declare function Dialog({ ...props }: React.ComponentProps<typeof Dialog$1.Root>): react_jsx_runtime.JSX.Element;
-declare function DialogTrigger({ ...props }: React.ComponentProps<typeof Dialog$1.Trigger>): react_jsx_runtime.JSX.Element;
-declare function DialogClose({ ...props }: React.ComponentProps<typeof Dialog$1.Close>): react_jsx_runtime.JSX.Element;
+/**
+ * @purpose Gestiona y renderiza un componente de diálogo utilizando primitives de UI Radix.
+ * @purpose_en Manages and renders a dialog component using Radix UI primitives.
+ * @refactorable false
+ * @classification UI Component
+ * @complexity Low
+ * @fingerprint exports:0,imports:5,sig:dbpzve
+ * @lastUpdated 2026-06-29T22:23:24.172Z
+ */
 
-declare function Input({ className, type, ...props }: React.ComponentProps<"input">): react_jsx_runtime.JSX.Element;
+declare function Dialog({ ...props }: React.ComponentProps<typeof Dialog$1.Root>): React.JSX.Element;
+declare function DialogTrigger({ ...props }: React.ComponentProps<typeof Dialog$1.Trigger>): React.JSX.Element;
+declare function DialogClose({ ...props }: React.ComponentProps<typeof Dialog$1.Close>): React.JSX.Element;
+
+/**
+ * @purpose Renderiza un campo de entrada estilizado con varias propiedades y atributos de accesibilidad.
+ * @purpose_en Renders a styled input field with various props and accessibility attributes.
+ * @refactorable false
+ * @classification UI Component
+ * @complexity Low
+ * @fingerprint exports:0,imports:2,sig:1hxpi9w
+ * @lastUpdated 2026-06-29T22:23:26.392Z
+ */
+
+declare function Input({ className, type, ...props }: React.ComponentProps<"input">): React.JSX.Element;
 
 /**
  * @purpose Renderiza un componente etiqueta estilizado con nombres de clase opcionales y propiedades.
@@ -565,9 +705,29 @@ declare function Input({ className, type, ...props }: React.ComponentProps<"inpu
 type LabelProps = React.LabelHTMLAttributes<HTMLLabelElement>;
 declare const Label: React.ForwardRefExoticComponent<LabelProps & React.RefAttributes<HTMLLabelElement>>;
 
-declare function Progress({ className, value, ...props }: React.ComponentProps<typeof Progress$1.Root>): react_jsx_runtime.JSX.Element;
+/**
+ * @purpose Renderiza un componente de barra de progreso utilizando Radix UI.
+ * @purpose_en Renders a progress bar component using Radix UI.
+ * @refactorable false
+ * @classification UI Component
+ * @complexity Low
+ * @fingerprint exports:0,imports:3,sig:yj2i37
+ * @lastUpdated 2026-06-29T22:23:33.539Z
+ */
 
-declare function Separator({ className, orientation, decorative, ...props }: React.ComponentProps<typeof Separator$1.Root>): react_jsx_runtime.JSX.Element;
+declare function Progress({ className, value, ...props }: React.ComponentProps<typeof Progress$1.Root>): React.JSX.Element;
+
+/**
+ * @purpose Renderiza un componente separador personalizable utilizando Radix UI.
+ * @purpose_en Renders a customizable separator component using Radix UI.
+ * @refactorable false
+ * @classification UI Component
+ * @complexity Low
+ * @fingerprint exports:0,imports:3,sig:mn2xsk
+ * @lastUpdated 2026-06-29T22:23:35.385Z
+ */
+
+declare function Separator({ className, orientation, decorative, ...props }: React.ComponentProps<typeof Separator$1.Root>): React.JSX.Element;
 
 /**
  * @purpose Gestiona una constante para definir el tiempo de las animaciones de entrada y salida de diálogo en milisegundos.
@@ -581,7 +741,27 @@ declare function Separator({ className, orientation, decorative, ...props }: Rea
 /** Duration (ms) for dialog entrance and exit animations */
 declare const ANIM_DURATION = 200;
 
-declare function ThemeProvider({ children, ...props }: React.ComponentProps<typeof ThemeProvider$1>): react_jsx_runtime.JSX.Element;
+/**
+ * @purpose Gestiona los ajustes del tema y los proporciona a la aplicación mediante NextThemesProvider.
+ * @purpose_en Manages theme settings and provides them to the application using NextThemesProvider.
+ * @refactorable false
+ * @classification Context/Provider
+ * @complexity Low
+ * @fingerprint exports:1,imports:2,sig:ogjt6n
+ * @lastUpdated 2026-06-29T22:23:07.664Z
+ */
+
+declare function ThemeProvider({ children, ...props }: React.ComponentProps<typeof ThemeProvider$1>): React.JSX.Element;
+
+/**
+ * @purpose Renderiza un menú de configuración del sistema con opciones de ubicación y tema, controles de autenticación y información de versión.
+ * @purpose_en Renders a system settings dropdown menu with locale and theme options, authentication controls, and version information.
+ * @refactorable true (contains too many state variables and UI parts)
+ * @classification UI Component
+ * @complexity Medium
+ * @fingerprint exports:2,imports:5,sig:1h5h42d
+ * @lastUpdated 2026-06-26T10:00:03.150Z
+ */
 
 interface SystemSettingsProps {
     locale: string;
@@ -602,14 +782,34 @@ interface SystemSettingsProps {
     showLogin?: boolean;
     versionSignature?: string;
 }
-declare function SystemSettings({ locale, onLocaleChange, locales, theme, onThemeChange, isAuthenticated, onLogin, onLogout, logoutUrl, signinUrl, showLogin, versionSignature, }: SystemSettingsProps): react_jsx_runtime.JSX.Element;
+declare function SystemSettings({ locale, onLocaleChange, locales, theme, onThemeChange, isAuthenticated, onLogin, onLogout, logoutUrl, signinUrl, showLogin, versionSignature, }: SystemSettingsProps): React.JSX.Element;
+
+/**
+ * @purpose Renderiza un componente de visualizador de registro vivo que recupera y muestra registros de auditoria en tiempo real.
+ * @purpose_en Renders a live log viewer UI component that fetches and displays audit logs in real-time.
+ * @refactorable true (contains too many state variables and UI parts)
+ * @classification UI Component
+ * @complexity Medium
+ * @fingerprint exports:1,imports:7,sig:11fb18z
+ * @lastUpdated 2026-06-26T09:59:32.519Z
+ */
 
 interface LiveLogViewerProps {
     tenantId: string;
     /** Override the global feature flag for live mode on this instance */
     liveModeEnabled?: boolean;
 }
-declare function LiveLogViewer({ tenantId, liveModeEnabled }: LiveLogViewerProps): react_jsx_runtime.JSX.Element;
+declare function LiveLogViewer({ tenantId, liveModeEnabled }: LiveLogViewerProps): React__default.JSX.Element;
+
+/**
+ * @purpose Renderiza una ventana modal que muestra la historia de auditoría para una entidad específica, incluyendo tablas para visualizar registros y estadísticas.
+ * @purpose_en Renders a modal displaying audit history for a specific entity, including tabs for viewing logs and statistics.
+ * @refactorable true (contains too many state variables and UI parts)
+ * @classification UI Component
+ * @complexity Medium
+ * @fingerprint exports:1,imports:5,sig:1unjzfl
+ * @lastUpdated 2026-06-26T09:59:28.856Z
+ */
 
 interface AuditHistoryModalProps {
     isOpen: boolean;
@@ -627,7 +827,7 @@ interface AuditHistoryModalProps {
         underConstruction?: string;
     };
 }
-declare function AuditHistoryModal({ isOpen, onClose, tenantId, entityType, entityId, entityName, translations }: AuditHistoryModalProps): react_jsx_runtime.JSX.Element | null;
+declare function AuditHistoryModal({ isOpen, onClose, tenantId, entityType, entityId, entityName, translations }: AuditHistoryModalProps): React__default.JSX.Element | null;
 
 /**
  * @purpose Gestiona la estructura para registros de auditoría.
@@ -651,15 +851,25 @@ interface AuditLog {
     [key: string]: unknown;
 }
 
+/**
+ * @purpose Renderiza un componente para mostrar las diferencias entre los estados anteriores y actuales de una entrada de registro de auditoria.
+ * @purpose_en Renders a component to display the differences between previous and current states of an audit log entry.
+ * @refactorable true (contains too many state variables and UI parts)
+ * @classification UI Component
+ * @complexity Low
+ * @fingerprint exports:1,imports:3,sig:psesfc
+ * @lastUpdated 2026-06-21T14:26:00.793Z
+ */
+
 interface AuditDeltaViewerProps {
     log: AuditLog;
 }
-declare function AuditDeltaViewer({ log }: AuditDeltaViewerProps): react_jsx_runtime.JSX.Element;
+declare function AuditDeltaViewer({ log }: AuditDeltaViewerProps): React__default.JSX.Element;
 
 interface ActionBadgeProps {
     action: AuditLog['action'];
 }
-declare function ActionBadge({ action }: ActionBadgeProps): react_jsx_runtime.JSX.Element;
+declare function ActionBadge({ action }: ActionBadgeProps): React.JSX.Element;
 
 /**
  * @purpose Gestiona banderas de características para ABDEcosystemWidgets, permitiendo la configuración en tiempo de ejecución de los ajustes globales.

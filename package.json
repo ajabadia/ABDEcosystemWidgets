@@ -53,20 +53,20 @@
   "author": "ABD Ecosystem Architecture Team",
   "license": "UNLICENSED",
   "dependencies": {
-    "@ajabadia/styles": "latest",
-    "class-variance-authority": "^0.7.1",
-    "clsx": "2.1.1",
+    "@ajabadia/styles": "^1.0.99",
+    "class-variance-authority": "catalog:",
+    "clsx": "catalog:",
     "tailwind-merge": "3.6.0"
   },
   "peerDependencies": {
     "@ajabadia/satellite-sdk": "^1.0.0",
-    "lucide-react": "^0.46.0 || ^1.0.0",
-    "next-intl": "^4.12.0",
-    "next-themes": "^0.4.0",
-    "nextjs-toploader": "^3.9.0",
+    "lucide-react": "catalog:",
+    "next-intl": "catalog:",
+    "next-themes": "catalog:",
+    "nextjs-toploader": "catalog:",
     "radix-ui": "^1.0.0",
-    "react": "^19.0.0",
-    "sonner": "^2.0.0"
+    "react": "catalog:",
+    "sonner": "catalog:"
   },
   "devDependencies": {
     "@ajabadia/satellite-sdk": "file:../ABDSatelliteSDK",
